@@ -52,7 +52,7 @@ const swaggerOptions = {
             }
         ]
     },
-    apis: ['./router/login/loginRouter.js'],
+    apis: ['./router/*/*.js', './router/*.js'],
 }
 const swaggerDocs = swaggerJsDoc(swaggerOptions);                      //? Generate swagger docs
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));   //? Serve swagger docs
