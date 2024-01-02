@@ -9,5 +9,5 @@ npm start
 ### [Optional] 
 - Install "Better Comments" Plugin on VS Code
 
-### Show API doc
+### Show API doc[Swagger]
 - Goto: http://localhost:PORT/api-docs/
