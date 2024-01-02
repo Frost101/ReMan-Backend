@@ -6,5 +6,5 @@ cd ReMan-Backend
 npm install
 npm start
 ```
-###
-[Optional]: Install "Better Comments" Plugin on VS Code
+###[Optional] 
+- Install "Better Comments" Plugin on VS Code
