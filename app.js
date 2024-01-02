@@ -3,6 +3,8 @@ const express = require('express');
 const dotenv = require('dotenv');                  //? For environment variables
 const path = require('path');                      //? To handle file paths
 const cookieParser = require('cookie-parser');     //? To parse cookies
+const swaggerUI = require('swagger-ui-express');   //? To serve swagger docs
+const swaggerJsDoc = require('swagger-jsdoc');     //? To generate swagger docs
 
 
 
@@ -31,6 +33,29 @@ app.use(express.urlencoded({ extended: true }));     //? To Parse URL encoded da
 //* Set view engine
 //* Now you can render ejs files but we will use React so we wont be needing it hopefully
 app.set('view engine', 'ejs');      
+
+
+
+//* Swagger Docs
+//* Swagger docs will be served at /api-docs
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'ReMan API',
+            version: '1.0.0',
+            description: 'Express API for ReMan',
+        },
+        servers: [
+            {
+                url: `http://localhost:${process.env.PORT}`
+            }
+        ]
+    },
+    apis: ['./router/*/*.js', './router/*.js'],
+}
+const swaggerDocs = swaggerJsDoc(swaggerOptions);                      //? Generate swagger docs
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));   //? Serve swagger docs
 
 
 
