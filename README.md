@@ -6,8 +6,9 @@ cd ReMan-Backend
 npm install
 npm start
 ```
-### [Optional] 
-- Install "Better Comments" Plugin on VS Code
 
 ### Show API doc[Swagger]
 - Goto: http://localhost:PORT/api-docs/
+
+### [Optional] 
+- Install "Better Comments" Plugin on VS Code
