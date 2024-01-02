@@ -8,3 +8,6 @@ npm start
 ```
 ### [Optional] 
 - Install "Better Comments" Plugin on VS Code
+
+### Swagger
+- Goto: http://localhost:PORT/api-docs/
