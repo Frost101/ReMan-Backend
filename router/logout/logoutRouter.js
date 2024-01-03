@@ -83,7 +83,7 @@ const logoutRouter = express.Router();
 
 
 
-logoutRouter.delete('/doLogOut', doLogout);
+logoutRouter.post('/doLogOut', doLogout);
 
 
 module.exports = logoutRouter;
