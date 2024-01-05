@@ -9,13 +9,13 @@ npm start
 ```
 
 ### Server
-- 13.126.115.126:3000
+- 3.109.184.180:3000
 <br>
 For Example:
-13.126.115.126:3000/api-docs
+3.109.184.180:3000/api-docs
 
 ### Show API doc[Swagger]
-- Goto: 13.126.115.126:3000/api-docs
+- Goto: 3.109.184.180:3000/api-docs
 
 ### Clear the ports
 ```
