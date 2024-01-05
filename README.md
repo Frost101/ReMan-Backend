@@ -1,4 +1,5 @@
 # ReMan-Backend
+
 ### How to run
 ```
 git clone <link>
@@ -7,8 +8,13 @@ npm install
 npm start
 ```
 
+### Server
+- 13.126.115.126:3000
+For Example:
+13.126.115.126:3000/api-docs
+
 ### Show API doc[Swagger]
-- Goto: http://localhost:PORT/api-docs/
+- Goto: 13.126.115.126:3000/api-docs
 
 ### Clear the ports
 ```
