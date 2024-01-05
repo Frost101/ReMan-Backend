@@ -1,7 +1,6 @@
+//* Array of products
 function getOnSaleProducts(req, res) {
-
-    //* Array of products
-    res.json({
+    let output = {
         products: [{
             PID: 123456,
             MID: 123456,
@@ -31,9 +30,52 @@ function getOnSaleProducts(req, res) {
             unit: 'L',
         }
     ]
-    });
+    };
+
+    res.json(output);
 }
+
+
+
+function getAllCategories(req, res) {
+    let output = {
+        categories: [{
+            categoryName: 'Beverage',
+            categoryImage: 'public/images/beverage.jpg',
+        },
+        {
+            categoryName: 'Dairy',
+            categoryImage: 'public/images/dairy.jpg',
+        }
+    ]
+    };
+
+    res.json(output);
+}
+
+
+
+
+function getRecommendedCategories(req, res) {
+    let output = {
+        categories: [{
+            categoryName: 'Beverage',
+            categoryImage: 'public/images/beverage.jpg',
+        },
+        {
+            categoryName: 'Dairy',
+            categoryImage: 'public/images/dairy.jpg',
+        }
+    ]
+    };
+
+    res.json(output);
+}
+
+
 
 module.exports = {
     getOnSaleProducts,
+    getRecommendedCategories,
+    getAllCategories,
 }

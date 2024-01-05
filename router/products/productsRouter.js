@@ -2,7 +2,11 @@
 const express = require('express');
 
 //* Internal imports
-const {getOnSaleProducts} = require('../../controllers/products/productsController');
+const {
+        getOnSaleProducts,
+        getRecommendedCategories,    
+        getAllCategories,
+    } = require('../../controllers/products/productsController');
 
 
 //* Initialize router
@@ -28,7 +32,7 @@ const productsRouter = express.Router();
 *     description: Submit Email and Password to login and get JWT token
 *     responses:
 *        200:
-*          description: A User object
+*          description: An array of products
 *          response-body:
 *          content:
 *            application/json:
@@ -86,6 +90,97 @@ const productsRouter = express.Router();
 *          description: Internal server error
 */
 productsRouter.get('/onSale', getOnSaleProducts);
+
+
+
+
+/**
+* @swagger
+* /api/products/allCategories:
+*   get:
+*     tags: [Products]
+*     description: Get all the available product categories and their images
+*     responses:
+*        200:
+*          description: An array of categories
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  products:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        categoryName:
+*                          type: string
+*                          example: Beverage
+*                        categoryImage:
+*                          type: string
+*                          example: public/images/beverage.jpg      
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+productsRouter.get('/allCategories', getAllCategories);
+
+
+
+/**
+* @swagger
+* /api/products/recommendedCategories:
+*   post:
+*     tags: [Products]
+*     description: If SID is provided, returns recommended categories for that SHOP/Retailer. If SID is not provided, returns globally popular categories.
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - SID
+*            properties: 
+*              SID:
+*                type: integer
+*                default: 123456
+*     responses:
+*        200:
+*          description: An array of categories
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  products:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        categoryName:
+*                          type: string
+*                          example: Beverage
+*                        categoryImage:
+*                          type: string
+*                          example: public/images/beverage.jpg      
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+productsRouter.post('/recommendedCategories', getRecommendedCategories);
 
 
 module.exports = productsRouter;
