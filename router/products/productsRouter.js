@@ -29,7 +29,7 @@ const productsRouter = express.Router();
 * /api/products/onSale:
 *   get:
 *     tags: [Products]
-*     description: Submit Email and Password to login and get JWT token
+*     description: Get all the products that are on sale
 *     responses:
 *        200:
 *          description: An array of products
