@@ -3,6 +3,7 @@ const express = require('express');
 
 //* Internal imports
 const { doLogin } = require('../../controllers/login/loginController');
+const { log } = require('console');
 
 
 //* Initialize router
