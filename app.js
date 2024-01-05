@@ -117,3 +117,4 @@ createPerson()
         await prisma.$disconnect();
         process.exit(1);
     });
+
