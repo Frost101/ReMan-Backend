@@ -11,8 +11,10 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model person {
-  pid       String   @id @default(cuid())
+model user {
+  id        String   @id @default(uuid())
+  email     String   @unique
   name      String
-  createdAt DateTime @default(now())  
+  password  String
+  createdAt DateTime @default(now())
 }

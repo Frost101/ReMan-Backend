@@ -8,7 +8,8 @@ const cookieParser = require('cookie-parser');     //? To parse cookies
 const swaggerUI = require('swagger-ui-express');   //? To serve swagger docs
 const swaggerJsDoc = require('swagger-jsdoc');     //? To generate swagger docs
 
-
+// testing auth
+const authRoutes = require('./router/common/authRoutes.js');
 
 //* Internal imports
 const { notFoundHandler, errorHandler } = require('./middlewares/common/errorHandler.js');
@@ -34,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));     //? To Parse URL encoded da
 
 //* Set view engine
 //* Now you can render ejs files but we will use React so we wont be needing it hopefully
-app.set('view engine', 'ejs');      
+app.set('view engine', 'ejs');
 
 
 
@@ -88,33 +89,18 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 
-
 //* Start server
 app.listen(process.env.PORT, () => {
     console.log(`Server started. Listening on port ${process.env.PORT}`);
     console.log(`http://localhost:${process.env.PORT}`);
 });
 
+app.use(authRoutes);
 
-async function createPerson() {
-    // const person = await prisma.person.create({
-    //       data: {
-    //         name: 'Abrar',
-    //       }  
-    // });
+app.get('/', (req, res) => {
+    res.render('home');
+});
 
-    const person = await prisma.person.findMany();
-
-    console.log(person);
-}
-
-createPerson()
-    .then(async () => {
-        await prisma.$disconnect();
-    })
-    .catch(async (e) => {
-        console.error(e);
-        await prisma.$disconnect();
-        process.exit(1);
-    });
-
+app.get('/smoothies', (req, res) => {
+    res.render('smoothies');
+});
