@@ -4,6 +4,7 @@ function doLogin(req, res) {
     });
 }
 
+
 module.exports = {
-    doLogin
+    doLogin,
 }
