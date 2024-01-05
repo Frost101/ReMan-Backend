@@ -1,5 +1,7 @@
 //* External imports
 const express = require('express');
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
 const dotenv = require('dotenv');                  //? For environment variables
 const path = require('path');                      //? To handle file paths
 const cookieParser = require('cookie-parser');     //? To parse cookies
@@ -94,4 +96,24 @@ app.listen(process.env.PORT, () => {
 });
 
 
+async function createPerson() {
+    // const person = await prisma.person.create({
+    //       data: {
+    //         name: 'Abrar',
+    //       }  
+    // });
 
+    const person = await prisma.person.findMany();
+
+    console.log(person);
+}
+
+createPerson()
+    .then(async () => {
+        await prisma.$disconnect();
+    })
+    .catch(async (e) => {
+        console.error(e);
+        await prisma.$disconnect();
+        process.exit(1);
+    });
