@@ -9,6 +9,7 @@ const passwordRouter = require('./password/passwordRouter');
 const retailerRouter = require('./retailer/retailerRouter');
 const manufacturerRouter = require('./manufacturer/manRouter');
 const commonRouter = require('./common/commonRouter');
+const productsRouter = require('./products/productsRouter');
 
 
 
@@ -29,6 +30,8 @@ APIrouter.use('/password', passwordRouter);
 APIrouter.use('/retailer', retailerRouter);
 
 APIrouter.use('/manufacturer', manufacturerRouter);
+
+APIrouter.use('/products', productsRouter);
 
 APIrouter.use('/common', commonRouter);
 
