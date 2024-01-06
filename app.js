@@ -1,12 +1,16 @@
 //* External imports
 const express = require('express');
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
 const dotenv = require('dotenv');                  //? For environment variables
 const path = require('path');                      //? To handle file paths
 const cookieParser = require('cookie-parser');     //? To parse cookies
 const swaggerUI = require('swagger-ui-express');   //? To serve swagger docs
 const swaggerJsDoc = require('swagger-jsdoc');     //? To generate swagger docs
 
-
+// testing auth
+const authRoutes = require('./router/common/authRoutes.js');
+const { requireAuth, checkUser } = require('./middlewares/common/authMiddleware.js');
 
 //* Internal imports
 const { notFoundHandler, errorHandler } = require('./middlewares/common/errorHandler.js');
@@ -32,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));     //? To Parse URL encoded da
 
 //* Set view engine
 //* Now you can render ejs files but we will use React so we wont be needing it hopefully
-app.set('view engine', 'ejs');      
+app.set('view engine', 'ejs');
 
 
 
@@ -57,6 +61,7 @@ const swaggerOptions = {
     },
     apis: ['./router/*/*.js', './router/*.js'],
 }
+
 const swaggerDocs = swaggerJsDoc(swaggerOptions);                      //? Generate swagger docs
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));   //? Serve swagger docs
 
@@ -86,12 +91,14 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 
-
 //* Start server
 app.listen(process.env.PORT, () => {
     console.log(`Server started. Listening on port ${process.env.PORT}`);
     console.log(`http://localhost:${process.env.PORT}`);
 });
 
+app.use(authRoutes);
 
-
+app.get('*', checkUser);
+app.get('/', (req, res) => res.render('home'));
+app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
