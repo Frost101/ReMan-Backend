@@ -28,13 +28,14 @@ const checkUser = (req, res, next) => {
             if (err) {
                 res.locals.user = null;
                 next();
-            } else {
+            } else {                
                 let user = await prisma.person.findUnique({
                     where: {
-                        id: decodedToken
+                        id: decodedToken.id
                     }
                 });
                 res.locals.user = user;
+                res.locals.user.password = null;
                 next();
             }
         });

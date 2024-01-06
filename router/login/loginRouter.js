@@ -12,6 +12,17 @@ const loginRouter = express.Router();
 
 
 //* Routes
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 /**
  * @swagger
  * tags:
@@ -25,6 +36,8 @@ const loginRouter = express.Router();
 *   post:
 *     tags: [Login]
 *     description: Submit Email and Password to login and get JWT token
+*     security:
+*       - bearerAuth: []
 *     requestBody:
 *      required: true
 *      content:
