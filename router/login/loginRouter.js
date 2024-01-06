@@ -36,8 +36,7 @@ const loginRouter = express.Router();
 *   post:
 *     tags: [Login]
 *     description: Submit Email and Password to login and get JWT token
-*     security:
-*       - cookieAuth: []
+*     security: []
 *     requestBody:
 *      required: true
 *      content:
@@ -66,6 +65,11 @@ const loginRouter = express.Router();
 *                  dummyMessage:
 *                    type: string
 *                    default: Dummy Message
+*          headers:
+*            Set-Cookie:
+*              schema:
+*                type: string
+*                example: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNjI5MjU0NjY3LCJleHAi; Path=/; Expires=Thu, 19 Aug 2021 12:27:47 GMT; HttpOnly
 *        400:
 *          description: Invalid Username or Password
 *        404:
