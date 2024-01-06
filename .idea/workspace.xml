@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="394da7ec-88d0-4934-83f0-787576aaaa9e" name="Changes" comment="added postgresDB and tested prisma ORM">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/common/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/common/authController.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +37,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "pg-prisma",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -71,6 +71,7 @@
       <workItem from="1704469742596" duration="4429000" />
       <workItem from="1704475278610" duration="548000" />
       <workItem from="1704475847082" duration="233000" />
+      <workItem from="1704543140415" duration="30000" />
     </task>
     <task id="LOCAL-00001" summary="added postgresDB and tested prisma ORM">
       <option name="closed" value="true" />

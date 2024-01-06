@@ -10,6 +10,7 @@ const swaggerJsDoc = require('swagger-jsdoc');     //? To generate swagger docs
 
 // testing auth
 const authRoutes = require('./router/common/authRoutes.js');
+const { requireAuth, checkUser } = require('./middlewares/common/authMiddleware.js');
 
 //* Internal imports
 const { notFoundHandler, errorHandler } = require('./middlewares/common/errorHandler.js');
@@ -97,10 +98,6 @@ app.listen(process.env.PORT, () => {
 
 app.use(authRoutes);
 
-app.get('/', (req, res) => {
-    res.render('home');
-});
-
-app.get('/smoothies', (req, res) => {
-    res.render('smoothies');
-});
+app.get('*', checkUser);
+app.get('/', (req, res) => res.render('home'));
+app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
