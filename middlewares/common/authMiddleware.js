@@ -34,8 +34,19 @@ const checkUser = (req, res, next) => {
                         id: decodedToken.id
                     }
                 });
-                res.locals.user = user;
-                res.locals.user.password = null;
+
+                if(user) {
+                    res.locals.user = {
+                        name: user.name,                    
+                    }
+                }
+                
+                else {
+                    res.locals.user = null;   
+                    res.cookie('jwt', '', { maxAge: 1 });
+                    res.redirect('/login');             
+                }
+
                 next();
             }
         });
