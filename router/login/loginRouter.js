@@ -69,7 +69,7 @@ const loginRouter = express.Router();
 *            Set-Cookie:
 *              schema:
 *                type: string
-*                example: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNjI5MjU0NjY3LCJleHAi; Path=/; Expires=Thu, 19 Aug 2021 12:27:47 GMT; HttpOnly
+*                example: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc2MzFmOTJhLTA4YTMtNGU0MC05ZjA4LTgxMWEwZmJmM2VhNiIsImlhdCI6MTcwNDU1NjgyMiwiZXhwIjoxNzA0ODE2MDIyfQ.FH_uNhKhyrSnxY999aNHq3DXiGQBPArZVM9GwV9KfuQ; Path=/; Expires=Tue, 09 Jan 2024 16:00:22 GMT; HttpOnly
 *        400:
 *          description: Invalid Username or Password
 *        404:
