@@ -17,10 +17,10 @@ const loginRouter = express.Router();
  * @swagger
  * components:
  *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
+ *     cookieAuth:
+ *       type: apiKey
+ *       in: cookie
+ *       name: jwt
  */
 
 /**
@@ -37,7 +37,7 @@ const loginRouter = express.Router();
 *     tags: [Login]
 *     description: Submit Email and Password to login and get JWT token
 *     security:
-*       - bearerAuth: []
+*       - cookieAuth: []
 *     requestBody:
 *      required: true
 *      content:
