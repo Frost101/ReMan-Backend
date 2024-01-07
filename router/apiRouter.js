@@ -12,6 +12,7 @@ const commonRouter = require('./common/commonRouter');
 const productsRouter = require('./products/productsRouter');
 const cartRouter = require('./cart/cartRouter');
 const notificationRouter = require('./notification/notificationRouter');
+const batchRouter = require('./batch/batchRouter');
 const { requireAuth } = require('../middlewares/common/authMiddleware');
 
 
@@ -41,6 +42,8 @@ APIrouter.use('/common', commonRouter);
 APIrouter.use('/cart', cartRouter);
 
 APIrouter.use('/notification', notificationRouter);
+
+APIrouter.use('/batch', batchRouter);
 
 
 module.exports = APIrouter;
