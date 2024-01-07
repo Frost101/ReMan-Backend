@@ -13,7 +13,7 @@ const productsRouter = require('./products/productsRouter');
 const cartRouter = require('./cart/cartRouter');
 const notificationRouter = require('./notification/notificationRouter');
 const inventoryRouter = require('./inventory/inventoryRouter');
-// const productionHouseRouter = require('./productionhouse/productionHouseRouter');
+const productionHouseRouter = require('./productionhouse/productionHouseRouter');
 const batchRouter = require('./batch/batchRouter');
 const vouchersRouter = require('./vouchers/vouchersRouter');
 const leaseInventoryRouter = require('./leaseInventory/leaseInventoryRouter');
@@ -51,7 +51,7 @@ APIrouter.use('/notification', notificationRouter);
 
 APIrouter.use('/inventory', inventoryRouter);
 
-// APIrouter.use('/productionhouse', productionHouseRouter);
+APIrouter.use('/productionhouse', productionHouseRouter);
 
 APIrouter.use('/batch', batchRouter);
 
