@@ -102,8 +102,8 @@ batchRouter.post('/batchList', getBatchList);
 *                type: boolean
 *                default: true
 *              Sale:
-*                type: boolean
-*                default: false
+*                type: double
+*                default: 0
 *     responses:
 *        200:
 *          description: Successfully updated
@@ -160,8 +160,8 @@ batchRouter.put('/batchScreening', batchScreening);
 *                type: boolean
 *                default: true
 *              sale:
-*                type: boolean
-*                default: false
+*                type: double
+*                default: 0
 *     responses:
 *        200:
 *          description: Successfully added
