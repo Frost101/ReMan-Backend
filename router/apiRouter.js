@@ -16,6 +16,8 @@ const inventoryRouter = require('./inventory/inventoryRouter');
 // const productionHouseRouter = require('./productionhouse/productionHouseRouter');
 const batchRouter = require('./batch/batchRouter');
 const vouchersRouter = require('./vouchers/vouchersRouter');
+
+
 const { requireAuth } = require('../middlewares/common/authMiddleware');
 
 
