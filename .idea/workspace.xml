@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="394da7ec-88d0-4934-83f0-787576aaaa9e" name="Changes" comment="added postgresDB and tested prisma ORM">
-      <change beforePath="$PROJECT_DIR$/controllers/common/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/common/authController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +20,34 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "history": [
+    {
+      "state": "OPEN",
+      "assignee": "sabahcsxgawd",
+      "author": "sabahcsxgawd"
+    },
+    {
+      "state": "MERGED",
+      "author": "sabahcsxgawd"
+    },
+    {
+      "state": "MERGED",
+      "assignee": "ferb97",
+      "author": "sabahcsxgawd"
+    }
+  ],
+  "lastFilter": {
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="aae13d21-6ba5-4d36-bae4-a51c43b661ff" />
+        <option name="url" value="https://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@github.com/Frost101/ReMan-Backend.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -37,14 +65,15 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "pg-prisma",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/media/sabah/269CFD019CFCCC75/Level 4 Term 1/Sessional/CSE 408 Software Development/ReMan-Backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "npm.start.executor": "Run",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "com.github.copilot.settings.ApplicationConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -72,6 +101,9 @@
       <workItem from="1704475278610" duration="548000" />
       <workItem from="1704475847082" duration="233000" />
       <workItem from="1704543140415" duration="30000" />
+      <workItem from="1704563004586" duration="4000" />
+      <workItem from="1704563023224" duration="105000" />
+      <workItem from="1704563155468" duration="1284000" />
     </task>
     <task id="LOCAL-00001" summary="added postgresDB and tested prisma ORM">
       <option name="closed" value="true" />

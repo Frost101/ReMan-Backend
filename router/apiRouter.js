@@ -15,6 +15,7 @@ const notificationRouter = require('./notification/notificationRouter');
 const inventoryRouter = require('./inventory/inventoryRouter');
 // const productionHouseRouter = require('./productionhouse/productionHouseRouter');
 const batchRouter = require('./batch/batchRouter');
+const vouchersRouter = require('./vouchers/vouchersRouter');
 const { requireAuth } = require('../middlewares/common/authMiddleware');
 
 
@@ -50,6 +51,8 @@ APIrouter.use('/inventory', inventoryRouter);
 // APIrouter.use('/productionhouse', productionHouseRouter);
 
 APIrouter.use('/batch', batchRouter);
+
+APIrouter.use('/vouchers', vouchersRouter);
 
 
 
