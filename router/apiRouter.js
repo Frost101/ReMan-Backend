@@ -35,7 +35,7 @@ APIrouter.use('/retailer', retailerRouter);
 
 APIrouter.use('/manufacturer', manufacturerRouter);
 
-APIrouter.use('/products', requireAuth, productsRouter);
+APIrouter.use('/products', productsRouter);
 
 APIrouter.use('/common', commonRouter);
 
