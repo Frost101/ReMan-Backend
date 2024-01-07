@@ -3,7 +3,7 @@ const express = require('express');
 
 //* Internal imports
 const loginRouter = require('./login/loginRouter');
-const registerRouter = require('./register/registerRouter');
+const registrationRouter = require('./registration/registrationRouter');
 const logoutRouter = require('./logout/logoutRouter');
 const passwordRouter = require('./password/passwordRouter');
 const retailerRouter = require('./retailer/retailerRouter');
@@ -31,7 +31,7 @@ const APIrouter = express.Router();
 //* Routes
 APIrouter.use('/login', loginRouter);
 
-APIrouter.use('/register', registerRouter);
+APIrouter.use('/registration', registrationRouter);
 
 APIrouter.use('/logout', logoutRouter);
 
