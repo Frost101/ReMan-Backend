@@ -82,9 +82,8 @@
 things to do while adding api doc -->
     0. git pull in main branch, npm install, checkout to a new branch
     1. make a controller file && export those
-    2. make a router file and import controller && export those
+    2. make a router file and import controller && export router
     3. add the router in APIrouter.js & use it
-    4. 
 
 
 
