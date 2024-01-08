@@ -171,7 +171,7 @@ cartRouter.put('/updateCart', updateCartInfo);
 /**
 * @swagger
 * /api/cart/addToCart:
-*   put:
+*   post:
 *     tags: [Cart]
 *     description: Add to cart information
 *     requestBody:
@@ -221,7 +221,7 @@ cartRouter.put('/updateCart', updateCartInfo);
 *        default:
 *          description: Internal server error
 */
-cartRouter.put('/addToCart', addToCartInfo);
+cartRouter.post('/addToCart', addToCartInfo);
 
 
 

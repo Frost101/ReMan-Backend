@@ -15,6 +15,7 @@ const productionHouseRouter = require('./productionhouse/productionHouseRouter')
 const batchRouter = require('./batch/batchRouter');
 const vouchersRouter = require('./vouchers/vouchersRouter');
 const leaseInventoryRouter = require('./leaseInventory/leaseInventoryRouter');
+const orderRouter = require('./order/orderRouter');
 const authenticationRouter = require('./authentication/authenticationRouter');
 const paymentRouter = require('./payment/paymentRouter');
 const adminRouter = require('./admin/adminRouter');
@@ -57,10 +58,13 @@ APIrouter.use('/vouchers', vouchersRouter);
 
 APIrouter.use('/leaseInventory', leaseInventoryRouter);
 
+APIrouter.use('/order', orderRouter);
+
 APIrouter.use('/authentication', authenticationRouter);
 
 APIrouter.use('/payment', paymentRouter);
 
 APIrouter.use('/admin', adminRouter);
+
 
 module.exports = APIrouter;
