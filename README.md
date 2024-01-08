@@ -19,6 +19,7 @@ We followed the MVC Architecture for this project
 - Frontend : `React`, `HTML`, `CSS`, `JS`
 - Backend : `Node JS`, `Express JS`
 - Database : `PostgreSQL`
+- ORM: Prisma
 - Payment Gateway: `sslcommerz`
 - Miscellaneous : `Swagger`, `Postman`
 
