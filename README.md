@@ -12,8 +12,7 @@ The frontend of the project can be found in the following repository : [ReMan-Fr
 # **Project Architecture**
 
 We followed the MVC Architecture for this project
-
-![](public/Architecture/architecture.png)
+![](public/Architecture/architecture1.png)
 
 # **Tech Stack & Tools**
 
