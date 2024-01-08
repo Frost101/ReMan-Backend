@@ -21,6 +21,11 @@ We followed the MVC Architecture for this project
 - Database : `PostgreSQL`
 - Miscellaneous : `Swagger`, `Postman`
 
+# **API Documentation**
+
+Swagger was used to document the API endpoints. The documentation can be found here : [3.111.213.171:3000/api-docs](3.111.213.171:3000/api-docs)
+
+
 ### Clear the ports
 ```
 sudo killall -9 node
