@@ -32,54 +32,57 @@ const orderRouter = express.Router();
 *           schema:
 *            type: object
 *            required:
-*              - MID
-*              - InventoryName
-*              - Capacity
-*              - InventoryType
-*              - HouseNumber
-*              - Street
-*              - ZIP
-*              - Thana
-*              - Division
-*              - AddressDetails
-*              - image
+*              - SID
+*              - OrderDate
+*              - TotalPrice
+*              - OrderFragments
 *            properties: 
-*              MID:
+*              SID:
 *                type: integer
-*                default: 123412
-*              InventoryName:
+*                default: 123456
+*              OrderDate:
 *                type: string
-*                default: Shahi House
-*              Capacity:
-*                type: double
-*                default: 2301
-*              InventoryType:
-*                type: string
-*                default: Cold Stoarge
-*              HouseNumber:
+*                default: 09/08/2023
+*              TotalPrice:
 *                type: integer
-*                default: 120
-*              Street:
-*                type: string
-*                default: Rankin Street
-*              ZIP:
-*                type: integer
-*                default: 6200
-*              Thana:
-*                type: string
-*                default: Tikatuli
-*              Division:
-*                type: string
-*                default: Dhaka
-*              AddressDetails:
-*                type: string
-*                default: Near the jame mosjid
-*              image:
-*                type: string
-*                default: public/images/shahi_house.jpg
+*                default: 230000
+*              OrderFragments:
+*                type: array
+*                items:
+*                  type: object
+*                  properties:
+*                    MID:
+*                     type: integer
+*                     example: 123412
+*                    RawPrice:
+*                     type: integer
+*                     example: 230000
+*                    DeliveryCharge:
+*                     type: integer
+*                     example: 500
+*                    ReducedAmount:
+*                     type: integer
+*                     example: 500
+*                    FinalPrice:
+*                     type: integer
+*                     example: 230000
+*                    products:
+*                     type: array
+*                     items:
+*                      type: object
+*                      properties:
+*                        pid:
+*                          type: integer
+*                          example: 423456
+*                        quantity:
+*                          type: integer
+*                          example: 1000
+*                        price:
+*                          type: integer
+*                          example: 30000
 *     responses:
 *        200:
-*          description: Adding a new inventory successful
+*          description: Adding a new order successful
 *          response-body:
 *          content:
 *            application/json:
@@ -88,7 +91,7 @@ const orderRouter = express.Router();
 *                properties:
 *                  message:
 *                    type: string
-*                    default: adding a new inventory successful     
+*                    default: adding a new order successful     
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
@@ -116,26 +119,47 @@ orderRouter.post('/addOrder', addNewOrder);
 *           schema:
 *            type: object
 *            required:
-*              - IID
+*              - DeliveryStatus
+*              - DeliveryDate
+*              - OrderID
+*              - MID
+*              - BatchQuantities
 *            properties: 
-*              IID:
+*              DeliveryStatus:
+*                type: string
+*                default: delivered
+*              DeliveryDate:
+*                type: string
+*                default: 09/08/2023
+*              OrderID:
+*                type: integer
+*                default: 233412
+*              MID:
 *                type: integer
 *                default: 123412
+*              BatchQuantities:
+*                type: array
+*                items:
+*                  type: object
+*                  properties:
+*                    BID:
+*                     type: integer
+*                     example: 233412
+*                    Quantity:
+*                     type: integer
+*                     example: 1000
 *     responses:
 *        200:
-*          description: Current status of the inventory
+*          description: Updating Order Status and Assigning Batches to an Order
 *          response-body:
 *          content:
 *            application/json:
 *              schema:
 *                type: object
 *                properties:
-*                  empty:
-*                    type: boolean
-*                    default: false 
-*                  owned:
-*                    type: boolean
-*                    default: true 
+*                  message:
+*                    type: string
+*                    default: Order Status Update and Assigning Batches Successful 
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
@@ -163,23 +187,46 @@ orderRouter.put('/deliveryStatus', updateDeliveryStatus);
 *           schema:
 *            type: object
 *            required:
-*              - IID
+*              - SID
 *            properties: 
-*              IID:
+*              SID:
 *                type: integer
-*                default: 123412
+*                default: 123456
 *     responses:
 *        200:
-*          description: Removing an inventory successfully
+*          description: An array of Orders of a Retailer
 *          response-body:
 *          content:
 *            application/json:
 *              schema:
 *                type: object
 *                properties:
-*                  message:
-*                    type: string
-*                    default: Inventory removed successfully  
+*                  orders:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        oid:
+*                          type: integer
+*                          example: 233412
+*                        orderDate:
+*                          type: string
+*                          example: 03/08/2023
+*                        deliveryDate:
+*                          type: string
+*                          example: 17/08/2023
+*                        totalPrice:
+*                          type: integer
+*                          example: 230000
+*                        paymentStatus:
+*                          type: string
+*                          example: Paid
+*                        deliveryStatus:
+*                          type: string
+*                          example: Delivered
+*                        paymentMethod:
+*                          type: string
+*                          example: COD  
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
@@ -214,45 +261,48 @@ orderRouter.post('/retailer', getRetailerOrders);
 *                default: 123434
 *     responses:
 *        200:
-*          description: An array of products' information for each inventory of a manufacturer
+*          description: An array of Orders of a Manufacturer
 *          response-body:
 *          content:
 *            application/json:
 *              schema:
 *                type: object
 *                properties:
-*                  inventories:
+*                  orders:
 *                    type: array
 *                    items:
 *                      type: object
 *                      properties:
-*                        iid:
+*                        oid:
 *                          type: integer
-*                          example: 123412
-*                        inventoryName:
+*                          example: 233412
+*                        shopName:
 *                          type: string
-*                          example: Shahi House
-*                        address:
+*                          example: Hatir Store
+*                        shopImage:
 *                          type: string
-*                          example: 32 Sultan Road, Savar, 6200, Dhaka
-*                        capacity:
+*                          example: public/images/hatir_store.jpg
+*                        shopPhoneNumber:
+*                          type: string
+*                          example: 01787623092
+*                        orderDate:
+*                          type: string
+*                          example: 03/08/2023
+*                        deliveryDate:
+*                          type: string
+*                          example: 17/08/2023
+*                        totalPrice:
 *                          type: integer
-*                          example: 230
-*                        inventoryType:
+*                          example: 230000
+*                        paymentStatus:
 *                          type: string
-*                          example: cold storage
-*                        empty:
-*                          type: boolean
-*                          example: false
-*                        owned:
-*                          type: boolean
-*                          example: true
-*                        image:
+*                          example: Paid
+*                        deliveryStatus:
 *                          type: string
-*                          example: public/images/shahi_house.jpg
-*                        productName:
-*                          type: array
-*                          example: ['potato', 'rice', 'wheat'] 
+*                          example: Delivered
+*                        paymentMethod:
+*                          type: string
+*                          example: COD 
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
