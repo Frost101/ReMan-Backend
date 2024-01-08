@@ -1,7 +1,7 @@
 # **ReMan-Backend**
 # **Project Overview**
 
-Here in `ReMan`, we Connect The `Retailers` and `Manufacturers` through a completely digital platform.
+Here in <b>ReMan</b>, we Connect The <b>Retailers</b> and <b>Manufacturers</b> through a completely digital platform.
 
 
 The backend of the project is deployed on AWS EC2 and can be accessed here : [http://3.111.213.171:3000/](http://3.111.213.171:3000/)
