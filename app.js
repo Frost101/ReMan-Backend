@@ -55,7 +55,7 @@ const swaggerOptions = {
                 url: `http://localhost:${process.env.PORT}`
             },
             {
-                url: 'http://13.126.115.126:3000'
+                url: 'http://3.111.213.171:3000'
             }
         ]
     },
