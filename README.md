@@ -23,7 +23,7 @@ We followed the MVC Architecture for this project
 
 # **API Documentation**
 
-Swagger was used to document the API endpoints. The documentation can be found here : [3.111.213.171:3000/api-docs](3.111.213.171:3000/api-docs)
+Swagger was used to document the API endpoints. The documentation can be found here : [http://3.111.213.171:3000/api-docs](http://3.111.213.171:3000/api-docs)
 
 
 ### Clear the ports
