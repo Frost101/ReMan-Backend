@@ -17,6 +17,7 @@ const vouchersRouter = require('./vouchers/vouchersRouter');
 const leaseInventoryRouter = require('./leaseInventory/leaseInventoryRouter');
 const authenticationRouter = require('./authentication/authenticationRouter');
 const paymentRouter = require('./payment/paymentRouter');
+const adminRouter = require('./admin/adminRouter');
 
 
 const { requireAuth } = require('../middlewares/common/authMiddleware');
@@ -59,5 +60,7 @@ APIrouter.use('/leaseInventory', leaseInventoryRouter);
 APIrouter.use('/authentication', authenticationRouter);
 
 APIrouter.use('/payment', paymentRouter);
+
+APIrouter.use('/admin', adminRouter);
 
 module.exports = APIrouter;
