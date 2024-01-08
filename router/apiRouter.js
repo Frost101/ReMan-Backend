@@ -2,9 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const loginRouter = require('./login/loginRouter');
 const registrationRouter = require('./registration/registrationRouter');
-const logoutRouter = require('./logout/logoutRouter');
 const passwordRouter = require('./password/passwordRouter');
 const retailerRouter = require('./retailer/retailerRouter');
 const manufacturerRouter = require('./manufacturer/manRouter');
@@ -18,6 +16,9 @@ const batchRouter = require('./batch/batchRouter');
 const vouchersRouter = require('./vouchers/vouchersRouter');
 const leaseInventoryRouter = require('./leaseInventory/leaseInventoryRouter');
 const orderRouter = require('./order/orderRouter');
+const authenticationRouter = require('./authentication/authenticationRouter');
+const paymentRouter = require('./payment/paymentRouter');
+const adminRouter = require('./admin/adminRouter');
 
 
 const { requireAuth } = require('../middlewares/common/authMiddleware');
@@ -30,11 +31,8 @@ const APIrouter = express.Router();
 
 
 //* Routes
-APIrouter.use('/login', loginRouter);
 
 APIrouter.use('/registration', registrationRouter);
-
-APIrouter.use('/logout', logoutRouter);
 
 APIrouter.use('/password', passwordRouter);
 
@@ -61,5 +59,12 @@ APIrouter.use('/vouchers', vouchersRouter);
 APIrouter.use('/leaseInventory', leaseInventoryRouter);
 
 APIrouter.use('/order', orderRouter);
+
+APIrouter.use('/authentication', authenticationRouter);
+
+APIrouter.use('/payment', paymentRouter);
+
+APIrouter.use('/admin', adminRouter);
+
 
 module.exports = APIrouter;
