@@ -330,19 +330,11 @@ orderRouter.post('/manufacturer', getManufacturerOrders);
 *           schema:
 *            type: object
 *            required:
-*              - ShiftFromIID
-*              - ShiftToIID
-*              - BID
+*              - OrderID
 *            properties: 
-*              ShiftFromIID:
+*              OrderID:
 *                type: integer
-*                default: 123412
-*              ShiftToIID:
-*                type: integer
-*                default: 123411
-*              BID:
-*                type: array
-*                default: [313234, 292931, 131123]
+*                default: 233412
 *     responses:
 *        200:
 *          description: Product batches shifted from one inventory to other inventory successfully
@@ -352,9 +344,70 @@ orderRouter.post('/manufacturer', getManufacturerOrders);
 *              schema:
 *                type: object
 *                properties:
-*                  message:
+*                  orderDate:
 *                    type: string
-*                    default: Batches shifted to other inventory successfully   
+*                    default: 03/08/2023
+*                  totalPrice:
+*                    type: integer
+*                    default: 230000
+*                  paymentStatus:
+*                    type: string
+*                    default: Paid
+*                  deliveryStatus:
+*                    type: string
+*                    default: Delivered
+*                  paymentMethod:
+*                    type: string
+*                    default: COD
+*                  orderFragments:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        manufacturerName:
+*                          type: string
+*                          example: Keya
+*                        manufacturerLogo:
+*                          type: string
+*                          example: public/images/keya.jpg
+*                        deliveryDate:
+*                          type: string
+*                          example: 17/08/2023
+*                        rawPrice:
+*                          type: integer
+*                          example: 115000
+*                        deliveryCharge:
+*                          type: integer
+*                          example: 500
+*                        reducedAmount:
+*                          type: integer
+*                          example: 500
+*                        finalPrice:
+*                          type: integer
+*                          example: 115000
+*                        paymentStatus:
+*                          type: string
+*                          example: Paid
+*                        deliveryStatus:
+*                          type: string
+*                          example: Delivered
+*                        products:
+*                          type: array
+*                          items:
+*                            type: object
+*                            properties:
+*                              productName:
+*                                type: string
+*                                example: Keya Soap
+*                              image:
+*                                type: string
+*                                example: public/images/keya_soap.jpg
+*                              quantity:
+*                                type: integer
+*                                example: 2000
+*                              price:
+*                                type: integer
+*                                example: 60000  
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
@@ -383,10 +436,14 @@ orderRouter.post('/retailer/singleOrder', getRetailerOrderDetails);
 *            type: object
 *            required:
 *              - MID
+*              - OrderID
 *            properties: 
 *              MID:
 *                type: integer
 *                default: 123434
+*              OrderID:
+*                type: integer
+*                default: 233412
 *     responses:
 *        200:
 *          description: An array of products' information for each inventory of a manufacturer
@@ -396,38 +453,59 @@ orderRouter.post('/retailer/singleOrder', getRetailerOrderDetails);
 *              schema:
 *                type: object
 *                properties:
-*                  inventories:
-*                    type: array
-*                    items:
-*                      type: object
-*                      properties:
-*                        iid:
+*                        shopName:
+*                          type: string
+*                          example: Hatir Store
+*                        shopImage:
+*                          type: string
+*                          example: public/images/hatir_store.jpg
+*                        shopPhoneNumber:
+*                          type: string
+*                          example: 01787623092
+*                        orderDate:
+*                          type: string
+*                          example: 03/08/2023
+*                        deliveryDate:
+*                          type: string
+*                          example: 17/08/2023
+*                        rawPrice:
 *                          type: integer
-*                          example: 123412
-*                        inventoryName:
-*                          type: string
-*                          example: Shahi House
-*                        address:
-*                          type: string
-*                          example: 32 Sultan Road, Savar, 6200, Dhaka
-*                        capacity:
+*                          example: 115000
+*                        deliveryCharge:
 *                          type: integer
-*                          example: 230
-*                        inventoryType:
+*                          example: 500
+*                        reducedAmount:
+*                          type: integer
+*                          example: 500
+*                        finalPrice:
+*                          type: integer
+*                          example: 115000
+*                        paymentStatus:
 *                          type: string
-*                          example: cold storage
-*                        empty:
-*                          type: boolean
-*                          example: false
-*                        owned:
-*                          type: boolean
-*                          example: true
-*                        image:
+*                          example: Paid
+*                        deliveryStatus:
 *                          type: string
-*                          example: public/images/shahi_house.jpg
-*                        productName:
+*                          example: Delivered
+*                        paymentMethod:
+*                          type: string
+*                          example: COD
+*                        products:
 *                          type: array
-*                          example: ['potato', 'rice', 'wheat'] 
+*                          items:
+*                            type: object
+*                            properties:
+*                              productName:
+*                                type: string
+*                                example: Keya Soap
+*                              image:
+*                                type: string
+*                                example: public/images/keya_soap.jpg
+*                              quantity:
+*                                type: integer
+*                                example: 2000
+*                              price:
+*                                type: integer
+*                                example: 60000 
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
