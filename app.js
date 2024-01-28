@@ -1,5 +1,6 @@
 //* External imports
 const express = require('express');
+const cors = require('cors');
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const dotenv = require('dotenv');                  //? For environment variables
@@ -28,7 +29,7 @@ dotenv.config();
 const app = express();
 
 
-
+app.use(cors());
 app.use(express.json());                             //? To Parse JSON objects in the body
 app.use(express.urlencoded({ extended: true }));     //? To Parse URL encoded data(form data) in the body. And {extended: true} parse query data
 
@@ -69,6 +70,7 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));   //? Serve
 
 //* set static public folder. Users can access files in public folder directly
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/.well-known/pki-validation')));
 
 
 
