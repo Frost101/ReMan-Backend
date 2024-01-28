@@ -35,8 +35,8 @@ async function retailerLogin(req,res){
 
 
 async function manufacturerLogin(req,res){
-    const email = 'ruchi@gmail.com';
-    const pass = '123456';
+    const email = req.body.email;
+    const pass = req.body.password;
 
     try {
       const user = await prisma.company.findUnique({
