@@ -32,7 +32,7 @@ const registrationRouter = express.Router();
  *             properties:
  *               ShopPhoneNumber:
  *                 type: string
- *                 example: "1234567890"
+ *                 example: "01234567890"
  *               TIN:
  *                 type: string
  *                 example: "TIN123456"
@@ -50,7 +50,7 @@ const registrationRouter = express.Router();
  *                 example: "info@abcelectronics.com"
  *               Password:
  *                 type: string
- *                 example: "securepassword"
+ *                 example: "12345"
  *               ShopImage:
  *                 type: string
  *                 example: "shop_image_url.jpg"
@@ -61,8 +61,8 @@ const registrationRouter = express.Router();
  *                 type: string
  *                 example: "Main Street"
  *               ZIP:
- *                 type: string
- *                 example: "12345"
+ *                 type: integer
+ *                 example: 6200
  *               Thana:
  *                 type: string
  *                 example: "Cityville Thana"
