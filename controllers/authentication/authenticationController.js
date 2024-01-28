@@ -4,8 +4,8 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function retailerLogin(req,res){
-    const phoneNumber = '01700000000';
-    const pass = '12345';
+    const phoneNumber = req.body.phoneNumber;
+    const pass = req.body.password;
 
     try {
       const user = await prisma.shop.findUnique({

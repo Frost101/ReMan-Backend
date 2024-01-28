@@ -38,7 +38,7 @@ const authenticationRouter = express.Router();
 *                example: 01700000000
 *              password:
 *                type: string
-*                example: sdfsdfbasdadjk
+*                example: 12345
 *     responses:
 *        200:
 *          description: Valid user, jwt token generated      
@@ -73,10 +73,10 @@ authenticationRouter.post('/retailer', retailerLogin);
 *            properties: 
 *              email:
 *                type: string
-*                example: abc@gmail.com
+*                example: ruchi@gmail.com
 *              password:
 *                type: string
-*                example: sdfsdfbasdadjk
+*                example: 123456
 *     responses:
 *        200:
 *          description: Valid user, jwt token generated      
