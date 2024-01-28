@@ -69,7 +69,9 @@ model ShopOwner {
 }
 
 model Category {
-  CategoryName String @id(map: "Category_pk") @db.VarChar
+  CategoryName     String   @id(map: "Category_pk") @db.VarChar
+  Image            String?  @db.VarChar
+  PopularityStatus Boolean?
 }
 
 model CompanyOwner {

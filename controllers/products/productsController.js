@@ -1,3 +1,8 @@
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
+
 //* Array of products
 function getOnSaleProducts(req, res) {
     let output = {
@@ -113,8 +118,47 @@ function addNewProduct(req, res) {
 }
 
 
-function addNewCategory(req, res) {
-    res.status(200).end();
+async function addNewCategory(req, res) {
+    try {
+        // Extracting input parameters from the request body
+        const {
+            categoryName,
+            categoryImage,
+        } = req.body;
+
+        // TODO: Perform any necessary validation or business logic
+
+        // TODO: Save details to the database or perform other actions
+        const user = await prisma.category.create({
+            data: {
+              CategoryName: categoryName,
+              Image: categoryImage,
+              PopularityStatus: false,  
+            },
+          });
+
+        // Responding with success
+        res.status(201).json({
+            success: true,
+            message: 'Category created successfully',
+        });
+    } catch (error) {
+        console.error('Error adding category:', error);
+        if ( error.code === 'P2002') {
+            // P2002 is the Prisma error code for unique constraint violation
+            console.error('Duplicate entry error:', error.meta.target);
+            res.status(409).json({
+              success: false,
+              message: 'Conflict: Category with the provided name already exists',
+            });
+        } else {
+            // Responding with server errors
+            res.status(500).json({
+                success: false,
+                message: 'Internal Server Error',
+            });
+        }
+    }
 }
 
 
