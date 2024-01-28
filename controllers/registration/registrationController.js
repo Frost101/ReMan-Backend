@@ -1,4 +1,9 @@
-module.exports.addRetailer = (req, res) => {
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
+
+module.exports.addRetailer = async (req, res) => {
     try {
         // Extracting input parameters from the request body
         const {
@@ -25,6 +30,25 @@ module.exports.addRetailer = (req, res) => {
         // TODO: Perform any necessary validation or business logic
 
         // TODO: Save retailer details to the database or perform other actions
+        const user = await prisma.shop.create({
+            data: {
+              PhoneNumber: ShopPhoneNumber,
+              Name: ShopName,
+              Type: ShopType,
+              tin: TIN,
+              RetailPoints: 0,
+              Email: ShopEmail,
+              Website: Website,
+              Password: Password,
+              Logo: ShopImage,
+              HouseNumber: HouseNumber,
+              Street: Street,
+              zip: ZIP,
+              Thana: Thana,
+              Division: Division,
+              AddressDetails: AddressDetails,
+            },
+          });
 
         // Responding with success
         res.status(201).json({
@@ -33,19 +57,12 @@ module.exports.addRetailer = (req, res) => {
         });
     } catch (error) {
         console.error('Error adding retailer:', error);
-
-        // Responding with client errors
-        if (error instanceof ValidationError) {
-            // Assuming ValidationError is a custom error class for validation errors
-            res.status(400).json({
-                success: false,
-                message: 'Bad Request: Invalid input data',
-            });
-        } else if (error instanceof DuplicateEntryError) {
-            // Assuming DuplicateEntryError is a custom error class for duplicate entry errors
+        if ( error.code === 'P2002') {
+            // P2002 is the Prisma error code for unique constraint violation
+            console.error('Duplicate entry error:', error.meta.target);
             res.status(409).json({
-                success: false,
-                message: 'Conflict: Retailer with the provided data already exists',
+              success: false,
+              message: 'Conflict: Retailer with the provided phone number already exists',
             });
         } else {
             // Responding with server errors
