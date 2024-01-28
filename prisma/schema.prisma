@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,4 +14,73 @@ model person {
   name      String
   password  String
   createdAt DateTime @default(now())
+}
+
+model Shop {
+  Name           String?     @db.VarChar
+  Type           String?     @db.VarChar
+  PhoneNumber    String      @unique(map: "Shop_pk2") @db.VarChar
+  tin            String      @db.VarChar
+  RetailPoints   Int?
+  Website        String?     @db.VarChar
+  Email          String?     @db.VarChar
+  Password       String?     @db.VarChar
+  Logo           String?     @db.VarChar
+  ShopID         String      @id(map: "Shop_pk") @default(uuid()) @db.Uuid
+  HouseNumber    String?     @db.VarChar
+  Street         String?     @db.VarChar
+  zip            Int?
+  Thana          String?     @db.VarChar
+  Division       String?     @db.VarChar
+  AddressDetails String?     @db.VarChar
+  ShopOwner      ShopOwner[]
+}
+
+model Company {
+  mid            String         @id(map: "Company_pk") @default(uuid()) @db.Uuid
+  Name           String?        @db.VarChar
+  PhoneNumber    String?        @db.VarChar
+  tin            Int?
+  Website        String?        @db.VarChar
+  Email          String?        @unique(map: "Company_pk2") @db.VarChar
+  Password       String?        @db.VarChar
+  Logo           String?        @db.VarChar
+  Rating         Float?
+  HouseNumber    String?        @db.VarChar
+  Street         String?        @db.VarChar
+  zip            Int?
+  Thana          String?        @db.VarChar
+  Division       String?        @db.VarChar
+  AddressDetails String?        @db.VarChar
+  CompanyOwner   CompanyOwner[]
+}
+
+model ShopOwner {
+  sid         String    @db.Uuid
+  nid         String    @db.VarChar
+  Name        String?   @db.VarChar
+  Image       String?   @db.VarChar
+  Email       String    @db.VarChar
+  PhoneNumber String?   @db.VarChar
+  dob         DateTime? @db.Date
+  Shop        Shop      @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "Owner_Shop_ShopID_fk")
+
+  @@id([sid, nid], map: "Owner_pk")
+}
+
+model Category {
+  CategoryName String @id(map: "Category_pk") @db.VarChar
+}
+
+model CompanyOwner {
+  mid         String    @db.Uuid
+  nid         String    @db.VarChar
+  Name        String?   @db.VarChar
+  Image       String?   @db.VarChar
+  Email       String    @db.VarChar
+  PhoneNumber String?   @db.VarChar
+  dob         DateTime? @db.Date
+  Company     Company   @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "CompanyOwner_Company_mid_fk")
+
+  @@id([mid, nid], map: "CompanyOwner_pk")
 }

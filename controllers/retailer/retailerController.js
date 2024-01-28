@@ -1,15 +1,61 @@
-function getShopInfo(req, res) {
-    let output = {
-            shopName: 'Reja Store',
-            phoneNumber: ['01988974891', '05776879659'],
-            shopImage: 'public/images/reja_store.jpg',
-            retailPoints: 663,
-            website: 'https://www.reja_store.com',
-            email: 'reja@gmail.com',
-            address: '32 Baker Street, Mymensingh',
-    };
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
 
-    res.json(output);
+const prisma = new PrismaClient();
+
+async function getShopInfo(req, res) {
+  const userId = '549e6a2a-79bf-469b-8eda-5cbc8e85cfb5';
+
+  try {
+    const user = await prisma.shop.findUnique({
+      where: {
+        ShopID: userId,
+      },
+      select: {
+        Name: true,
+        PhoneNumber: true,
+        Logo: true,
+        RetailPoints: true,
+        Website: true,
+        Email: true,
+        HouseNumber: true,
+        Street: true,
+        zip: true,
+        Thana: true,
+        Division: true,
+        AddressDetails: true,
+      },
+    });
+
+    if (user) {   
+      const formattedAddresses = `${user.AddressDetails}, ${user.HouseNumber}, ${user.Street}, ${user.zip}, ${user.Thana}, ${user.Division}`;  
+      res.json({
+        Name: user.Name,
+        PhoneNumber: user.PhoneNumber,
+        Logo: user.Logo,
+        RetailPoints: user.RetailPoints,
+        Website: user.Website,
+        Email: user.Email,
+        Address: formattedAddresses,
+      });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+    // let output = {
+    //         shopName: 'Reja Store',
+    //         phoneNumber: ['01988974891', '05776879659'],
+    //         shopImage: 'public/images/reja_store.jpg',
+    //         retailPoints: 663,
+    //         website: 'https://www.reja_store.com',
+    //         email: 'reja@gmail.com',
+    //         address: '32 Baker Street, Mymensingh',
+    // };
+
+    // res.json(output);
 }
 
 
