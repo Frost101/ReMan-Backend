@@ -42,39 +42,78 @@ function getOnSaleProducts(req, res) {
 
 
 
-function getAllCategories(req, res) {
-    let output = {
-        categories: [{
-            categoryName: 'Beverage',
-            categoryImage: 'public/images/beverage.jpg',
+async function getAllCategories(req, res) {
+  
+    try {
+      const categories = await prisma.category.findMany({
+        select: {
+          CategoryName: true,
+          Image: true,
         },
-        {
-            categoryName: 'Dairy',
-            categoryImage: 'public/images/dairy.jpg',
-        }
-    ]
-    };
+      });
+  
+      if (categories) {   
+        res.status(200).json({ categories});
+      } else {
+        res.status(404).json({ error: 'Categories not found' });
+      }
+    } catch (error) {
+      console.error('Error retrieving Categories:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    // let output = {
+    //     categories: [{
+    //         categoryName: 'Beverage',
+    //         categoryImage: 'public/images/beverage.jpg',
+    //     },
+    //     {
+    //         categoryName: 'Dairy',
+    //         categoryImage: 'public/images/dairy.jpg',
+    //     }
+    // ]
+    // };
 
-    res.json(output);
+    // res.json(output);
 }
 
 
 
 
-function getRecommendedCategories(req, res) {
-    let output = {
-        categories: [{
-            categoryName: 'Beverage',
-            categoryImage: 'public/images/beverage.jpg',
-        },
-        {
-            categoryName: 'Dairy',
-            categoryImage: 'public/images/dairy.jpg',
-        }
-    ]
-    };
+async function getRecommendedCategories(req, res) {
 
-    res.json(output);
+    try {
+        const categories = await prisma.category.findMany({
+          where: {
+            PopularityStatus: true,
+          } , 
+          select: {
+            CategoryName: true,
+            Image: true,
+          },
+        });
+    
+        if (categories) {   
+          res.status(200).json({ categories});
+        } else {
+          res.status(404).json({ error: 'Categories not found' });
+        }
+      } catch (error) {
+        console.error('Error retrieving Categories:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    // let output = {
+    //     categories: [{
+    //         categoryName: 'Beverage',
+    //         categoryImage: 'public/images/beverage.jpg',
+    //     },
+    //     {
+    //         categoryName: 'Dairy',
+    //         categoryImage: 'public/images/dairy.jpg',
+    //     }
+    // ]
+    // };
+
+    // res.json(output);
 }
 
 
