@@ -17,42 +17,48 @@ model person {
 }
 
 model Shop {
-  Name           String?     @db.VarChar
-  Type           String?     @db.VarChar
-  PhoneNumber    String      @unique(map: "Shop_pk2") @db.VarChar
-  tin            String      @db.VarChar
-  RetailPoints   Int?
-  Website        String?     @db.VarChar
-  Email          String?     @db.VarChar
-  Password       String?     @db.VarChar
-  Logo           String?     @db.VarChar
-  ShopID         String      @id(map: "Shop_pk") @default(uuid()) @db.Uuid
-  HouseNumber    String?     @db.VarChar
-  Street         String?     @db.VarChar
-  zip            Int?
-  Thana          String?     @db.VarChar
-  Division       String?     @db.VarChar
-  AddressDetails String?     @db.VarChar
-  ShopOwner      ShopOwner[]
-}
-
-model Company {
-  mid            String         @id(map: "Company_pk") @default(uuid()) @db.Uuid
   Name           String?        @db.VarChar
-  PhoneNumber    String?        @db.VarChar
-  tin            Int?
+  Type           String?        @db.VarChar
+  PhoneNumber    String         @unique(map: "Shop_pk2") @db.VarChar
+  tin            String         @db.VarChar
+  RetailPoints   Int?
   Website        String?        @db.VarChar
-  Email          String?        @unique(map: "Company_pk2") @db.VarChar
+  Email          String?        @db.VarChar
   Password       String?        @db.VarChar
   Logo           String?        @db.VarChar
-  Rating         Float?
+  ShopID         String         @id(map: "Shop_pk") @default(uuid()) @db.Uuid
   HouseNumber    String?        @db.VarChar
   Street         String?        @db.VarChar
   zip            Int?
   Thana          String?        @db.VarChar
   Division       String?        @db.VarChar
   AddressDetails String?        @db.VarChar
-  CompanyOwner   CompanyOwner[]
+  Cart           Cart[]
+  ShopOwner      ShopOwner[]
+  VoucherUsage   VoucherUsage[]
+}
+
+model Company {
+  mid             String            @id(map: "Company_pk") @default(uuid()) @db.Uuid
+  Name            String?           @db.VarChar
+  PhoneNumber     String?           @db.VarChar
+  tin             String?           @db.VarChar
+  Website         String?           @db.VarChar
+  Email           String?           @unique(map: "Company_pk2") @db.VarChar
+  Password        String?           @db.VarChar
+  Logo            String?           @db.VarChar
+  Rating          Float?
+  HouseNumber     String?           @db.VarChar
+  Street          String?           @db.VarChar
+  zip             Int?
+  Thana           String?           @db.VarChar
+  Division        String?           @db.VarChar
+  AddressDetails  String?           @db.VarChar
+  CompanyOwner    CompanyOwner[]
+  Inventory       Inventory[]
+  Product         Product[]
+  ProductionHouse ProductionHouse[]
+  Voucher         Voucher[]
 }
 
 model ShopOwner {
@@ -69,9 +75,10 @@ model ShopOwner {
 }
 
 model Category {
-  CategoryName     String   @id(map: "Category_pk") @db.VarChar
-  Image            String?  @db.VarChar
+  CategoryName     String    @id(map: "Category_pk") @db.VarChar
+  Image            String?   @db.VarChar
   PopularityStatus Boolean?
+  Product          Product[]
 }
 
 model CompanyOwner {
@@ -85,4 +92,128 @@ model CompanyOwner {
   Company     Company   @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "CompanyOwner_Company_mid_fk")
 
   @@id([mid, nid], map: "CompanyOwner_pk")
+}
+
+model Cart {
+  sid      String  @db.Uuid
+  pid      String  @db.Uuid
+  Quantity Int?
+  Price    Float?
+  Product  Product @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "Cart_Product_pid_fk")
+  Shop     Shop    @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "Cart_Shop_ShopID_fk")
+
+  @@id([sid, pid], map: "Cart_pk")
+}
+
+model Inventory {
+  iid            String           @id(map: "Inventory_pk") @default(uuid()) @db.Uuid
+  mid            String           @db.Uuid
+  InventoryName  String?          @db.VarChar
+  Capacity       Float?
+  Type           String?          @db.VarChar
+  Image          String?          @db.VarChar
+  Details        String?          @db.VarChar
+  EmptyStatus    Boolean?
+  OwnerStatus    Boolean?
+  HouseNumber    String?          @db.VarChar
+  Street         String?          @db.VarChar
+  zip            Int?
+  Thana          String?          @db.VarChar
+  Division       String?          @db.VarChar
+  AddressDetails String?          @db.VarChar
+  Company        Company          @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Inventory_Company_mid_fk")
+  InventoryBatch InventoryBatch[]
+}
+
+model InventoryBatch {
+  bid               String    @id(map: "InventoryBatch_pk") @default(uuid()) @db.Uuid
+  pid               String    @db.Uuid
+  iid               String    @db.Uuid
+  ManufacturingDate DateTime? @db.Date
+  ExpiryDate        DateTime? @db.Date
+  Quantity          Int?
+  MarketStatus      Boolean?
+  Sale              Float?
+  Inventory         Inventory @relation(fields: [iid], references: [iid], onDelete: NoAction, onUpdate: NoAction, map: "InventoryBatch_Inventory_iid_fk")
+  Product           Product   @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "InventoryBatch_Product_pid_fk")
+}
+
+model PaymentMethod {
+  Name String  @id(map: "PaymentMethod_pk") @db.VarChar
+  Logo String? @db.VarChar
+}
+
+model Product {
+  pid                            String                 @id(map: "Product_pk") @default(uuid()) @db.Uuid
+  mid                            String                 @db.Uuid
+  CategoryName                   String                 @db.VarChar
+  ProductName                    String                 @db.VarChar
+  Image                          String?                @db.VarChar
+  Weight_volume                  Float?
+  Unit                           String?                @db.VarChar
+  UnitPrice                      Float?
+  Description                    String?                @db.VarChar
+  Rating                         Float?
+  MinQuantityForSale             Int?
+  MinQuantityForDiscount         Int?
+  MinimumDiscount                Float?
+  MaximumDiscount                Float?
+  DiscountRate                   Float?
+  ProductQuantityForDiscountRate Int?
+  Cart                           Cart[]
+  InventoryBatch                 InventoryBatch[]
+  Category                       Category               @relation(fields: [CategoryName], references: [CategoryName], onDelete: NoAction, onUpdate: NoAction, map: "Product_Category_CategoryName_fk")
+  Company                        Company                @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Product_Company_mid_fk")
+  ProductionHouseBatch           ProductionHouseBatch[]
+}
+
+model ProductionHouse {
+  phid                 String                 @id(map: "ProductionHouse_pk") @default(uuid()) @db.Uuid
+  mid                  String                 @db.Uuid
+  ProductionHouseName  String?                @db.VarChar
+  Capacity             Float?
+  Type                 String?                @db.VarChar
+  Image                String?                @db.VarChar
+  Details              String?                @db.VarChar
+  HouseNumber          String?                @db.VarChar
+  Street               String?                @db.VarChar
+  zip                  Int?
+  Thana                String?                @db.VarChar
+  Division             String?                @db.VarChar
+  AddressDetails       String?                @db.VarChar
+  Company              Company                @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "ProductionHouse_Company_mid_fk")
+  ProductionHouseBatch ProductionHouseBatch[]
+}
+
+model ProductionHouseBatch {
+  bid               String          @id(map: "ProductionHouseBatch_pk") @default(uuid()) @db.Uuid
+  pid               String          @db.Uuid
+  phid              String          @db.Uuid
+  ManufacturingDate DateTime?       @db.Date
+  ExpiryDate        DateTime?       @db.Date
+  Quantity          Int?
+  Product           Product         @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "ProductionHouseBatch_Product_pid_fk")
+  ProductionHouse   ProductionHouse @relation(fields: [phid], references: [phid], onDelete: NoAction, onUpdate: NoAction, map: "ProductionHouseBatch_ProductionHouse_phid_fk")
+}
+
+model Voucher {
+  VoucherCode       String         @id(map: "Voucher_pk") @default(uuid()) @db.Uuid
+  mid               String         @db.Uuid
+  VoucherName       String         @db.VarChar
+  VoucherPercentage Float?
+  validity          DateTime?      @db.Date
+  MinPurchase       Float?
+  MaxUsage          Int?
+  Company           Company        @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Voucher_Company_mid_fk")
+  VoucherUsage      VoucherUsage[]
+}
+
+model VoucherUsage {
+  sid         String  @db.Uuid
+  VoucherCode String  @db.Uuid
+  Usage       Int?
+  Shop        Shop    @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "VoucherUsage_Shop_ShopID_fk")
+  Voucher     Voucher @relation(fields: [VoucherCode], references: [VoucherCode], onDelete: NoAction, onUpdate: NoAction, map: "VoucherUsage_Voucher_VoucherCode_fk")
+
+  @@id([sid, VoucherCode], map: "VoucherUsage_pk")
 }
