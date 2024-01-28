@@ -69,6 +69,7 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));   //? Serve
 
 //* set static public folder. Users can access files in public folder directly
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/.well-known/pki-validation')));
 
 
 
