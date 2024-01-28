@@ -14,12 +14,14 @@ async function retailerLogin(req,res){
         },
         select: {
           Password: true,
+          ShopID: true,
         },
       });
   
       if (user) {   
         if(user.Password == pass){
-           res.status(200).json({ message: 'Login successful' });
+           res.status(200).json({ message: 'Login successful'
+                                , shopId: user.ShopID});
         }
         else{
             res.status(401).json({ error: 'Invalid username or password' });
@@ -45,12 +47,14 @@ async function manufacturerLogin(req,res){
         },
         select: {
           Password: true,
+          mid: true,
         },
       });
   
       if (user) {   
         if(user.Password == pass){
-           res.status(200).json({ message: 'Login successful' });
+           res.status(200).json({ message: 'Login successful' 
+                                , manufacturerId: user.mid});
         }
         else{
             res.status(401).json({ error: 'Invalid username or password' });
