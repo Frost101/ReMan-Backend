@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/Frost101/ReMan-Backend#readme",
   "dependencies": {
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "^5.8.1",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -36,6 +36,9 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.2",
-    "prisma": "^5.7.1"
+    "prisma": "^5.8.1"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   }
 }

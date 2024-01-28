@@ -35,7 +35,7 @@ const retailerRouter = express.Router();
 *              - SID
 *            properties: 
 *              SID:
-*                type: integer
+*                type: string
 *                default: 123456
 *     responses:
 *        200:
@@ -46,27 +46,27 @@ const retailerRouter = express.Router();
 *              schema:
 *                type: object
 *                properties:
-*                  shopName:
+*                  Name:
 *                    type: string
 *                    default: Reja Store
-*                  phoneNumber:
-*                    type: array
-*                    default: ['01988974891', '05776879659']
-*                  shopImage:
+*                  PhoneNumber:
+*                    type: string
+*                    default: '01988974891'
+*                  Logo:
 *                    type: string
 *                    default: public/images/reja_store.jpg
-*                  retailPoints:
+*                  RetailPoints:
 *                    type: integer
 *                    default: 663
-*                  website:
+*                  Website:
 *                    type: string
 *                    default: https://www.reja_store.com
-*                  email:
+*                  Email:
 *                    type: string
 *                    default: reja@gmail.com
-*                  address:
+*                  Address:
 *                    type: string
-*                    default: 32 Baker Street, Mymensingh           
+*                    default: 52 Baker Steet           
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
