@@ -294,12 +294,35 @@ async function addNewCategory(req, res) {
 }
 
 
-function deleteProduct(req, res) {
-    res.status(200).end();
+async function deleteProduct(req, res) {
+
+    const userId = req.body.PID;
+
+    try {
+      const user = await prisma.product.delete({
+        where: {
+          pid: userId,
+        },
+      });
+  
+      res.status(200).json({success: true,
+                             message: 'Product removed successfully'});
+    } catch (error) {
+
+      if(error.code === 'P2025') {
+        res.status(404).json({ error: 'Product not found' });
+      }
+      else{ 
+        console.error('Error retrieving user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    }
+    // res.status(200).end();
 }
 
 
-function deleteCategory(req, res) {
+async function deleteCategory(req, res) {
+
     res.status(200).end();
 }
 
