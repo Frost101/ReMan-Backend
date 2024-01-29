@@ -495,8 +495,8 @@ productsRouter.post('/newCategory', addNewCategory);
 *              - PID
 *            properties: 
 *              PID:
-*                type: integer
-*                default: 123456
+*                type: string
+*                default: d5003c4f-862f-496e-b0d8-83030b409869
 *     responses:
 *        200:
 *          description: Successfully deleted product
@@ -526,9 +526,9 @@ productsRouter.delete('/deleteProduct', deleteProduct);
 *           schema:
 *            type: object
 *            required:
-*              - categoryName
+*              - CategoryName
 *            properties: 
-*              categoryName:
+*              CategoryName:
 *                type: string
 *                default: Beverage
 *     responses:
