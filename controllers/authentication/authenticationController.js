@@ -58,7 +58,7 @@ async function retailerLogin(req,res){
           else {
               if (result) {
                   const token = createToken(user.ShopID);
-                  res.cookie('jwt', token, { maxAge: maxAge * 1000 });
+                  res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
                   res.status(200).json({ message: 'Login successful'
                                               , shopId: user.ShopID});
               }
