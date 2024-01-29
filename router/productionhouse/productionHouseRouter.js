@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {addNewProductionHouse, deleteProductionHouse, getProductListAndProductionHouses, shiftToInventory} = require('../../controllers/productionhouse/productionHouseController'); 
+const {addNewProductionHouse, deleteProductionHouse, getProductionHousesList, shiftToInventory} = require('../../controllers/productionhouse/productionHouseController'); 
 
 //* Initialize router
 const productionHouseRouter = express.Router();
@@ -36,6 +36,8 @@ const productionHouseRouter = express.Router();
 *              - ProductionHouseName
 *              - Capacity
 *              - ProductionHouseType
+*              - Image
+*              - Details
 *              - HouseNumber
 *              - Street
 *              - ZIP
@@ -45,20 +47,26 @@ const productionHouseRouter = express.Router();
 *              - image
 *            properties: 
 *              MID:
-*                type: integer
-*                default: 123412
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
 *              ProductionHouseName:
 *                type: string
-*                default: Shahi House
+*                default: ProductionHouse1
 *              Capacity:
 *                type: double
 *                default: 2301
 *              ProductionHouseType:
 *                type: string
 *                default: Cold Stoarge
+*              Image:
+*                type: string
+*                default: public/images/ruchi_prod1.jpg
+*              Details:
+*                type: string
+*                default: Fresh Food Stoarge
 *              HouseNumber:
-*                type: integer
-*                default: 120
+*                type: string
+*                default: A-120
 *              Street:
 *                type: string
 *                default: Rankin Street
@@ -74,11 +82,8 @@ const productionHouseRouter = express.Router();
 *              AddressDetails:
 *                type: string
 *                default: Near the jame mosjid
-*              image:
-*                type: string
-*                default: public/images/shahi_house.jpg
 *     responses:
-*        200:
+*        201:
 *          description: Adding a new Production House successful
 *          response-body:
 *          content:
@@ -119,8 +124,8 @@ productionHouseRouter.post('/addProductionHouse', addNewProductionHouse);
 *              - PHID
 *            properties: 
 *              PHID:
-*                type: integer
-*                default: 123412
+*                type: string
+*                default: 5c204b23-c65e-4dd0-b0a1-9514b1fc532f
 *     responses:
 *        200:
 *          description: Removing an Production House successfully
@@ -149,10 +154,10 @@ productionHouseRouter.delete('/deleteProductionHouse', deleteProductionHouse);
 
 /**
 * @swagger
-* /api/productionhouse/productList:
+* /api/productionhouse/productionHouseList:
 *   post:
 *     tags: [Production House]
-*     description: Show all the Production Houses and product list of a manufacturer
+*     description: Show all the Production Houses of a manufacturer
 *     requestBody:
 *      required: true
 *      content:
@@ -163,8 +168,8 @@ productionHouseRouter.delete('/deleteProductionHouse', deleteProductionHouse);
 *              - MID
 *            properties: 
 *              MID:
-*                type: integer
-*                default: 123434
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
 *     responses:
 *        200:
 *          description: An array of products' information for each Production House of a manufacturer
@@ -180,26 +185,26 @@ productionHouseRouter.delete('/deleteProductionHouse', deleteProductionHouse);
 *                      type: object
 *                      properties:
 *                        phid:
-*                          type: integer
+*                          type: string
 *                          example: 123412
-*                        productionHouseName:
+*                        ProductionHouseName:
 *                          type: string
 *                          example: Shahi House
-*                        address:
-*                          type: string
-*                          example: 32 Sultan Road, Savar, 6200, Dhaka
-*                        capacity:
-*                          type: integer
+*                        Capacity:
+*                          type: double
 *                          example: 230
-*                        productionHouseType:
+*                        Type:
 *                          type: string
 *                          example: cold storage
-*                        image:
+*                        Image:
 *                          type: string
 *                          example: public/images/shahi_house.jpg
-*                        productName:
-*                          type: array
-*                          example: ['potato', 'rice', 'wheat'] 
+*                        Details:
+*                          type: string
+*                          example: Fresh Food Storage
+*                        Address:
+*                          type: string
+*                          example: 32 Sultan Road, Savar, 6200, Dhaka
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
@@ -209,7 +214,7 @@ productionHouseRouter.delete('/deleteProductionHouse', deleteProductionHouse);
 *        default:
 *          description: Internal server error
 */
-productionHouseRouter.post('/productList', getProductListAndProductionHouses);
+productionHouseRouter.post('/productionHouseList', getProductionHousesList);
 
 
 

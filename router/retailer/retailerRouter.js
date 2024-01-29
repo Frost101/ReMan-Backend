@@ -36,7 +36,7 @@ const retailerRouter = express.Router();
 *            properties: 
 *              SID:
 *                type: string
-*                default: 123456
+*                default: 549e6a2a-79bf-469b-8eda-5cbc8e85cfb5
 *     responses:
 *        200:
 *          description: Shop related information

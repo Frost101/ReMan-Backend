@@ -35,8 +35,8 @@ const manufacturerRouter = express.Router();
 *              - MID
 *            properties: 
 *              MID:
-*                type: integer
-*                default: 123412
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
 *     responses:
 *        200:
 *          description: Manufacturer related information
@@ -68,7 +68,7 @@ const manufacturerRouter = express.Router();
 *                    type: string
 *                    default: 32 Baker Street, Mymensingh
 *                  tin:
-*                    type: integer
+*                    type: string
 *                    default: 23878931          
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found

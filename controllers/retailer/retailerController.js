@@ -4,7 +4,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function getShopInfo(req, res) {
-  const userId = '549e6a2a-79bf-469b-8eda-5cbc8e85cfb5';
+  const userId = req.body.SID;
 
   try {
     const user = await prisma.shop.findUnique({

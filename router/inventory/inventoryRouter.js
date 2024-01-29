@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {addNewInventory, checkInventoryStatus, deleteInventory, getProductListAndInventories, shiftToInventory} = require('../../controllers/inventory/inventoryController'); 
+const {addNewInventory, checkInventoryStatus, deleteInventory, getInventoriesList, shiftToInventory} = require('../../controllers/inventory/inventoryController'); 
 
 //* Initialize router
 const inventoryRouter = express.Router();
@@ -36,6 +36,8 @@ const inventoryRouter = express.Router();
 *              - InventoryName
 *              - Capacity
 *              - InventoryType
+*              - Image
+*              - Details
 *              - HouseNumber
 *              - Street
 *              - ZIP
@@ -45,8 +47,8 @@ const inventoryRouter = express.Router();
 *              - image
 *            properties: 
 *              MID:
-*                type: integer
-*                default: 123412
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
 *              InventoryName:
 *                type: string
 *                default: Shahi House
@@ -56,9 +58,15 @@ const inventoryRouter = express.Router();
 *              InventoryType:
 *                type: string
 *                default: Cold Stoarge
+*              Image:
+*                type: string
+*                default: public/images/shahi_house.jpg
+*              Details:
+*                type: string
+*                default: Fresh Food Storage
 *              HouseNumber:
-*                type: integer
-*                default: 120
+*                type: string
+*                default: A-120
 *              Street:
 *                type: string
 *                default: Rankin Street
@@ -74,11 +82,8 @@ const inventoryRouter = express.Router();
 *              AddressDetails:
 *                type: string
 *                default: Near the jame mosjid
-*              image:
-*                type: string
-*                default: public/images/shahi_house.jpg
 *     responses:
-*        200:
+*        201:
 *          description: Adding a new inventory successful
 *          response-body:
 *          content:
@@ -166,8 +171,8 @@ inventoryRouter.post('/status', checkInventoryStatus);
 *              - IID
 *            properties: 
 *              IID:
-*                type: integer
-*                default: 123412
+*                type: string
+*                default: 35963a39-0a62-4425-90e2-d74b346a5c59
 *     responses:
 *        200:
 *          description: Removing an inventory successfully
@@ -196,10 +201,10 @@ inventoryRouter.delete('/deleteInventory', deleteInventory);
 
 /**
 * @swagger
-* /api/inventory/productList:
+* /api/inventory/inventoryList:
 *   post:
 *     tags: [Inventory]
-*     description: Show all the inventories and product list of a manufacturer
+*     description: Show all the inventories list of a manufacturer
 *     requestBody:
 *      required: true
 *      content:
@@ -210,8 +215,8 @@ inventoryRouter.delete('/deleteInventory', deleteInventory);
 *              - MID
 *            properties: 
 *              MID:
-*                type: integer
-*                default: 123434
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
 *     responses:
 *        200:
 *          description: An array of products' information for each inventory of a manufacturer
@@ -227,32 +232,32 @@ inventoryRouter.delete('/deleteInventory', deleteInventory);
 *                      type: object
 *                      properties:
 *                        iid:
-*                          type: integer
+*                          type: string
 *                          example: 123412
-*                        inventoryName:
+*                        InventoryName:
 *                          type: string
 *                          example: Shahi House
-*                        address:
-*                          type: string
-*                          example: 32 Sultan Road, Savar, 6200, Dhaka
-*                        capacity:
-*                          type: integer
+*                        Capacity:
+*                          type: double
 *                          example: 230
-*                        inventoryType:
+*                        Type:
 *                          type: string
 *                          example: cold storage
-*                        empty:
-*                          type: boolean
-*                          example: false
-*                        owned:
-*                          type: boolean
-*                          example: true
-*                        image:
+*                        Image:
 *                          type: string
 *                          example: public/images/shahi_house.jpg
-*                        productName:
-*                          type: array
-*                          example: ['potato', 'rice', 'wheat'] 
+*                        Details:
+*                          type: string
+*                          example: Fresh Food Storage
+*                        EmptyStatus:
+*                          type: boolean
+*                          example: true
+*                        OwnedStatus:
+*                          type: boolean
+*                          example: true
+*                        Address:
+*                          type: string
+*                          example: 32 Sultan Road, Savar, 6200, Dhaka
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
@@ -262,7 +267,7 @@ inventoryRouter.delete('/deleteInventory', deleteInventory);
 *        default:
 *          description: Internal server error
 */
-inventoryRouter.post('/productList', getProductListAndInventories);
+inventoryRouter.post('/inventoryList', getInventoriesList);
 
 
 
