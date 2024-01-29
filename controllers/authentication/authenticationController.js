@@ -39,15 +39,35 @@ async function retailerLogin(req,res){
         //     res.status(401).json({ error: 'Invalid username or password' });
         // }
 
-        bcrypt.compare(pass, user.Password, function(err, result) {
-            if(result){
-                res.status(200).json({ message: 'Login successful'
-                                    , shopId: user.ShopID});
-            }
-            else{
-                res.status(401).json({ error: 'Invalid username or password' });
-            }
-        });
+        // bcrypt.compare(pass, user.Password, function(err, result) {
+        //     if(result){
+        //         res.status(200).json({ message: 'Login successful'
+        //                             , shopId: user.ShopID});
+        //     }
+        //     else{
+        //         res.status(401).json({ error: 'Invalid username or password' });
+        //     }
+        // });
+
+
+        bcrypt.compare(password, user.Password, function (err, result) {
+          if (err) {
+              res.status(400).json({ err });
+              return;
+          }
+          else {
+              if (result) {
+                  const token = createToken(user.ShopID);
+                  res.cookie('jwt', token, { maxAge: maxAge * 1000 });
+                  res.status(200).json({ message: 'Login successful'
+                                              , shopId: user.ShopID});
+              }
+              else {
+                  res.status(400).json({ message: 'Incorrect password' });
+                  return;
+              }
+          }
+      });
 
       } else {
         res.status(404).json({ error: 'User not found' });

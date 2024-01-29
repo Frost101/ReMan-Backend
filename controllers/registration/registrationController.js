@@ -70,7 +70,7 @@ module.exports.addRetailer = async (req, res) => {
                     },
                 });
                 const token = createToken(user.ShopID);
-                res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+                res.cookie('jwt', token, { maxAge: maxAge * 1000 });
                 res.status(201).json({
                     user: user.ShopID,
                     message: 'Retailer created successfully'
