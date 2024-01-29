@@ -210,8 +210,8 @@ productsRouter.post('/recommendedCategories', getRecommendedCategories);
 *              - MID
 *            properties: 
 *              MID:
-*                type: integer
-*                default: 123456
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
 *     responses:
 *        200:
 *          description: An array of products
@@ -226,30 +226,33 @@ productsRouter.post('/recommendedCategories', getRecommendedCategories);
 *                    items:
 *                      type: object
 *                      properties:
-*                        PID:
-*                          type: integer
+*                        pid:
+*                          type: string
 *                          example: 123456
-*                        productName:
+*                        CategoryName:
 *                          type: string
 *                          example: Mojito
-*                        productImage:
+*                        ProductName:
 *                          type: string
 *                          example: public/images/mojito.jpg
-*                        quantity:
-*                          type: integer
+*                        Image:
+*                          type: string
 *                          example: 1000
-*                        categoryName:
-*                          type: string
-*                          example: Beverage
-*                        weightVolume:
-*                          type: integer
+*                        Weight_volume:
+*                          type: double
 *                          example: 250
-*                        unit:
+*                        Unit:
 *                          type: string
-*                          example: mL
+*                          example: ml
+*                        UnitPrice:
+*                          type: double
+*                          example: 20
+*                        Description:
+*                          type: string
+*                          example: refreshing
 *                        rating:
-*                          type: integer
-*                          example: 4
+*                          type: double
+*                          example: 4.6
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:

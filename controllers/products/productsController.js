@@ -118,32 +118,62 @@ async function getRecommendedCategories(req, res) {
 
 
 
-function getProductsByManufacturer(req, res) {
-    let output = {
-        products: [{
-            PID: 123456,
-            productName: 'Mojito',
-            productImage: 'public/images/mojito.jpg',
-            quantity: 1000,
-            categoryName: 'Beverage',
-            weightVolume: 250,
-            unit: 'mL',
-            rating: 4,
-        },
-        {
-            PID: 654321,
-            productName: 'Chocolate Milk',
-            productImage: 'public/images/chocolateMilk.jpg',
-            quantity: 5000,
-            categoryName: 'Dairy',
-            weightVolume: 1,
-            unit: 'L',
-            rating: 5,
-        }
-    ]
-    };
+async function getProductsByManufacturer(req, res) {
 
-    res.json(output);
+    const userId = req.body.MID;
+
+    try {
+      const user = await prisma.product.findMany({
+        where: {
+          mid: userId,
+        },
+        select: {
+          pid: true,
+          CategoryName: true,
+          ProductName: true,
+          Image: true,
+          Weight_volume: true,
+          Unit: true,
+          UnitPrice: true,
+          Description: true,
+          Rating: true,
+        },
+      });
+  
+      if (user) {   
+        res.status(200).json({user});
+      } else {
+        res.status(404).json({ error: 'No products found' });
+      }
+    } catch (error) {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    // let output = {
+    //     products: [{
+    //         PID: 123456,
+    //         productName: 'Mojito',
+    //         productImage: 'public/images/mojito.jpg',
+    //         quantity: 1000,
+    //         categoryName: 'Beverage',
+    //         weightVolume: 250,
+    //         unit: 'mL',
+    //         rating: 4,
+    //     },
+    //     {
+    //         PID: 654321,
+    //         productName: 'Chocolate Milk',
+    //         productImage: 'public/images/chocolateMilk.jpg',
+    //         quantity: 5000,
+    //         categoryName: 'Dairy',
+    //         weightVolume: 1,
+    //         unit: 'L',
+    //         rating: 5,
+    //     }
+    // ]
+    // };
+
+    // res.json(output);
 }
 
 
