@@ -50,7 +50,7 @@ async function retailerLogin(req,res){
         // });
 
 
-        bcrypt.compare(password, user.Password, function (err, result) {
+        bcrypt.compare(pass, user.Password, function (err, result) {
           if (err) {
               res.status(400).json({ err });
               return;
