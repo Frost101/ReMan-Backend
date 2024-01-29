@@ -152,8 +152,71 @@ function updateProductInformation(req, res) {
     res.status(200).end();
 }
 
-function addNewProduct(req, res) {
-    res.status(200).end();
+async function addNewProduct(req, res) {
+    try {
+        // Extracting input parameters from the request body
+        const {
+            MID,
+            CategoryName,
+            ProductName,
+            Image,
+            Weight_Volume,
+            Unit,
+            UnitPrice,
+            Description,
+            MinQuantityForSale,
+            MinQuantityForDiscount,
+            MinimumDiscount,
+            MaximumDiscount,
+            DiscountRate,
+            ProductQuantityForDiscountRate
+        } = req.body;
+
+        // TODO: Perform any necessary validation or business logic
+
+        // TODO: Save inventory details to the database or perform other actions
+        const user = await prisma.product.create({
+            data: {
+              mid: MID,
+              CategoryName: CategoryName,
+              ProductName: ProductName,
+              Image: Image,
+              Weight_volume: Weight_Volume,
+              Unit: Unit,
+              UnitPrice: UnitPrice,
+              Description: Description,
+              Rating: 0.0,
+              MinQuantityForSale: MinQuantityForSale,
+              MinQuantityForDiscount: MinQuantityForDiscount,
+              MinimumDiscount: MinimumDiscount,
+              MaximumDiscount: MaximumDiscount,
+              DiscountRate: DiscountRate,
+              ProductQuantityForDiscountRate: ProductQuantityForDiscountRate,
+            },
+          });
+
+        // Responding with success
+        res.status(201).json({
+            success: true,
+            message: 'Product created successfully',
+        });
+    } catch (error) {
+        console.error('Error adding inventory:', error);
+        if ( error.code === 'P2002') {
+            // P2002 is the Prisma error code for unique constraint violation
+            console.error('Duplicate entry error:', error.meta.target);
+            res.status(409).json({
+              success: false,
+              message: 'Conflict: Inventory with the provided description already exists',
+            });
+        } else {
+            // Responding with server errors
+            res.status(500).json({
+                success: false,
+                message: 'Internal Server Error',
+            });
+        }
+    }
 }
 
 

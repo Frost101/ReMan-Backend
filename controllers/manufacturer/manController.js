@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 async function getManufacturerInfo(req, res) {
 
-    const userId = req.body.MID;
+    const userId = req.body.manufacturerId;
 
     try {
       const user = await prisma.company.findUnique({
