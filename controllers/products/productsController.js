@@ -118,32 +118,62 @@ async function getRecommendedCategories(req, res) {
 
 
 
-function getProductsByManufacturer(req, res) {
-    let output = {
-        products: [{
-            PID: 123456,
-            productName: 'Mojito',
-            productImage: 'public/images/mojito.jpg',
-            quantity: 1000,
-            categoryName: 'Beverage',
-            weightVolume: 250,
-            unit: 'mL',
-            rating: 4,
-        },
-        {
-            PID: 654321,
-            productName: 'Chocolate Milk',
-            productImage: 'public/images/chocolateMilk.jpg',
-            quantity: 5000,
-            categoryName: 'Dairy',
-            weightVolume: 1,
-            unit: 'L',
-            rating: 5,
-        }
-    ]
-    };
+async function getProductsByManufacturer(req, res) {
 
-    res.json(output);
+    const userId = req.body.MID;
+
+    try {
+      const user = await prisma.product.findMany({
+        where: {
+          mid: userId,
+        },
+        select: {
+          pid: true,
+          CategoryName: true,
+          ProductName: true,
+          Image: true,
+          Weight_volume: true,
+          Unit: true,
+          UnitPrice: true,
+          Description: true,
+          Rating: true,
+        },
+      });
+  
+      if (user) {   
+        res.status(200).json({user});
+      } else {
+        res.status(404).json({ error: 'No products found' });
+      }
+    } catch (error) {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    // let output = {
+    //     products: [{
+    //         PID: 123456,
+    //         productName: 'Mojito',
+    //         productImage: 'public/images/mojito.jpg',
+    //         quantity: 1000,
+    //         categoryName: 'Beverage',
+    //         weightVolume: 250,
+    //         unit: 'mL',
+    //         rating: 4,
+    //     },
+    //     {
+    //         PID: 654321,
+    //         productName: 'Chocolate Milk',
+    //         productImage: 'public/images/chocolateMilk.jpg',
+    //         quantity: 5000,
+    //         categoryName: 'Dairy',
+    //         weightVolume: 1,
+    //         unit: 'L',
+    //         rating: 5,
+    //     }
+    // ]
+    // };
+
+    // res.json(output);
 }
 
 
@@ -152,8 +182,71 @@ function updateProductInformation(req, res) {
     res.status(200).end();
 }
 
-function addNewProduct(req, res) {
-    res.status(200).end();
+async function addNewProduct(req, res) {
+    try {
+        // Extracting input parameters from the request body
+        const {
+            MID,
+            CategoryName,
+            ProductName,
+            Image,
+            Weight_Volume,
+            Unit,
+            UnitPrice,
+            Description,
+            MinQuantityForSale,
+            MinQuantityForDiscount,
+            MinimumDiscount,
+            MaximumDiscount,
+            DiscountRate,
+            ProductQuantityForDiscountRate
+        } = req.body;
+
+        // TODO: Perform any necessary validation or business logic
+
+        // TODO: Save inventory details to the database or perform other actions
+        const user = await prisma.product.create({
+            data: {
+              mid: MID,
+              CategoryName: CategoryName,
+              ProductName: ProductName,
+              Image: Image,
+              Weight_volume: Weight_Volume,
+              Unit: Unit,
+              UnitPrice: UnitPrice,
+              Description: Description,
+              Rating: 0.0,
+              MinQuantityForSale: MinQuantityForSale,
+              MinQuantityForDiscount: MinQuantityForDiscount,
+              MinimumDiscount: MinimumDiscount,
+              MaximumDiscount: MaximumDiscount,
+              DiscountRate: DiscountRate,
+              ProductQuantityForDiscountRate: ProductQuantityForDiscountRate,
+            },
+          });
+
+        // Responding with success
+        res.status(201).json({
+            success: true,
+            message: 'Product created successfully',
+        });
+    } catch (error) {
+        console.error('Error adding inventory:', error);
+        if ( error.code === 'P2002') {
+            // P2002 is the Prisma error code for unique constraint violation
+            console.error('Duplicate entry error:', error.meta.target);
+            res.status(409).json({
+              success: false,
+              message: 'Conflict: Inventory with the provided description already exists',
+            });
+        } else {
+            // Responding with server errors
+            res.status(500).json({
+                success: false,
+                message: 'Internal Server Error',
+            });
+        }
+    }
 }
 
 
