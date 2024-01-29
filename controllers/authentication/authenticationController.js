@@ -1,5 +1,17 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+
+const maxAge = 3 * 24 * 60 * 60; // 3 days in seconds
+const createToken = (id) => {
+    return jwt.sign({ id }, process.env.COOKIE_SECRET, {
+        expiresIn: maxAge
+    });
+};
+
+
 
 const prisma = new PrismaClient();
 
@@ -19,13 +31,24 @@ async function retailerLogin(req,res){
       });
   
       if (user) {   
-        if(user.Password == pass){
-           res.status(200).json({ message: 'Login successful'
-                                , shopId: user.ShopID});
-        }
-        else{
-            res.status(401).json({ error: 'Invalid username or password' });
-        }
+        // if(user.Password == pass){
+        //    res.status(200).json({ message: 'Login successful'
+        //                         , shopId: user.ShopID});
+        // }
+        // else{
+        //     res.status(401).json({ error: 'Invalid username or password' });
+        // }
+
+        bcrypt.compare(pass, user.Password, function(err, result) {
+            if(result){
+                res.status(200).json({ message: 'Login successful'
+                                    , shopId: user.ShopID});
+            }
+            else{
+                res.status(401).json({ error: 'Invalid username or password' });
+            }
+        });
+
       } else {
         res.status(404).json({ error: 'User not found' });
       }
