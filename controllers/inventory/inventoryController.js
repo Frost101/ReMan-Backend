@@ -114,10 +114,10 @@ async function deleteInventory(req, res) {
 
 async function getInventoriesList(req, res) {
 
-    const userId = req.body.MID;
+    const userId = req.body.manufacturerId;
 
     try {
-      const user = await prisma.inventory.findMany({
+      const inventories = await prisma.inventory.findMany({
         where: {
           mid: userId,
         },
@@ -139,8 +139,8 @@ async function getInventoriesList(req, res) {
         },
       });
   
-      if (user) {   
-        res.status(200).json({user});
+      if (inventories) {   
+        res.status(200).json({inventories});
       } else {
         res.status(404).json({ error: 'No inventories found' });
       }
