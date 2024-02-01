@@ -149,31 +149,34 @@ async function getProductsByManufacturer(req, res) {
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
-    // let output = {
-    //     products: [{
-    //         PID: 123456,
-    //         productName: 'Mojito',
-    //         productImage: 'public/images/mojito.jpg',
-    //         quantity: 1000,
-    //         categoryName: 'Beverage',
-    //         weightVolume: 250,
-    //         unit: 'mL',
-    //         rating: 4,
-    //     },
-    //     {
-    //         PID: 654321,
-    //         productName: 'Chocolate Milk',
-    //         productImage: 'public/images/chocolateMilk.jpg',
-    //         quantity: 5000,
-    //         categoryName: 'Dairy',
-    //         weightVolume: 1,
-    //         unit: 'L',
-    //         rating: 5,
-    //     }
-    // ]
-    // };
+}
 
-    // res.json(output);
+
+
+async function getCategoriesByManufacturer(req, res) {
+
+  const userId = req.body.MID;
+
+  try {
+    const uniqueCategories = await prisma.product.findMany({
+      where: {
+        mid: userId,
+      },
+      select: {
+        CategoryName: true,
+      },
+      distinct: ['CategoryName'],
+    });
+
+    if (uniqueCategories) {   
+      res.status(200).json({uniqueCategories});
+    } else {
+      res.status(404).json({ error: 'No categories found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 
@@ -400,6 +403,7 @@ module.exports = {
     getRecommendedCategories,
     getAllCategories,
     getProductsByManufacturer,
+    getCategoriesByManufacturer,
     updateProductInformation,
     addNewProduct,
     addNewCategory,

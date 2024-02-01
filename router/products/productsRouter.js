@@ -7,6 +7,7 @@ const {
         getRecommendedCategories,    
         getAllCategories,
         getProductsByManufacturer,
+        getCategoriesByManufacturer,
         updateProductInformation,
         addNewProduct,
         addNewCategory,
@@ -199,7 +200,7 @@ productsRouter.post('/recommendedCategories', getRecommendedCategories);
 * /api/products/byManufacturer:
 *   post:
 *     tags: [Products]
-*     description: If SID is provided, returns recommended categories for that SHOP/Retailer. If SID is not provided, returns globally popular categories.
+*     description: Get all the products of a manufacturer
 *     requestBody:
 *      required: true
 *      content:
@@ -263,6 +264,56 @@ productsRouter.post('/recommendedCategories', getRecommendedCategories);
 *          description: Internal server error
 */
 productsRouter.post('/byManufacturer', getProductsByManufacturer);
+
+
+
+
+
+/**
+* @swagger
+* /api/products/manufacturerCategories:
+*   post:
+*     tags: [Products]
+*     description: Get all the categories of a manufacturer
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - MID
+*            properties: 
+*              MID:
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
+*     responses:
+*        200:
+*          description: An array of categories
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  categories:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        CategoryName:
+*                          type: string
+*                          example: Juice
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+productsRouter.post('/manufacturerCategories', getCategoriesByManufacturer);
 
 
 
