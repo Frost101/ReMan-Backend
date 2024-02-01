@@ -123,7 +123,7 @@ async function getProductsByManufacturer(req, res) {
     const userId = req.body.MID;
 
     try {
-      const user = await prisma.product.findMany({
+      const products = await prisma.product.findMany({
         where: {
           mid: userId,
         },
@@ -140,8 +140,8 @@ async function getProductsByManufacturer(req, res) {
         },
       });
   
-      if (user) {   
-        res.status(200).json({user});
+      if (products) {   
+        res.status(200).json({products});
       } else {
         res.status(404).json({ error: 'No products found' });
       }
