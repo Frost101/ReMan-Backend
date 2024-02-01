@@ -102,10 +102,10 @@ async function deleteProductionHouse(req, res) {
 
 async function getProductionHousesList(req, res) {
 
-    const userId = req.body.MID;
+    const userId = req.body.manufacturerId;
 
     try {
-      const user = await prisma.productionHouse.findMany({
+      const productionHouses = await prisma.productionHouse.findMany({
         where: {
           mid: userId,
         },
@@ -125,8 +125,8 @@ async function getProductionHousesList(req, res) {
         },
       });
   
-      if (user) {   
-        res.status(200).json({user});
+      if (productionHouses) {   
+        res.status(200).json({productionHouses});
       } else {
         res.status(404).json({ error: 'No production houses found' });
       }
