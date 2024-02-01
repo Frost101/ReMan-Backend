@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {getBatchList, batchScreening, addNewBatch, deleteBatch} = require('../../controllers/batch/batchController'); 
+const {getBatchList, batchScreening, addNewBatch, addNewBatch1,  deleteBatch} = require('../../controllers/batch/batchController'); 
 
 //* Initialize router
 const batchRouter = express.Router();
@@ -19,7 +19,7 @@ const batchRouter = express.Router();
 
 /**
 * @swagger
-* /api/batch/batchList:
+* /api/batch/inventoyrBatchList:
 *   post:
 *     tags: [Batch]
 *     description: If PID(product ID) and (IID) inventory ID is provided, it will return the batch list of that product which is in that inventory.
@@ -74,13 +74,13 @@ const batchRouter = express.Router();
 *        default:
 *          description: Internal server error
 */
-batchRouter.post('/batchList', getBatchList);
+batchRouter.post('/inventoryBatchList', getBatchList);
 
 
 
 /**
 * @swagger
-* /api/batch/batchScreening:
+* /api/batch/inventoryBatchScreening:
 *   put:
 *     tags: [Batch]
 *     description: Change the sale information of a batch or add or remove from marketlace
@@ -116,7 +116,7 @@ batchRouter.post('/batchList', getBatchList);
 *        default:
 *          description: Internal server error
 */
-batchRouter.put('/batchScreening', batchScreening);
+batchRouter.put('/inventoryBatchScreening', batchScreening);
 
 
 
@@ -178,6 +178,66 @@ batchRouter.post('/newBatch', addNewBatch);
 
 
 
+/**
+* @swagger
+* /api/batch/newBatchInventory:
+*   post:
+*     tags: [Batch]
+*     description: Add a new batch in an Inventory
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - IID
+*              - PID
+*              - manufacturingDate
+*              - expiryDate
+*              - quantity
+*              - inMarketplace
+*              - sale
+*            properties: 
+*              IID:
+*                type: string
+*                default: 8b4753af-39a0-458a-88ae-182875e0ec3b
+*              PID:
+*                type: string
+*                default: 288e0918-67ef-448d-b05d-380543e3ebcc
+*              manufacturingDate:
+*                type: string
+*                format: date
+*                default: 2021-01-01
+*              expiryDate:
+*                type: string
+*                format: date
+*                default: 2021-01-01
+*              quantity:
+*                type: integer
+*                default: 1000
+*              inMarketplace:
+*                type: boolean
+*                default: true
+*              sale:
+*                type: double
+*                default: 0
+*     responses:
+*        200:
+*          description: Successfully added
+*        401:
+*          description: Unauthorized, Invalid username or password
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+batchRouter.post('/newBatchInventory', addNewBatch1);
+
+
+
 
 /**
 * @swagger
@@ -195,7 +255,7 @@ batchRouter.post('/newBatch', addNewBatch);
 *              - BID
 *            properties: 
 *              BID:
-*                type: integer
+*                type: string
 *                default: 123456
 *     responses:
 *        200:
