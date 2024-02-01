@@ -137,6 +137,9 @@ async function getInventoriesList(req, res) {
           Division: true,
           AddressDetails: true,
         },
+        orderBy: {
+          InventoryName: 'asc',
+        }
       });
   
       if (inventories) {   

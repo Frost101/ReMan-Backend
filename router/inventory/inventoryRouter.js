@@ -212,9 +212,9 @@ inventoryRouter.delete('/deleteInventory', deleteInventory);
 *           schema:
 *            type: object
 *            required:
-*              - MID
+*              - manufacturerId
 *            properties: 
-*              MID:
+*              manufacturerId:
 *                type: string
 *                default: 2c397476-c131-4c60-b45a-12bd242ec256
 *     responses:

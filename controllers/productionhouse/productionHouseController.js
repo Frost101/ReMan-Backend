@@ -123,6 +123,9 @@ async function getProductionHousesList(req, res) {
           Division: true,
           AddressDetails: true,
         },
+        orderBy: {
+          ProductionHouseName: 'asc',
+        }
       });
   
       if (productionHouses) {   
