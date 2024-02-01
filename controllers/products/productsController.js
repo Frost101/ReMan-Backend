@@ -120,7 +120,7 @@ async function getRecommendedCategories(req, res) {
 
 async function getProductsByManufacturer(req, res) {
 
-    const userId = req.body.MID;
+    const userId = req.body.manufacturerId;
 
     try {
       const products = await prisma.product.findMany({
@@ -155,7 +155,7 @@ async function getProductsByManufacturer(req, res) {
 
 async function getCategoriesByManufacturer(req, res) {
 
-  const userId = req.body.MID;
+  const userId = req.body.manufacturerId;
 
   try {
     const uniqueCategories = await prisma.product.findMany({
