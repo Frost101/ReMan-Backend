@@ -132,13 +132,23 @@ async function getProductsByInventory(req, res) {
   const iid = req.body.iid;
 
   try {
-    const productsInInventory = await prisma.inventoryBatch.findMany({
+    const productsInInventory = await prisma.inventoryBatch.groupBy({
+      by: ['pid'],
       where: {
         iid: iid,
       },
-      distinct: ['pid'],
-      select: {
-        Product: {
+      _sum: {
+        Quantity: true,
+      },
+    });
+
+    if (productsInInventory) {
+      // console.log(productsInInventory.length);
+      for(let i = 0; i < productsInInventory.length; i++) {
+        const productDetails = await prisma.product.findUnique({
+          where: {
+            pid: productsInInventory[i].pid,
+          },
           select: {
             pid: true,
             CategoryName: true,
@@ -150,12 +160,77 @@ async function getProductsByInventory(req, res) {
             Description: true,
             Rating: true,
           },
-        },
+        });
+        productsInInventory[i].CategoryName = productDetails.CategoryName;
+        productsInInventory[i].ProductName = productDetails.ProductName;
+        productsInInventory[i].Image = productDetails.Image;
+        productsInInventory[i].Weight_volume = productDetails.Weight_volume;
+        productsInInventory[i].Unit = productDetails.Unit;
+        productsInInventory[i].UnitPrice = productDetails.UnitPrice;
+        productsInInventory[i].Description = productDetails.Description;
+        productsInInventory[i].Rating = productDetails.Rating;
+        productsInInventory[i].TotalQuantity = productsInInventory[i]._sum.Quantity;
+        delete productsInInventory[i]._sum;
+      }
+      res.status(200).json({productsInInventory});
+    } else {
+      res.status(404).json({ error: 'No products found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
+
+async function getProductsByProductionHouse(req, res) {
+
+  const phid = req.body.phid;
+
+  try {
+    const productsInProductionHouse = await prisma.productionHouseBatch.groupBy({
+      by: ['pid'],
+      where: {
+        phid: phid,
+      },
+      _sum: {
+        Quantity: true,
       },
     });
 
-    if (productsInInventory) {   
-      res.status(200).json({productsInInventory});
+    if (productsInProductionHouse) {
+      // console.log(productsInInventory.length);
+      for(let i = 0; i < productsInProductionHouse.length; i++) {
+        const productDetails = await prisma.product.findUnique({
+          where: {
+            pid: productsInProductionHouse[i].pid,
+          },
+          select: {
+            pid: true,
+            CategoryName: true,
+            ProductName: true,
+            Image: true,
+            Weight_volume: true,
+            Unit: true,
+            UnitPrice: true,
+            Description: true,
+            Rating: true,
+          },
+        });
+        productsInProductionHouse[i].CategoryName = productDetails.CategoryName;
+        productsInProductionHouse[i].ProductName = productDetails.ProductName;
+        productsInProductionHouse[i].Image = productDetails.Image;
+        productsInProductionHouse[i].Weight_volume = productDetails.Weight_volume;
+        productsInProductionHouse[i].Unit = productDetails.Unit;
+        productsInProductionHouse[i].UnitPrice = productDetails.UnitPrice;
+        productsInProductionHouse[i].Description = productDetails.Description;
+        productsInProductionHouse[i].Rating = productDetails.Rating;
+        productsInProductionHouse[i].TotalQuantity = productsInProductionHouse[i]._sum.Quantity;
+        delete productsInProductionHouse[i]._sum;
+      }
+      res.status(200).json({productsInProductionHouse});
     } else {
       res.status(404).json({ error: 'No products found' });
     }
@@ -418,6 +493,7 @@ module.exports = {
     getAllCategories,
     getProductsByManufacturer,
     getProductsByInventory,
+    getProductsByProductionHouse,
     getCategoriesByManufacturer,
     updateProductInformation,
     addNewProduct,

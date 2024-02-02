@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {getBatchList, batchScreening, addNewBatch, addNewBatch1,  deleteBatch} = require('../../controllers/batch/batchController'); 
+const {getInventoryBatchList, getProductionHouseBatchList, batchScreening, addNewBatch, addNewBatch1,  deleteBatch} = require('../../controllers/batch/batchController'); 
 
 //* Initialize router
 const batchRouter = express.Router();
@@ -80,7 +80,70 @@ const batchRouter = express.Router();
 *        default:
 *          description: Internal server error
 */
-batchRouter.post('/inventoryBatchList', getBatchList);
+batchRouter.post('/inventoryBatchList', getInventoryBatchList);
+
+
+
+
+
+/**
+* @swagger
+* /api/batch/productionHouseBatchList:
+*   post:
+*     tags: [Batch]
+*     description: If PID(Product ID) and PHID(Production House ID) is provided, it will return the batch list of that product which is in that production house.
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - phid
+*              - pid
+*            properties: 
+*              phid:
+*                type: string
+*                default: a5e62d0b-be4d-4516-8334-2576df8b8282
+*              pid:
+*                type: string
+*                default: 288e0918-67ef-448d-b05d-380543e3ebcc
+*     responses:
+*        200:
+*          description: An array of batches
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  batches:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        bid:
+*                          type: integer
+*                          example: 123456   
+*                        ManufacturingDate:
+*                          type: string
+*                          example: 2021-01-01
+*                        ExpiryDate:
+*                          type: string
+*                          example: 2022-01-01
+*                        Quantity:
+*                          type: integer
+*                          example: 1000
+*        401:
+*          description: Unauthorized, Invalid username or password
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+batchRouter.post('/productionHouseBatchList', getProductionHouseBatchList);
 
 
 

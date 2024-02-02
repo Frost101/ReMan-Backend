@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-async function getBatchList(req, res){
+async function getInventoryBatchList(req, res){
 
     const iid = req.body.iid;
     const pid = req.body.pid;
@@ -33,30 +33,38 @@ async function getBatchList(req, res){
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
-    // let output = {
-    //     batches: [
-    //         {
-    //             BID: 123456,
-    //             manufacturingDate: '2021-01-01',
-    //             expiryDate: '2022-01-01',
-    //             quantity: 1000,
-    //         },
-    //         {
-    //             BID: 555556,
-    //             manufacturingDate: '2022-01-01',
-    //             expiryDate: '2023-01-01',
-    //             quantity: 1000,
-    //         },
-    //         {
-    //             BID: 777756,
-    //             manufacturingDate: '2022-01-01',
-    //             expiryDate: '2024-01-01',
-    //             quantity: 1000,
-    //         },
-            
-    //     ],
-    // };
-    // res.status(200).json(output);
+}
+
+
+
+async function getProductionHouseBatchList(req, res){
+
+    const phid = req.body.phid;
+    const pid = req.body.pid;
+
+    try {
+      const batches = await prisma.productionHouseBatch.findMany({
+        where: {
+          phid: phid,
+          pid: pid,
+        },
+        select: {
+          bid: true,
+          ManufacturingDate: true,
+          ExpiryDate: true,
+          Quantity: true,
+        },
+      });
+  
+      if (batches) {   
+        res.status(200).json({batches});
+      } else {
+        res.status(404).json({ error: 'No batches found' });
+      }
+    } catch (error) {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
 
@@ -170,7 +178,8 @@ function deleteBatch(req, res){
 }
 
 module.exports = {
-    getBatchList,
+    getInventoryBatchList,
+    getProductionHouseBatchList,
     batchScreening,
     addNewBatch,
     addNewBatch1,
