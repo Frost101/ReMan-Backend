@@ -8,6 +8,7 @@ const {
         getAllCategories,
         getProductsByManufacturer,
         getProductsByInventory,
+        getProductsByProductionHouse,
         getCategoriesByManufacturer,
         updateProductInformation,
         addNewProduct,
@@ -283,9 +284,9 @@ productsRouter.post('/byManufacturer', getProductsByManufacturer);
 *           schema:
 *            type: object
 *            required:
-*              - IID
+*              - iid
 *            properties: 
-*              IID:
+*              iid:
 *                type: string
 *                default: 8b4753af-39a0-458a-88ae-182875e0ec3b
 *     responses:
@@ -339,6 +340,80 @@ productsRouter.post('/byManufacturer', getProductsByManufacturer);
 *          description: Internal server error
 */
 productsRouter.post('/byInventory', getProductsByInventory);
+
+
+
+
+
+/**
+* @swagger
+* /api/products/byProductionHouse:
+*   post:
+*     tags: [Products]
+*     description: Get all the products of a production house
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - phid
+*            properties: 
+*              phid:
+*                type: string
+*                default: a5e62d0b-be4d-4516-8334-2576df8b8282
+*     responses:
+*        200:
+*          description: An array of products
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  products:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        pid:
+*                          type: string
+*                          example: 123456
+*                        CategoryName:
+*                          type: string
+*                          example: Mojito
+*                        ProductName:
+*                          type: string
+*                          example: public/images/mojito.jpg
+*                        Image:
+*                          type: string
+*                          example: 1000
+*                        Weight_volume:
+*                          type: double
+*                          example: 250
+*                        Unit:
+*                          type: string
+*                          example: ml
+*                        UnitPrice:
+*                          type: double
+*                          example: 20
+*                        Description:
+*                          type: string
+*                          example: refreshing
+*                        Rating:
+*                          type: double
+*                          example: 4.6
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+productsRouter.post('/byProductionHouse', getProductsByProductionHouse);
 
 
 
