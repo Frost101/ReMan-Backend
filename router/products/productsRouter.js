@@ -7,6 +7,7 @@ const {
         getRecommendedCategories,    
         getAllCategories,
         getProductsByManufacturer,
+        getProductsByInventory,
         getCategoriesByManufacturer,
         updateProductInformation,
         addNewProduct,
@@ -264,6 +265,80 @@ productsRouter.post('/recommendedCategories', getRecommendedCategories);
 *          description: Internal server error
 */
 productsRouter.post('/byManufacturer', getProductsByManufacturer);
+
+
+
+
+
+/**
+* @swagger
+* /api/products/byInventory:
+*   post:
+*     tags: [Products]
+*     description: Get all the products of an inventory
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - IID
+*            properties: 
+*              IID:
+*                type: string
+*                default: 8b4753af-39a0-458a-88ae-182875e0ec3b
+*     responses:
+*        200:
+*          description: An array of products
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  products:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        pid:
+*                          type: string
+*                          example: 123456
+*                        CategoryName:
+*                          type: string
+*                          example: Mojito
+*                        ProductName:
+*                          type: string
+*                          example: public/images/mojito.jpg
+*                        Image:
+*                          type: string
+*                          example: 1000
+*                        Weight_volume:
+*                          type: double
+*                          example: 250
+*                        Unit:
+*                          type: string
+*                          example: ml
+*                        UnitPrice:
+*                          type: double
+*                          example: 20
+*                        Description:
+*                          type: string
+*                          example: refreshing
+*                        Rating:
+*                          type: double
+*                          example: 4.6
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+productsRouter.post('/byInventory', getProductsByInventory);
 
 
 

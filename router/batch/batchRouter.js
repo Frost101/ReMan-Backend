@@ -19,7 +19,7 @@ const batchRouter = express.Router();
 
 /**
 * @swagger
-* /api/batch/inventoyrBatchList:
+* /api/batch/inventoryBatchList:
 *   post:
 *     tags: [Batch]
 *     description: If PID(product ID) and (IID) inventory ID is provided, it will return the batch list of that product which is in that inventory.

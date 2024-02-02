@@ -153,6 +153,46 @@ async function getProductsByManufacturer(req, res) {
 
 
 
+async function getProductsByInventory(req, res) {
+
+  const iid = req.body.IID;
+
+  try {
+    const productsInInventory = await prisma.inventoryBatch.findMany({
+      where: {
+        iid: iid,
+      },
+      distinct: ['pid'],
+      select: {
+        Product: {
+          select: {
+            pid: true,
+            CategoryName: true,
+            ProductName: true,
+            Image: true,
+            Weight_volume: true,
+            Unit: true,
+            UnitPrice: true,
+            Description: true,
+            Rating: true,
+          },
+        },
+      },
+    });
+
+    if (productsInInventory) {   
+      res.status(200).json({productsInInventory});
+    } else {
+      res.status(404).json({ error: 'No products found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
 async function getCategoriesByManufacturer(req, res) {
 
   const userId = req.body.MID;
@@ -403,6 +443,7 @@ module.exports = {
     getRecommendedCategories,
     getAllCategories,
     getProductsByManufacturer,
+    getProductsByInventory,
     getCategoriesByManufacturer,
     updateProductInformation,
     addNewProduct,
