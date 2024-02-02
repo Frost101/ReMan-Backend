@@ -30,15 +30,15 @@ const batchRouter = express.Router();
 *           schema:
 *            type: object
 *            required:
-*              - IID
-*              - PID
+*              - iid
+*              - pid
 *            properties: 
-*              IID:
-*                type: integer
-*                default: 123456
-*              PID:
-*                type: integer
-*                default: 123456
+*              iid:
+*                type: string
+*                default: 8b4753af-39a0-458a-88ae-182875e0ec3b
+*              pid:
+*                type: string
+*                default: 288e0918-67ef-448d-b05d-380543e3ebcc
 *     responses:
 *        200:
 *          description: An array of batches
@@ -53,18 +53,24 @@ const batchRouter = express.Router();
 *                    items:
 *                      type: object
 *                      properties:
-*                        BID:
+*                        bid:
 *                          type: integer
 *                          example: 123456   
-*                        manufacturingDate:
+*                        ManufacturingDate:
 *                          type: string
 *                          example: 2021-01-01
-*                        expiryDate:
+*                        ExpiryDate:
 *                          type: string
 *                          example: 2022-01-01
-*                        quantity:
+*                        Quantity:
 *                          type: integer
 *                          example: 1000
+*                        MarketStatus:
+*                          type: boolean
+*                          example: true
+*                        Sale:
+*                          type: double
+*                          example: 0.0
 *        401:
 *          description: Unauthorized, Invalid username or password
 *        403:
@@ -133,20 +139,18 @@ batchRouter.put('/inventoryBatchScreening', batchScreening);
 *           schema:
 *            type: object
 *            required:
-*              - PHID
-*              - PID
+*              - phid
+*              - pid
 *              - manufacturingDate
 *              - expiryDate
 *              - quantity
-*              - inMarketplace
-*              - sale
 *            properties: 
-*              PHID:
-*                type: integer
-*                default: 123456
-*              PID:
-*                type: integer
-*                default: 123456
+*              phid:
+*                type: string
+*                default: a5e62d0b-be4d-4516-8334-2576df8b8282
+*              pid:
+*                type: string
+*                default: 288e0918-67ef-448d-b05d-380543e3ebcc
 *              manufacturingDate:
 *                type: string
 *                default: 2021-01-01
@@ -156,12 +160,6 @@ batchRouter.put('/inventoryBatchScreening', batchScreening);
 *              quantity:
 *                type: integer
 *                default: 1000
-*              inMarketplace:
-*                type: boolean
-*                default: true
-*              sale:
-*                type: double
-*                default: 0
 *     responses:
 *        200:
 *          description: Successfully added
@@ -191,18 +189,18 @@ batchRouter.post('/newBatch', addNewBatch);
 *           schema:
 *            type: object
 *            required:
-*              - IID
-*              - PID
+*              - iid
+*              - pid
 *              - manufacturingDate
 *              - expiryDate
 *              - quantity
 *              - inMarketplace
 *              - sale
 *            properties: 
-*              IID:
+*              iid:
 *                type: string
 *                default: 8b4753af-39a0-458a-88ae-182875e0ec3b
-*              PID:
+*              pid:
 *                type: string
 *                default: 288e0918-67ef-448d-b05d-380543e3ebcc
 *              manufacturingDate:
@@ -252,9 +250,9 @@ batchRouter.post('/newBatchInventory', addNewBatch1);
 *           schema:
 *            type: object
 *            required:
-*              - BID
+*              - bid
 *            properties: 
-*              BID:
+*              bid:
 *                type: string
 *                default: 123456
 *     responses:

@@ -61,19 +61,6 @@ async function getAllCategories(req, res) {
       console.error('Error retrieving Categories:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
-    // let output = {
-    //     categories: [{
-    //         categoryName: 'Beverage',
-    //         categoryImage: 'public/images/beverage.jpg',
-    //     },
-    //     {
-    //         categoryName: 'Dairy',
-    //         categoryImage: 'public/images/dairy.jpg',
-    //     }
-    // ]
-    // };
-
-    // res.json(output);
 }
 
 
@@ -101,19 +88,6 @@ async function getRecommendedCategories(req, res) {
         console.error('Error retrieving Categories:', error);
         res.status(500).json({ error: 'Internal server error' });
       }
-    // let output = {
-    //     categories: [{
-    //         categoryName: 'Beverage',
-    //         categoryImage: 'public/images/beverage.jpg',
-    //     },
-    //     {
-    //         categoryName: 'Dairy',
-    //         categoryImage: 'public/images/dairy.jpg',
-    //     }
-    // ]
-    // };
-
-    // res.json(output);
 }
 
 
@@ -155,7 +129,7 @@ async function getProductsByManufacturer(req, res) {
 
 async function getProductsByInventory(req, res) {
 
-  const iid = req.body.IID;
+  const iid = req.body.iid;
 
   try {
     const productsInInventory = await prisma.inventoryBatch.findMany({
