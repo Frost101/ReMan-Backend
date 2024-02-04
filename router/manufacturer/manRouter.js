@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {getManufacturerInfo, getOwnerInfo} = require('../../controllers/manufacturer/manController'); 
+const {getManufacturerInfo, getOwnerInfo, getManufacturerCountInfo} = require('../../controllers/manufacturer/manController'); 
 
 //* Initialize router
 const manufacturerRouter = express.Router();
@@ -144,5 +144,64 @@ manufacturerRouter.post('/info', getManufacturerInfo);
 *          description: Internal server error
 */
 manufacturerRouter.post('/ownerInfo', getOwnerInfo);
+
+
+
+
+/**
+* @swagger
+* /api/manufacturer/countInfo:
+*   post:
+*     tags: [Manufacturer]
+*     description: Get total numbers of inventories, production houses, distinct products, batches, categories, and total products
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - manufacturerId
+*            properties: 
+*              manufacturerId:
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
+*     responses:
+*        200:
+*          description: Manufacturer related information
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  InventoryCount:
+*                    type: integer
+*                    default: 5
+*                  ProductionHouseCount:
+*                    type: integer
+*                    default: 5
+*                  DistinctProductCount:
+*                    type: integer
+*                    default: 10
+*                  BatchCount:
+*                    type: integer
+*                    default: 80
+*                  CategoryCount:
+*                    type: integer
+*                    default: 3
+*                  TotalProductCount:
+*                    type: integer
+*                    default: 12000      
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+manufacturerRouter.post('/countInfo', getManufacturerCountInfo);
 
 module.exports = manufacturerRouter;
