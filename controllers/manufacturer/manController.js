@@ -48,18 +48,6 @@ async function getManufacturerInfo(req, res) {
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
-    // let output = {
-    //         name: 'Meril',
-    //         phoneNumber: ['01988974891', '05776879659'],
-    //         image: 'public/images/meril.jpg',
-    //         rating: 4.87,
-    //         website: 'https://www.meril.com',
-    //         email: 'meril@gmail.com',
-    //         address: '32 Baker Street, Mymensingh',
-    //         tin: 23878931
-    // };
-
-    // res.json(output);
 }
 
 
@@ -88,7 +76,112 @@ function getOwnerInfo(req, res) {
     res.json(output);
 }
 
+
+
+async function getManufacturerCountInfo(req, res) {
+
+  const manufacturerId = req.body.manufacturerId;
+
+  try {
+    const inventoryCount = await prisma.inventory.count({
+      where: {
+        mid: manufacturerId,
+      },
+    });
+
+    const productionHouseCount = await prisma.productionHouse.count({
+      where: {
+        mid: manufacturerId,
+      },
+    });
+
+    const categories = await prisma.product.findMany({
+      where: {
+        mid: manufacturerId,
+      },
+      distinct: ['CategoryName'],
+    });
+
+    const categoryCount = categories.length;
+
+    const products = await prisma.product.findMany({
+      where: {
+        mid: manufacturerId,
+      },
+      select: {
+        pid: true,
+      },
+    });
+
+    const distinctProductCount = products.length;
+
+    let batchCount = 0, totalProductCount = 0;
+
+    const totalInventoryProductCount = await prisma.inventoryBatch.groupBy({
+      by: ['pid'],
+      _sum: {
+        Quantity: true,
+      },
+      _count: {
+        bid: true,
+      },
+      where: {
+        pid: { in: products.map((product) => product.pid) },
+      },
+    });
+
+    const totalProductionHouseProductCount = await prisma.productionHouseBatch.groupBy({
+      by: ['pid'],
+      _sum: {
+        Quantity: true,
+      },
+      _count: {
+        bid: true,
+      },
+      where: {
+        pid: { in: products.map((product) => product.pid) },
+      },
+    });
+
+    for (let i = 0; i < totalInventoryProductCount.length; i++) {
+      totalProductCount += totalInventoryProductCount[i]._sum.Quantity;
+      batchCount += totalInventoryProductCount[i]._count.bid;
+    }
+
+    for (let i = 0; i < totalProductionHouseProductCount.length; i++) {
+      totalProductCount += totalProductionHouseProductCount[i]._sum.Quantity;
+      batchCount += totalProductionHouseProductCount[i]._count.bid;
+    }
+
+    res.status(200).json({
+      InventoryCount: inventoryCount,
+      ProductionHouseCount: productionHouseCount,
+      DistinctProductCount: distinctProductCount,
+      BatchCount: batchCount,
+      CategoryCount: categoryCount,
+      TotalProductCount: totalProductCount,
+    });
+
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+  // let output = {
+  //         name: 'Meril',
+  //         phoneNumber: ['01988974891', '05776879659'],
+  //         image: 'public/images/meril.jpg',
+  //         rating: 4.87,
+  //         website: 'https://www.meril.com',
+  //         email: 'meril@gmail.com',
+  //         address: '32 Baker Street, Mymensingh',
+  //         tin: 23878931
+  // };
+
+  // res.json(output);
+}
+
 module.exports = {
     getManufacturerInfo,
     getOwnerInfo,
+    getManufacturerCountInfo
 }

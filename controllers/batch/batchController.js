@@ -22,6 +22,9 @@ async function getInventoryBatchList(req, res){
           MarketStatus: true,
           Sale: true,
         },
+        orderBy: {
+          ExpiryDate: 'desc',
+        }
       });
   
       if (batches) {   
@@ -54,6 +57,9 @@ async function getProductionHouseBatchList(req, res){
           ExpiryDate: true,
           Quantity: true,
         },
+        orderBy: {
+          ExpiryDate: 'desc',
+        }
       });
   
       if (batches) {   
