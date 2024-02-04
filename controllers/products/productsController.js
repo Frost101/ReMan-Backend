@@ -419,27 +419,68 @@ async function deleteCategory(req, res) {
 }
 
 
-function getProductByCategory(req, res) {
-    let output = {
-        products: [{
-            PID: 123456,
-            productName: 'Mojito',
-            productImage: 'public/images/mojito.jpg',
-            batch : [123456, 256457, 256423],
-            quantity: 1000,
-            discountRate: 10,
-            MID: 123456,
-            manufacturerName: 'Fresh',
-            manufacturerLogo: 'public/images/fresh.jpg',
-            unitPrice: 10,
-            weightVolume: 250,
-            unit: 'mL',
-            rating: 4,
-        }
-    ]
-    };
+async function getProductByCategory(req, res) {
 
-    res.json(output);
+  const CategoryName = req.body.CategoryName;
+
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        CategoryName: CategoryName,
+      },
+      select: {
+        pid: true,
+        ProductName: true,
+        Image: true,
+        Weight_volume: true,
+        Unit: true,
+        UnitPrice: true,
+        Description: true,
+        Rating: true,
+        mid: true,
+        Company: {
+          select: {
+            Name: true,
+            Logo: true,
+          }
+        }
+      },
+    });
+
+    if (products) {
+      for(let i = 0; i < products.length; i++) {
+        products[i].ManufacturerName = products[i].Company.Name;
+        products[i].ManufacturerLogo = products[i].Company.Logo;
+        delete products[i].Company;
+      }  
+      res.status(200).json({products});
+    } else {
+      res.status(404).json({ error: 'No products found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+    // let output = {
+    //     products: [{
+    //         PID: 123456,
+    //         productName: 'Mojito',
+    //         productImage: 'public/images/mojito.jpg',
+    //         batch : [123456, 256457, 256423],
+    //         quantity: 1000,
+    //         discountRate: 10,
+    //         MID: 123456,
+    //         manufacturerName: 'Fresh',
+    //         manufacturerLogo: 'public/images/fresh.jpg',
+    //         unitPrice: 10,
+    //         weightVolume: 250,
+    //         unit: 'mL',
+    //         rating: 4,
+    //     }
+    // ]
+    // };
+
+    // res.json(output);
 
 }
 

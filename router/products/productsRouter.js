@@ -761,11 +761,11 @@ productsRouter.delete('/deleteCategory', deleteCategory);
 *           schema:
 *            type: object
 *            required:
-*              - categoryName
+*              - CategoryName
 *            properties:
-*              categoryName:
+*              CategoryName:
 *                type: string
-*                default: Beverage
+*                default: Juice
 *     responses:
 *        200:
 *          description: An array of products
@@ -780,45 +780,39 @@ productsRouter.delete('/deleteCategory', deleteCategory);
 *                    items:
 *                      type: object
 *                      properties:
-*                        PID:
-*                          type: integer
+*                        pid:
+*                          type: string
 *                          example: 123456
-*                        productName:
+*                        ProductName:
 *                          type: string
 *                          example: Mojito
-*                        productImage:
+*                        Image:
 *                          type: string
 *                          example: public/images/mojito.jpg
-*                        batch:
-*                          type: array
-*                          example: [123456, 256457, 256423]
-*                        quantity:
-*                          type: integer
+*                        Weight_volume:
+*                          type: double
+*                          example: 120
+*                        Unit:
+*                          type: string
 *                          example: 1000
-*                        discountRate:
-*                          type: integer
+*                        UnitPrice:
+*                          type: double
 *                          example: 10
-*                        MID:
-*                          type: integer
+*                        Description:
+*                          type: string
 *                          example: 123456
-*                        manufacturerName:
+*                        Rating:
+*                          type: double
+*                          example: 4.7
+*                        mid:
 *                          type: string
-*                          example: Fresh
-*                        manufacturerLogo:
+*                          example: 435465
+*                        ManufacturerName:
 *                          type: string
-*                          example: public/images/fresh.jpg
-*                        unitPrice:
-*                          type: integer
-*                          example: 10
-*                        weightVolume:
-*                          type: integer
-*                          example: 250
-*                        unit:
+*                          example: Mojo
+*                        ManufacturerLogo:
 *                          type: string
-*                          example: mL
-*                        rating:
-*                          type: integer
-*                          example: 4           
+*                          example: public/images/mojito.jpg      
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
