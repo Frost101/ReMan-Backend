@@ -23,7 +23,7 @@ async function getInventoryBatchList(req, res){
           Sale: true,
         },
         orderBy: {
-          ExpiryDate: 'desc',
+          ExpiryDate: 'asc',
         }
       });
   
@@ -58,7 +58,7 @@ async function getProductionHouseBatchList(req, res){
           Quantity: true,
         },
         orderBy: {
-          ExpiryDate: 'desc',
+          ExpiryDate: 'asc',
         }
       });
   
