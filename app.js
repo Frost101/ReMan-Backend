@@ -37,6 +37,7 @@ app.use(express.urlencoded({ extended: true }));     //? To Parse URL encoded da
 
 //* Set view engine
 //* Now you can render ejs files but we will use React so we wont be needing it hopefully
+app.set("views", __dirname + "/views");
 app.set('view engine', 'ejs');
 
 
