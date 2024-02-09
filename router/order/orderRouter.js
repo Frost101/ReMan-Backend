@@ -254,11 +254,11 @@ orderRouter.post('/retailer', getRetailerOrders);
 *           schema:
 *            type: object
 *            required:
-*              - MID
+*              - manufacturerId
 *            properties: 
-*              MID:
-*                type: integer
-*                default: 123434
+*              manufacturerId:
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
 *     responses:
 *        200:
 *          description: An array of Orders of a Manufacturer

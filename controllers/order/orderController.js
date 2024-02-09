@@ -1,3 +1,8 @@
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
+
 function addNewOrder(req, res) {
     let output = {
         message: 'adding a new order successful'
@@ -40,36 +45,86 @@ function getRetailerOrders(req, res) {
     res.json(output);
 }
 
-function getManufacturerOrders(req, res) {
-    let output = {
-        orders: [{
-        oid: 233412,
-        shopName: 'Hatir Store',
-        shopImage: 'public/images/hatir_store.jpg',
-        shopPhoneNumber: '01787623092',
-        orderDate: '03/08/2023',
-        deliveryDate: '17/08/2023',
-        totalPrice: 230000,
-        paymentStatus: 'Paid',
-        deliveryStatus: 'Delivered',
-        paymentMethod: 'COD'
-        },
-        {    
-        oid: 233413,
-        shopName: 'Kulir Store',
-        shopImage: 'public/images/kulir_store.jpg',
-        shopPhoneNumber: '01787343092',
-        orderDate: '03/08/2023',
-        deliveryDate: '19/08/2023',
-        totalPrice: 250000,
-        paymentStatus: 'Paid',
-        deliveryStatus: 'Delivered',
-        paymentMethod: 'Bkash'
-        }
-        ]
-    };
+async function getManufacturerOrders(req, res) {
 
-    res.json(output);
+    const mid = req.body.manufacturerId;
+
+    try {
+      const orders = await prisma.orderFragment.findMany({
+        where: {
+          mid: mid,
+        },
+        select: {
+          oid: true,
+          FinalPrice: true,
+          PaidAmount: true,
+          PaymentStatus: true,
+          DeliveryStatus: true,
+          DeliveryDate: true,
+          PaymentLastDate: true,
+          Order: {
+            select: {
+              OrderDate: true,
+              PaymentMethod: true,
+              sid: true,
+              Shop: {
+                select: {
+                  Name: true,
+                  Logo: true,
+                  PhoneNumber: true,
+                },
+              },
+            },
+          },
+        },
+      });
+  
+      if (orders) {
+        for(let i = 0; i < orders.length; i++) {
+            orders[i].ShopName = orders[i].Order.Shop.Name;
+            orders[i].ShopLogo = orders[i].Order.Shop.Logo;
+            orders[i].ShopPhoneNumber = orders[i].Order.Shop.PhoneNumber;
+            orders[i].OrderDate = orders[i].Order.OrderDate;
+            orders[i].PaymentMethod = orders[i].Order.PaymentMethod;
+            delete orders[i].Order;
+        }  
+        res.status(200).json({orders});
+      } else {
+        res.status(404).json({ error: 'No orders found' });
+      }
+    } catch (error) {
+      console.error('Error retrieving order:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    // let output = {
+    //     orders: [{
+    //     oid: 233412,
+    //     shopName: 'Hatir Store',
+    //     shopImage: 'public/images/hatir_store.jpg',
+    //     shopPhoneNumber: '01787623092',
+    //     orderDate: '03/08/2023',
+    //     deliveryDate: '17/08/2023',
+    //     totalPrice: 230000,
+    //     paymentStatus: 'Paid',
+    //     deliveryStatus: 'Delivered',
+    //     paymentMethod: 'COD'
+    //     },
+    //     {    
+    //     oid: 233413,
+    //     shopName: 'Kulir Store',
+    //     shopImage: 'public/images/kulir_store.jpg',
+    //     shopPhoneNumber: '01787343092',
+    //     orderDate: '03/08/2023',
+    //     deliveryDate: '19/08/2023',
+    //     totalPrice: 250000,
+    //     paymentStatus: 'Paid',
+    //     deliveryStatus: 'Delivered',
+    //     paymentMethod: 'Bkash'
+    //     }
+    //     ]
+    // };
+
+    // res.json(output);
 }
 
 function getRetailerOrderDetails(req, res) {
