@@ -34,31 +34,34 @@ model Shop {
   Division       String?        @db.VarChar
   AddressDetails String?        @db.VarChar
   Cart           Cart[]
+  Order          Order[]
   ShopOwner      ShopOwner[]
   VoucherUsage   VoucherUsage[]
 }
 
 model Company {
-  mid             String            @id(map: "Company_pk") @default(uuid()) @db.Uuid
-  Name            String?           @db.VarChar
-  PhoneNumber     String?           @db.VarChar
-  tin             String?           @db.VarChar
-  Website         String?           @db.VarChar
-  Email           String?           @unique(map: "Company_pk2") @db.VarChar
-  Password        String?           @db.VarChar
-  Logo            String?           @db.VarChar
-  Rating          Float?
-  HouseNumber     String?           @db.VarChar
-  Street          String?           @db.VarChar
-  zip             Int?
-  Thana           String?           @db.VarChar
-  Division        String?           @db.VarChar
-  AddressDetails  String?           @db.VarChar
-  CompanyOwner    CompanyOwner[]
-  Inventory       Inventory[]
-  Product         Product[]
-  ProductionHouse ProductionHouse[]
-  Voucher         Voucher[]
+  mid                String               @id(map: "Company_pk") @default(uuid()) @db.Uuid
+  Name               String?              @db.VarChar
+  PhoneNumber        String?              @db.VarChar
+  tin                String?              @db.VarChar
+  Website            String?              @db.VarChar
+  Email              String?              @unique(map: "Company_pk2") @db.VarChar
+  Password           String?              @db.VarChar
+  Logo               String?              @db.VarChar
+  Rating             Float?
+  HouseNumber        String?              @db.VarChar
+  Street             String?              @db.VarChar
+  zip                Int?
+  Thana              String?              @db.VarChar
+  Division           String?              @db.VarChar
+  AddressDetails     String?              @db.VarChar
+  CompanyOwner       CompanyOwner[]
+  Inventory          Inventory[]
+  OrderFragment      OrderFragment[]
+  Product            Product[]
+  ProductionHouse    ProductionHouse[]
+  SingleProductOrder SingleProductOrder[]
+  Voucher            Voucher[]
 }
 
 model ShopOwner {
@@ -165,6 +168,7 @@ model Product {
   Category                       Category               @relation(fields: [CategoryName], references: [CategoryName], onDelete: NoAction, onUpdate: NoAction, map: "Product_Category_CategoryName_fk")
   Company                        Company                @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Product_Company_mid_fk")
   ProductionHouseBatch           ProductionHouseBatch[]
+  SingleProductOrder             SingleProductOrder[]
 }
 
 model ProductionHouse {
@@ -216,4 +220,53 @@ model VoucherUsage {
   Voucher     Voucher @relation(fields: [VoucherCode], references: [VoucherCode], onDelete: NoAction, onUpdate: NoAction, map: "VoucherUsage_Voucher_VoucherCode_fk")
 
   @@id([sid, VoucherCode], map: "VoucherUsage_pk")
+}
+
+model Order {
+  oid                String               @id(map: "Order_pk") @default(uuid()) @db.Uuid
+  sid                String               @db.Uuid
+  OrderDate          DateTime?            @db.Date
+  TotalPrice         Float?
+  PaidAmount         Float?
+  PaymentStatus      String?              @db.VarChar
+  DeliveryStatus     String?              @db.VarChar
+  PaymentMethod      String?              @db.VarChar
+  PaymentLastDate    DateTime?            @db.Date
+  Shop               Shop                 @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "Order_Shop_ShopID_fk")
+  OrderFragment      OrderFragment[]
+  SingleProductOrder SingleProductOrder[]
+}
+
+model OrderFragment {
+  oid             String    @db.Uuid
+  mid             String    @db.Uuid
+  RawPrice        Float?
+  DeliveryCharge  Float?
+  VoucherCode     String?   @db.Uuid
+  ReducedAmount   Float?
+  FinalPrice      Float?
+  PaidAmount      Float?
+  PaymentStatus   String?   @db.VarChar
+  DeliveryStatus  String?   @db.VarChar
+  DeliveryDate    DateTime? @db.Date
+  PaymentLastDate DateTime? @db.Date
+  Company         Company   @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "OrderFragment_Company_mid_fk")
+  Order           Order     @relation(fields: [oid], references: [oid], onDelete: NoAction, onUpdate: NoAction, map: "OrderFragment_Order_oid_fk")
+
+  @@id([oid, mid], map: "OrderFragment_pk")
+}
+
+model SingleProductOrder {
+  oid             String  @db.Uuid
+  mid             String  @db.Uuid
+  pid             String  @db.Uuid
+  Quantity        Int?
+  ShippedQuantity Int?
+  ShipmentStatus  String? @db.VarChar
+  Price           Float?
+  Company         Company @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "SingleProductOrder_Company_mid_fk")
+  Order           Order   @relation(fields: [oid], references: [oid], onDelete: NoAction, onUpdate: NoAction, map: "SingleProductOrder_Order_oid_fk")
+  Product         Product @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "SingleProductOrder_Product_pid_fk")
+
+  @@id([oid, mid, pid], map: "SingleProductOrder_pk")
 }
