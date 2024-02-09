@@ -4,8 +4,8 @@
   "description": "ReMan API and backend",
   "main": "app.js",
   "scripts": {
-    "start": "NODE_ENV=development node app.js",
-    "prod": "NODE_ENV=production node app.js",
+    "start": "NODE_ENV=development nodemon app.js",
+    "prod": "NODE_ENV=production nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "prisma generate"
   },

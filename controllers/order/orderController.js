@@ -87,6 +87,42 @@ async function getManufacturerOrders(req, res) {
             orders[i].OrderDate = orders[i].Order.OrderDate;
             orders[i].PaymentMethod = orders[i].Order.PaymentMethod;
             delete orders[i].Order;
+
+            const products = await prisma.singleProductOrder.findMany({
+                where: {
+                  oid: orders[i].oid,
+                  mid: mid,
+                },
+                select: {
+                  pid: true,
+                  Quantity: true,
+                  ShippedQuantity: true,
+                  ShipmentStatus: true,
+                  Price: true,
+                  Product: {
+                    select: {
+                      CategoryName: true,
+                      ProductName: true,
+                      Image: true,
+                      Weight_volume: true,
+                      Unit: true,
+                      Description: true,
+                      UnitPrice: true,
+                    },
+                  },
+                },
+            });
+
+            for(let j = 0; j < products.length; j++) {
+                products[j].ProductName = products[j].Product.ProductName;
+                products[j].Image = products[j].Product.Image;
+                products[j].WeightVolume = products[j].Product.Weight_volume;
+                products[j].Unit = products[j].Product.Unit;
+                products[j].Description = products[j].Product.Description;
+                products[j].UnitPrice = products[j].Product.UnitPrice;
+                delete products[j].Product;
+            }
+            orders[i].Products = products;
         }  
         res.status(200).json({orders});
       } else {
