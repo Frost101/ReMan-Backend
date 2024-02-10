@@ -55,6 +55,7 @@ model Company {
   Thana              String?              @db.VarChar
   Division           String?              @db.VarChar
   AddressDetails     String?              @db.VarChar
+  Cart               Cart[]
   CompanyOwner       CompanyOwner[]
   Inventory          Inventory[]
   OrderFragment      OrderFragment[]
@@ -103,6 +104,8 @@ model Cart {
   Quantity       Int?
   Price          Float?
   DeliveryCharge Float?
+  mid            String  @db.Uuid
+  Company        Company @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Cart_Company_mid_fk")
   Product        Product @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "Cart_Product_pid_fk")
   Shop           Shop    @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "Cart_Shop_ShopID_fk")
 

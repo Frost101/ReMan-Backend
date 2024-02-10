@@ -32,11 +32,11 @@ const cartRouter = express.Router();
 *           schema:
 *            type: object
 *            required:
-*              - SID
+*              - sid
 *            properties: 
-*              SID:
-*                type: integer
-*                default: 123456
+*              sid:
+*                type: string
+*                default: 37c86bde-7c02-4bd5-923a-b302efdcf466
 *     responses:
 *        200:
 *          description: An array of products' information in the cart
