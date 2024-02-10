@@ -184,6 +184,44 @@ async function getProductsByInventory(req, res) {
 
 
 
+async function getInventoriesByProduct(req, res) {
+
+  const pid = req.body.pid;
+
+  try {
+    const inventories = await prisma.inventoryBatch.findMany({
+      where: {
+        pid: pid,
+        MarketStatus: true,
+      },
+      distinct: ['iid'],
+      select: {
+        Inventory: {
+          select: {
+            iid: true,
+            InventoryName: true,
+            Image: true,
+          }  
+        }
+      }
+    });
+
+    for(let i = 0; i < inventories.length; i++) {
+      inventories[i].iid = inventories[i].Inventory.iid;
+      inventories[i].InventoryName = inventories[i].Inventory.InventoryName;
+      inventories[i].Image = inventories[i].Inventory.Image;
+      delete inventories[i].Inventory;
+    }
+
+      res.status(200).json({inventories});
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
 
 async function getProductsByProductionHouse(req, res) {
 
@@ -619,6 +657,7 @@ module.exports = {
     getAllCategories,
     getProductsByManufacturer,
     getProductsByInventory,
+    getInventoriesByProduct,
     getProductsByProductionHouse,
     getCategoriesByManufacturer,
     updateProductInformation,

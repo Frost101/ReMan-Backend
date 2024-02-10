@@ -253,6 +253,7 @@ model OrderFragment {
   DeliveryStatus  String?   @db.VarChar
   DeliveryDate    DateTime? @db.Date
   PaymentLastDate DateTime? @db.Date
+  ShipmentStatus  String?   @db.VarChar
   Company         Company   @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "OrderFragment_Company_mid_fk")
   Order           Order     @relation(fields: [oid], references: [oid], onDelete: NoAction, onUpdate: NoAction, map: "OrderFragment_Order_oid_fk")
 

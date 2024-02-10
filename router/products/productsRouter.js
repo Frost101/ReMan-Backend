@@ -8,6 +8,7 @@ const {
         getAllCategories,
         getProductsByManufacturer,
         getProductsByInventory,
+        getInventoriesByProduct,
         getProductsByProductionHouse,
         getCategoriesByManufacturer,
         updateProductInformation,
@@ -341,6 +342,61 @@ productsRouter.post('/byManufacturer', getProductsByManufacturer);
 *          description: Internal server error
 */
 productsRouter.post('/byInventory', getProductsByInventory);
+
+
+
+
+/**
+* @swagger
+* /api/products/getInventories:
+*   post:
+*     tags: [Products]
+*     description: Get all inventories for a product
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - pid
+*            properties: 
+*              pid:
+*                type: string
+*                default: 4c5cf7b4-ecd5-453a-abd9-2be12291c7c3
+*     responses:
+*        200:
+*          description: An array of inventories
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                 inventories:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        iid:
+*                          type: string
+*                          example: 123456
+*                        InventoryName:
+*                          type: string
+*                          example: Mojito
+*                        Image:
+*                          type: string
+*                          example: public/images/mojito.jpg
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+productsRouter.post('/getInventories', getInventoriesByProduct);
 
 
 

@@ -62,6 +62,7 @@ async function getManufacturerOrders(req, res) {
           DeliveryStatus: true,
           DeliveryDate: true,
           PaymentLastDate: true,
+          ShipmentStatus: true,
           Order: {
             select: {
               OrderDate: true,
@@ -163,6 +164,58 @@ async function getManufacturerOrders(req, res) {
     // res.json(output);
 }
 
+
+async function getOrderedProductInfo(req, res) {
+
+  const pid = req.body.pid;
+  const oid = req.body.oid;
+  const mid = req.body.manufacturerId;
+
+  try {
+    const productInfo = await prisma.singleProductOrder.findMany({
+      where: {
+        oid: oid,
+        mid: mid,
+        pid: pid,
+      },
+      select: {
+        Quantity: true,
+        ShippedQuantity: true,
+        ShipmentStatus: true,
+        Price: true,
+        Product: {
+          select: {
+            ProductName: true,
+            CategoryName: true,
+            Image: true,
+            Weight_volume: true,
+            Unit: true,
+            UnitPrice: true,
+            Description: true,
+            Rating: true,
+          }  
+        }
+      }
+    });
+
+    productInfo[0].ProductName = productInfo[0].Product.ProductName;
+    productInfo[0].CategoryName = productInfo[0].Product.CategoryName;
+    productInfo[0].Image = productInfo[0].Product.Image;
+    productInfo[0].Weight_volume = productInfo[0].Product.Weight_volume;
+    productInfo[0].Unit = productInfo[0].Product.Unit;
+    productInfo[0].UnitPrice = productInfo[0].Product.UnitPrice;
+    productInfo[0].Description = productInfo[0].Product.Description;
+    productInfo[0].Rating = productInfo[0].Product.Rating;
+    delete productInfo[0].Product;
+
+    res.status(200).json({productInfo: productInfo[0]});
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
 function getRetailerOrderDetails(req, res) {
     let output = {
         orderDate: '03/08/2023',
@@ -255,6 +308,7 @@ module.exports = {
     updateDeliveryStatus,
     getRetailerOrders,
     getManufacturerOrders,
+    getOrderedProductInfo,
     getRetailerOrderDetails,
     getManufacturerOrderDetails
 }
