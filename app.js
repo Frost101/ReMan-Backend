@@ -29,7 +29,7 @@ dotenv.config();
 const app = express();
 
 
-app.use(cors());
+// app.use(cors());
 app.use(express.json());                             //? To Parse JSON objects in the body
 app.use(express.urlencoded({ extended: true }));     //? To Parse URL encoded data(form data) in the body. And {extended: true} parse query data
 
