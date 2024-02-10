@@ -30,6 +30,15 @@ const app = express();
 
 
 app.use(cors());
+app.options('*', cors());
+var allowCrossDomain = function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+}
+app.use(allowCrossDomain);
+
 app.use(express.json());                             //? To Parse JSON objects in the body
 app.use(express.urlencoded({ extended: true }));     //? To Parse URL encoded data(form data) in the body. And {extended: true} parse query data
 
