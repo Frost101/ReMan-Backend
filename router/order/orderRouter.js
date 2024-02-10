@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, getRetailerOrderDetails, getManufacturerOrderDetails} = require('../../controllers/order/orderController'); 
+const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails} = require('../../controllers/order/orderController'); 
 
 //* Initialize router
 const orderRouter = express.Router();
@@ -321,6 +321,66 @@ orderRouter.post('/retailer', getRetailerOrders);
 *          description: Internal server error
 */
 orderRouter.post('/orderedProductInfo', getOrderedProductInfo);
+
+
+
+
+/**
+* @swagger
+* /api/order/updateShipmentInfo:
+*   put:
+*     tags: [Order]
+*     description: Update Shipment Information of an order
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - manufacturerId
+*              - oid
+*              - pid
+*              - bid
+*              - Quantity
+*            properties: 
+*              manufacturerId:
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
+*              oid:
+*                type: string
+*                default: 08402709-4821-46bf-954f-3515c0f9c8ba
+*              pid:
+*                type: string
+*                default: 288e0918-67ef-448d-b05d-380543e3ebcc
+*              bid:
+*                type: string
+*                default: 0ed39543-023a-43ec-b634-f99f53814826
+*              Quantity:
+*                type: integer
+*                default: 10
+*     responses:
+*        200:
+*          description: Updating Shipment Status and Assigning Batches to an Order
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  message:
+*                    type: string
+*                    default: Shipment Status Update and Assigning Batches Successful 
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+orderRouter.put('/updateShipmentInfo', updateShipmentInfo);
 
 
 
