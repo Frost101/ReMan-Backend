@@ -181,25 +181,23 @@ cartRouter.put('/updateCart', updateCartInfo);
 *           schema:
 *            type: object
 *            required:
-*              - products
+*              - product
 *            properties: 
-*                  products:
-*                    type: array
-*                    items:
+*                  product:
 *                      type: object
 *                      properties:
 *                        sid:
-*                          type: integer
-*                          example: 123456
+*                          type: string
+*                          example: 37c86bde-7c02-4bd5-923a-b302efdcf466
 *                        pid:
-*                          type: integer
-*                          example: 423456
-*                        quantity:
+*                          type: string
+*                          example: 288e0918-67ef-448d-b05d-380543e3ebcc
+*                        Quantity:
 *                          type: integer
 *                          example: 1000
-*                        price:
-*                          type: integer
-*                          example: 30000
+*                        Price:
+*                          type: double
+*                          example: 15000
 *     responses:
 *        200:
 *          description: Success message

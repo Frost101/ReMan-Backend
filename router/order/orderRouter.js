@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getRetailerOrderDetails, getManufacturerOrderDetails} = require('../../controllers/order/orderController'); 
+const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, getRetailerOrderDetails, getManufacturerOrderDetails} = require('../../controllers/order/orderController'); 
 
 //* Initialize router
 const orderRouter = express.Router();
@@ -237,6 +237,90 @@ orderRouter.put('/deliveryStatus', updateDeliveryStatus);
 *          description: Internal server error
 */
 orderRouter.post('/retailer', getRetailerOrders);
+
+
+
+
+/**
+* @swagger
+* /api/order/orderedProductInfo:
+*   post:
+*     tags: [Order]
+*     description: Get information for an order of a product
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - manufacturerId
+*              - oid
+*              - pid
+*            properties: 
+*              manufacturerId:
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
+*              oid:
+*                type: string
+*                default: 870fa621-a340-48c5-a382-9bd3be0366d0
+*              pid:
+*                type: string
+*                default: 288e0918-67ef-448d-b05d-380543e3ebcc
+*     responses:
+*        200:
+*          description: An array of Orders of a Manufacturer
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  orders:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        oid:
+*                          type: integer
+*                          example: 233412
+*                        shopName:
+*                          type: string
+*                          example: Hatir Store
+*                        shopImage:
+*                          type: string
+*                          example: public/images/hatir_store.jpg
+*                        shopPhoneNumber:
+*                          type: string
+*                          example: 01787623092
+*                        orderDate:
+*                          type: string
+*                          example: 03/08/2023
+*                        deliveryDate:
+*                          type: string
+*                          example: 17/08/2023
+*                        totalPrice:
+*                          type: integer
+*                          example: 230000
+*                        paymentStatus:
+*                          type: string
+*                          example: Paid
+*                        deliveryStatus:
+*                          type: string
+*                          example: Delivered
+*                        paymentMethod:
+*                          type: string
+*                          example: COD 
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+orderRouter.post('/orderedProductInfo', getOrderedProductInfo);
 
 
 

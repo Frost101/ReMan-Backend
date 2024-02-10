@@ -98,12 +98,13 @@ model CompanyOwner {
 }
 
 model Cart {
-  sid      String  @db.Uuid
-  pid      String  @db.Uuid
-  Quantity Int?
-  Price    Float?
-  Product  Product @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "Cart_Product_pid_fk")
-  Shop     Shop    @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "Cart_Shop_ShopID_fk")
+  sid            String  @db.Uuid
+  pid            String  @db.Uuid
+  Quantity       Int?
+  Price          Float?
+  DeliveryCharge Float?
+  Product        Product @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "Cart_Product_pid_fk")
+  Shop           Shop    @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "Cart_Shop_ShopID_fk")
 
   @@id([sid, pid], map: "Cart_pk")
 }
@@ -163,6 +164,8 @@ model Product {
   MaximumDiscount                Float?
   DiscountRate                   Float?
   ProductQuantityForDiscountRate Int?
+  MinimumDeliveryCharge          Float?
+  DeliveryChargeIncreaseRate     Float?
   Cart                           Cart[]
   InventoryBatch                 InventoryBatch[]
   Category                       Category               @relation(fields: [CategoryName], references: [CategoryName], onDelete: NoAction, onUpdate: NoAction, map: "Product_Category_CategoryName_fk")
@@ -242,7 +245,7 @@ model OrderFragment {
   mid             String    @db.Uuid
   RawPrice        Float?
   DeliveryCharge  Float?
-  VoucherCode     String?   @db.Uuid
+  VoucherCode     String?   @db.VarChar
   ReducedAmount   Float?
   FinalPrice      Float?
   PaidAmount      Float?
@@ -250,6 +253,7 @@ model OrderFragment {
   DeliveryStatus  String?   @db.VarChar
   DeliveryDate    DateTime? @db.Date
   PaymentLastDate DateTime? @db.Date
+  ShipmentStatus  String?   @db.VarChar
   Company         Company   @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "OrderFragment_Company_mid_fk")
   Order           Order     @relation(fields: [oid], references: [oid], onDelete: NoAction, onUpdate: NoAction, map: "OrderFragment_Order_oid_fk")
 
