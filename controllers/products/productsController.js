@@ -486,6 +486,91 @@ async function getProductByCategory(req, res) {
 
 
 
+
+async function getProductInfo(req, res) {
+
+  const pid = req.body.pid;
+
+  try {
+    const productInfo = await prisma.product.findUnique({
+      where: {
+        pid: pid,
+      },
+      select: {
+        CategoryName: true,
+        ProductName: true,
+        Image: true,
+        Weight_volume: true,
+        Unit: true,
+        UnitPrice: true,
+        Description: true,
+        Rating: true,
+        MinQuantityForSale: true,
+        MinQuantityForDiscount: true,
+        MinimumDiscount: true,
+        MaximumDiscount: true,
+        DiscountRate: true,
+        ProductQuantityForDiscountRate: true,
+        mid: true,
+        Company: {
+          select: {
+            Name: true,
+            Logo: true,
+          }
+        }
+      },
+    });
+
+    if (productInfo) {
+      productInfo.ManufacturerName = productInfo.Company.Name;
+      productInfo.ManufacturerLogo = productInfo.Company.Logo;
+      delete productInfo.Company;
+      
+      const totalQuantity = await prisma.inventoryBatch.groupBy({
+        by: ['pid'],
+        where: {
+          pid: pid,
+          MarketStatus: true,
+          Sale: 0,
+        },
+        _sum: {
+          Quantity: true,
+        },
+      });
+      productInfo.TotalQuantity = totalQuantity[0]._sum.Quantity;
+      res.status(200).json({productInfo});
+    } else {
+      res.status(404).json({ error: 'No products found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+    // let output = {
+    //     products: [{
+    //         PID: 123456,
+    //         productName: 'Mojito',
+    //         productImage: 'public/images/mojito.jpg',
+    //         batch : [123456, 256457, 256423],
+    //         quantity: 1000,
+    //         discountRate: 10,
+    //         MID: 123456,
+    //         manufacturerName: 'Fresh',
+    //         manufacturerLogo: 'public/images/fresh.jpg',
+    //         unitPrice: 10,
+    //         weightVolume: 250,
+    //         unit: 'mL',
+    //         rating: 4,
+    //     }
+    // ]
+    // };
+
+    // res.json(output);
+
+}
+
+
+
 function getProductDetails(req, res) {
     let output = {
         product: {
@@ -542,5 +627,6 @@ module.exports = {
     deleteProduct,
     deleteCategory,
     getProductByCategory,
+    getProductInfo,
     getProductDetails,
 }
