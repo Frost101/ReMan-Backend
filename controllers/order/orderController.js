@@ -216,6 +216,106 @@ async function getOrderedProductInfo(req, res) {
 }
 
 
+
+async function updateShipmentInfo(req, res) {
+
+  const pid = req.body.pid;
+  const oid = req.body.oid;
+  const mid = req.body.manufacturerId;
+  const bid = req.body.bid;
+  const Quantity = req.body.Quantity;
+
+  try {
+    const updateBatch = await prisma.inventoryBatch.update({
+      where: {
+        bid: bid,
+      },
+      data: {
+        Quantity: {
+          decrement: Quantity,
+        },
+      },
+    });
+
+    const updateShippedProduct = await prisma.singleProductOrder.updateMany({
+      where: {
+        oid: oid,
+        mid: mid,
+        pid: pid,
+      },
+      data: {
+        ShippedQuantity: {
+          increment: Quantity,
+        },
+      },
+    });
+
+    const getShippedProductAndQuantity = await prisma.singleProductOrder.findMany({
+      where: {
+        oid: oid,
+        mid: mid,
+        pid: pid,
+      },
+      select: {
+        ShippedQuantity: true,
+        Quantity: true,
+      },
+    });
+
+    let status = 'Partially Shipped';
+    if(getShippedProductAndQuantity[0].ShippedQuantity == getShippedProductAndQuantity[0].Quantity) {
+      status = 'Shipped';
+    }  
+
+    const updateShipmentStatus = await prisma.singleProductOrder.updateMany({
+      where: {
+        oid: oid,
+        mid: mid,
+        pid: pid,
+      },
+      data: {
+        ShipmentStatus: status,
+      },
+    });
+
+    const shipmentStatus = await prisma.singleProductOrder.findMany({
+      where: {
+        oid: oid,
+        mid: mid,
+      },
+      select: {
+        ShipmentStatus: true,
+      },
+    });
+
+    status = 'Shipped';
+
+    for(let i = 0; i < shipmentStatus.length; i++) {
+      if(shipmentStatus[i].ShipmentStatus != 'Shipped') {
+        status = 'Partially Shipped';
+        break;
+      }
+    }
+
+    const updateOrderFragmentShipmentStatus = await prisma.orderFragment.updateMany({
+      where: {
+        oid: oid,
+        mid: mid,
+      },
+      data: {
+        ShipmentStatus: status,
+      },
+    });
+
+    res.status(200).json({message: "Shipment Info Updated"});
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
 function getRetailerOrderDetails(req, res) {
     let output = {
         orderDate: '03/08/2023',
@@ -309,6 +409,7 @@ module.exports = {
     getRetailerOrders,
     getManufacturerOrders,
     getOrderedProductInfo,
+    updateShipmentInfo,
     getRetailerOrderDetails,
     getManufacturerOrderDetails
 }
