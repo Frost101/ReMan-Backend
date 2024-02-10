@@ -16,6 +16,7 @@ const {
         deleteProduct,
         deleteCategory,
         getProductByCategory,
+        getProductInfo,
         getProductDetails
     } = require('../../controllers/products/productsController');
 
@@ -823,6 +824,104 @@ productsRouter.delete('/deleteCategory', deleteCategory);
 *          description: Internal server error
 */
 productsRouter.post('/productByCategory', getProductByCategory);
+
+
+
+
+/**
+* @swagger
+* /api/products/productInfo:
+*   post:
+*     tags: [Products]
+*     description: Get product info of a specific product
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - pid
+*            properties:
+*              pid:
+*                type: string
+*                default: 288e0918-67ef-448d-b05d-380543e3ebcc
+*     responses:
+*        200:
+*          description: An array of products
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  productInfo:
+*                      type: object
+*                      properties:
+*                        CategoryName:
+*                          type: string
+*                          example: Juice
+*                        ProductName:
+*                          type: string
+*                          example: Mojito
+*                        Image:
+*                          type: string
+*                          example: public/images/mojito.jpg
+*                        Weight_volume:
+*                          type: double
+*                          example: 120
+*                        Unit:
+*                          type: string
+*                          example: 1000
+*                        UnitPrice:
+*                          type: double
+*                          example: 10
+*                        Description:
+*                          type: string
+*                          example: 123456
+*                        Rating:
+*                          type: double
+*                          example: 4.7
+*                        MinQuantityForSale:
+*                          type: integer
+*                          example: 100
+*                        MinQuantityForDiscount:
+*                          type: integer
+*                          example: 200
+*                        MinimumDiscount:
+*                          type: double
+*                          example: 5
+*                        MaximumDiscount:
+*                          type: double
+*                          example: 20
+*                        DiscountRate:
+*                          type: double
+*                          example: 0.2
+*                        ProductQuantityForDiscountRate:
+*                          type: integer
+*                          example: 30
+*                        mid:
+*                          type: string
+*                          example: 435465
+*                        ManufacturerName:
+*                          type: string
+*                          example: Mojo
+*                        ManufacturerLogo:
+*                          type: string
+*                          example: public/images/mojito.jpg
+*                        TotalQuantity:
+*                          type: integer
+*                          example: 1000      
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+productsRouter.post('/productInfo', getProductInfo);
 
 
 
