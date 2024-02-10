@@ -115,6 +115,7 @@ async function getManufacturerOrders(req, res) {
             });
 
             for(let j = 0; j < products.length; j++) {
+                products[j].CategoryName = products[j].Product.CategoryName;
                 products[j].ProductName = products[j].Product.ProductName;
                 products[j].Image = products[j].Product.Image;
                 products[j].WeightVolume = products[j].Product.Weight_volume;
