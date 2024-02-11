@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {getLoanStatus, updatePaymentStatus, updatePayLaterStatus} = require('../../controllers/payment/paymentController');
+const {paymentOnline, getLoanStatus, updatePaymentStatus, updatePayLaterStatus} = require('../../controllers/payment/paymentController');
 
 //* Router instance
 const paymentRouter = express.Router();
@@ -15,6 +15,41 @@ const paymentRouter = express.Router();
  *   - name: Payment
  *     description: Payment related routes
  */
+
+
+
+
+
+/**
+* @swagger
+* /api/payment/paymentOnline:
+*   post:
+*     tags: [Payment]
+*     description: Get loan status and retail points of a retailer
+*     responses:
+*        200:
+*          description: get url to make payment
+*          response-body:
+*            content:
+*              application/json:
+*                schema:
+*                  type: object
+*                  properties:
+*                    url:
+*                      type: string
+*                      example: 1000
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route
+*        default:
+*          description: Internal server error
+*/
+paymentRouter.post('/paymentOnline', paymentOnline);
+
+
 
 
 /**

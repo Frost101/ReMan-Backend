@@ -10,8 +10,15 @@ const is_live = false //true for live, false for sandbox
 
 
 
-async function paymentWithMobileBanking(req, res){
-    const tran_ID = new ObjectId().toString();
+async function paymentOnline(req, res){
+      // Get current timestamp
+  const timestamp = Date.now();
+
+  // Generate a random string
+  const randomString = Math.random().toString(36).substring(2, 10);
+
+  // Concatenate timestamp and random string
+  const tran_ID = `${timestamp}-${randomString}`;
     const data = {
         total_amount: 100,
         currency: 'BDT',
@@ -46,7 +53,7 @@ async function paymentWithMobileBanking(req, res){
     sslcz.init(data).then(apiResponse => {
         // Redirect the user to payment gateway
         let GatewayPageURL = apiResponse.GatewayPageURL;
-        res.send({url: GatewayPageURL});
+        res.status(200).json({url: GatewayPageURL});
         console.log('Redirecting to: ', GatewayPageURL);
     });
 }
@@ -73,6 +80,7 @@ function updatePayLaterStatus(req, res){
 
 
 module.exports = {
+    paymentOnline,
     getLoanStatus,
     updatePaymentStatus,
     updatePayLaterStatus,
