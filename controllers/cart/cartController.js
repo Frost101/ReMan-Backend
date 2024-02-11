@@ -37,10 +37,12 @@ async function getCartInfo(req, res) {
             },
             _sum: {
                 DeliveryCharge: true,
+                Price: true,
             }
         });
 
         manufacturerInfo[i].totalDeliveryCharge = totalDeliveryCharge[0]._sum.DeliveryCharge;
+        manufacturerInfo[i].totalPrice = totalDeliveryCharge[0]._sum.Price;
 
         const products = await prisma.cart.findMany({
             where: {

@@ -23,27 +23,27 @@ const vouchersRouter = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               voucherCode:
+ *               VoucherCode:
  *                 type: string
- *                 example: "VOUCHER123"
- *               voucherName:
+ *                 example: RUCHIBOGO
+ *               manufacturerId:
  *                 type: string
- *                 example: "Discount Voucher"
- *               MID:
+ *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
+ *               VoucherDetails:
  *                 type: string
- *                 example: "MANUFACTURER123"
- *               voucherAmount:
- *                 type: number
- *                 example: 10.0
- *               validity:
+ *                 example: Apply this to get 2.5% discount on all products
+ *               VoucherPercentage:
+ *                 type: double
+ *                 example: 2.5
+ *               Validity:
  *                 type: string
- *                 example: "2024-12-31"
- *               minPurchase:
- *                 type: number
- *                 example: 50.0
- *               maxUsage:
- *                 type: number
- *                 example: 100
+ *                 example: 2024-12-31
+ *               MinPurchase:
+ *                 type: double
+ *                 example: 10000.0
+ *               MaxUsage:
+ *                 type: integer
+ *                 example: 10
  *     responses:
  *       '201':
  *         description: Voucher created successfully
@@ -154,14 +154,9 @@ vouchersRouter.delete('/deleteVoucher', vouchersController.deleteVoucher);
  *           schema:
  *             type: object
  *             properties:
- *               SID:
+ *               sid:
  *                 type: string
- *                 example: "RETAILER123"
- *               MID:
- *                 type: array
- *                 example:
- *                  - "MANUFACTURER123"
- *                  - "MANUFACTURER456"
+ *                 example: 37c86bde-7c02-4bd5-923a-b302efdcf466
  *     responses:
  *       '200':
  *         description: Array of vouchers fetched successfully
