@@ -59,6 +59,9 @@ const swaggerOptions = {
             },
             {
                 url: 'https://reman-backend-v9rf.onrender.com'
+            },
+            {
+                url: 'https://reman-backend-8eli.onrender.com'
             }
         ]
     },
