@@ -1,16 +1,31 @@
-module.exports.addVoucher = (req, res) => {
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
+
+
+module.exports.addVoucher = async (req, res) => {
     try {
         // Extracting input parameters from the request body
-        const { voucherCode, voucherName, MID, voucherAmount, validity, minPurchase, maxUsage } = req.body;
+        const VoucherCode = req.body.VoucherCode;
+        const manufacturerId = req.body.manufacturerId;
+        const VoucherDetails = req.body.VoucherDetails;
+        const VoucherPercentage = req.body.VoucherPercentage;
+        const Validity = new Date(req.body.Validity);
+        const MinPurchase = req.body.MinPurchase;
+        const MaxUsage = req.body.MaxUsage;
 
-        // TODO: Perform any necessary validation or business logic
-
-        // Simulating a server error for demonstration purposes
-        if (Math.random() < 0.1) {
-            throw new Error('Simulated Internal Server Error');
-        }
-
-        // TODO: Save the voucher details to the database or perform other actions
+        const user = await prisma.voucher.create({
+            data: {
+              VoucherCode: VoucherCode,
+              mid: manufacturerId,
+              VoucherDetails: VoucherDetails,
+              VoucherPercentage: VoucherPercentage,
+              Validity: Validity,
+              MinPurchase: MinPurchase,
+              MaxUsage: MaxUsage,
+            },
+          });
 
         // Responding with success (201 - Created)
         res.status(201).json({
@@ -18,36 +33,23 @@ module.exports.addVoucher = (req, res) => {
             message: 'Voucher added successfully',
         });
     } catch (error) {
-        console.error('Error adding voucher:', error);
-
-        // Responding with client errors
-        if (error instanceof ValidationError) {
-            // Assuming ValidationError is a custom error class for validation errors
-            res.status(400).json({
-                success: false,
-                message: 'Bad Request: Invalid input data',
-            });
-        } else if (error instanceof UnauthorizedError) {
-            // Assuming UnauthorizedError is a custom error class for authentication errors
-            res.status(401).json({
-                success: false,
-                message: 'Unauthorized: User authentication required',
-            });
-        } else if (error instanceof ForbiddenError) {
-            // Assuming ForbiddenError is a custom error class for authorization errors
-            res.status(403).json({
-                success: false,
-                message: 'Forbidden: Insufficient permissions',
-            });
-        } else {
             // Responding with server errors
+            console.error('Error adding voucher:', error);
+            if (error.code === 'P2002') {
+                // P2002 is the Prisma error code for unique constraint violation
+                console.error('Duplicate entry error:', error.meta.target);
+                res.status(409).json({
+                    success: false,
+                    message: 'Conflict: Voucher with the provided code already exists',
+                });
+            } else {
             res.status(500).json({
                 success: false,
                 message: 'Internal Server Error',
             });
-        }
+            }    
     }
-};
+}
 
 module.exports.deleteVoucher = (req, res) => {
     try {
@@ -95,54 +97,81 @@ module.exports.deleteVoucher = (req, res) => {
     }
 };
 
-module.exports.fetchVouchers = (req, res) => {
+module.exports.fetchVouchers = async (req, res) => {
     try {
         // Extracting input parameters from the request body
-        const { SID, MID } = req.body;
+        const sid = req.body.sid;
+        const today = new Date();
+        vouchers = [];
 
-        // TODO: Perform any necessary validation or business logic
-
-        // TODO: Fetch vouchers from the database or perform other actions
-
-        // Example vouchers data
-        const vouchers = [
-            {
-                voucherCode: "VOUCHER123",
-                voucherName: "Discount Voucher",
-                MID: "MANUFACTURER123",
-                voucherAmount: 10.0,
-                validity: "2024-12-31",
-                minPurchase: 50.0,
-                maxUsage: 100,
+        const manufacturerInfo = await prisma.cart.findMany({
+            where: {
+              sid: sid,
             },
-            // Add more voucher objects as needed
-        ];
+            distinct: ['mid'],
+            select: {
+                mid: true,
+            },
+        });
+    
+        for(let i = 0; i < manufacturerInfo.length; i++) {
+ 
+            const totalPrice = await prisma.cart.groupBy({
+                by: ['mid'],
+                where: {
+                    sid: sid,
+                    mid: manufacturerInfo[i].mid,
+                },
+                _sum: {
+                    Price: true,
+                }
+            });
 
-        // Responding with success and the array of vouchers
+            const vouchers1 = await prisma.voucher.findMany({
+                where: {
+                  mid: manufacturerInfo[i].mid,
+                  MinPurchase: {
+                    lte: totalPrice[0]._sum.Price,
+                  },
+                  Validity: {
+                    gt: today,
+                  },
+                  VoucherCode: {
+                    not: 'ZERO',
+                  },
+                },
+              });
+
+            for(let j = 0; j < vouchers1.length; j++) {
+                const usage = await prisma.voucherUsage.findMany({
+                    where: {
+                      sid: sid,
+                      VoucherCode: vouchers1[j].VoucherCode,
+                    },
+                  });
+                
+                if(usage.length){
+                   if(usage[0].Usage >= vouchers1[j].MaxUsage){
+                      vouchers1.splice(j, 1);
+                      j--;    
+                   } 
+                }  
+            }
+
+            for (const voucher of vouchers1) {
+                vouchers.push(voucher);
+            }
+
+
+
+        }
         res.status(200).json(vouchers);
     } catch (error) {
-        console.error('Error fetching vouchers:', error);
-
-        // Responding with client errors
-        if (error instanceof UnauthorizedError) {
-            // Assuming UnauthorizedError is a custom error class for authentication errors
-            res.status(401).json({
-                success: false,
-                message: 'Unauthorized: User authentication required',
-            });
-        } else if (error instanceof ForbiddenError) {
-            // Assuming ForbiddenError is a custom error class for authorization errors
-            res.status(403).json({
-                success: false,
-                message: 'Forbidden: Insufficient permissions',
-            });
-        } else {
             // Responding with server errors
             res.status(500).json({
                 success: false,
                 message: 'Internal Server Error',
             });
-        }
     }
 };
 

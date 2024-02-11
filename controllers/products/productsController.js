@@ -332,9 +332,6 @@ async function addNewProduct(req, res) {
             ProductQuantityForDiscountRate
         } = req.body;
 
-        // TODO: Perform any necessary validation or business logic
-
-        // TODO: Save inventory details to the database or perform other actions
         const user = await prisma.product.create({
             data: {
               mid: MID,
