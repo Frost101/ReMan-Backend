@@ -23,8 +23,8 @@ async function paymentOnline(req, res){
         total_amount: 100,
         currency: 'BDT',
         tran_id: tran_ID, // use unique tran_id for each api call
-        success_url: 'http://localhost:3030/success',
-        fail_url: 'http://localhost:3030/fail',
+        success_url: 'http://localhost:3000/api/payment/onlinePaymentSuccess',
+        fail_url: 'http://localhost:3000/api/payment/onlinePaymentFail',
         cancel_url: 'http://localhost:3030/cancel',
         ipn_url: 'http://localhost:3030/ipn',
         shipping_method: 'Courier',
@@ -58,6 +58,38 @@ async function paymentOnline(req, res){
     });
 }
 
+
+
+async function onlinePaymentSuccessful(req, res){
+
+    res.status(200).json({success: true,
+        message: "Payment Successful"});
+    // let output = {
+    //     retailPoints: 1000,
+    //     availableLoanAmount: 100000,
+    //     payWithInDays: 30,
+    // }
+
+    // res.json(output);
+}
+
+
+
+async function onlinePaymentFailed(req, res){
+
+    res.status(200).json({success: false,
+        message: "Payment Failed"});
+    // let output = {
+    //     retailPoints: 1000,
+    //     availableLoanAmount: 100000,
+    //     payWithInDays: 30,
+    // }
+
+    // res.json(output);
+}
+
+
+
 function getLoanStatus(req, res){
     let output = {
         retailPoints: 1000,
@@ -81,6 +113,8 @@ function updatePayLaterStatus(req, res){
 
 module.exports = {
     paymentOnline,
+    onlinePaymentSuccessful,
+    onlinePaymentFailed,
     getLoanStatus,
     updatePaymentStatus,
     updatePayLaterStatus,

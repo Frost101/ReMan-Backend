@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {paymentOnline, getLoanStatus, updatePaymentStatus, updatePayLaterStatus} = require('../../controllers/payment/paymentController');
+const {paymentOnline, onlinePaymentSuccessful, onlinePaymentFailed, getLoanStatus, updatePaymentStatus, updatePayLaterStatus} = require('../../controllers/payment/paymentController');
 
 //* Router instance
 const paymentRouter = express.Router();
@@ -48,6 +48,72 @@ const paymentRouter = express.Router();
 *          description: Internal server error
 */
 paymentRouter.post('/paymentOnline', paymentOnline);
+
+
+
+
+
+/**
+* @swagger
+* /api/payment/onlinePaymentSuccess:
+*   post:
+*     tags: [Payment]
+*     description: Return status of online payment successful
+*     responses:
+*        200:
+*          description: payment successful
+*          response-body:
+*            content:
+*              application/json:
+*                schema:
+*                  type: object
+*                  properties:
+*                    message:
+*                      type: string
+*                      example: payment successful
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route
+*        default:
+*          description: Internal server error
+*/
+paymentRouter.post('/onlinePaymentSuccess', onlinePaymentSuccessful);
+
+
+
+
+
+/**
+* @swagger
+* /api/payment/onlinePaymentFail:
+*   post:
+*     tags: [Payment]
+*     description: Return status of online payment failed
+*     responses:
+*        200:
+*          description: payment failed
+*          response-body:
+*            content:
+*              application/json:
+*                schema:
+*                  type: object
+*                  properties:
+*                    message:
+*                      type: string
+*                      example: payment failed
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route
+*        default:
+*          description: Internal server error
+*/
+paymentRouter.post('/onlinePaymentFail', onlinePaymentFailed);
 
 
 
