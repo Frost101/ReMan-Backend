@@ -289,15 +289,15 @@ inventoryRouter.post('/inventoryList', getInventoriesList);
 *              - ShiftToIID
 *              - BID
 *            properties: 
-*              ShiftFromIID:
-*                type: integer
-*                default: 123412
-*              ShiftToIID:
-*                type: integer
-*                default: 123411
-*              BID:
+*              fromIID:
+*                type: string
+*                default: ec77df68-7ad2-4bf3-aa25-04f5a95e4bfd
+*              toIID:
+*                type: string
+*                default: 26c89f94-e98b-4378-8d7f-3961a766cb77
+*              bid:
 *                type: array
-*                default: [313234, 292931, 131123]
+*                default: ['62634e68-822a-4c22-8682-e620b0391b3d', '559eab95-f7f1-471a-b04b-65a861451398']
 *     responses:
 *        200:
 *          description: Product batches shifted from one inventory to other inventory successfully
