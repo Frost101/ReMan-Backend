@@ -40,6 +40,44 @@ async function getInventoryBatchList(req, res){
 
 
 
+
+async function getInventoryBatchListInMarketWithoutSale(req, res){
+
+  const iid = req.body.iid;
+  const pid = req.body.pid;
+
+  try {
+    const batches = await prisma.inventoryBatch.findMany({
+      where: {
+        iid: iid,
+        pid: pid,
+        MarketStatus: true,
+        Sale: 0,
+      },
+      select: {
+        bid: true,
+        ManufacturingDate: true,
+        ExpiryDate: true,
+        Quantity: true,
+      },
+      orderBy: {
+        ExpiryDate: 'asc',
+      }
+    });
+
+    if (batches) {   
+      res.status(200).json({batches});
+    } else {
+      res.status(404).json({ error: 'No batches found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
 async function getProductionHouseBatchList(req, res){
 
     const phid = req.body.phid;
@@ -185,6 +223,7 @@ function deleteBatch(req, res){
 
 module.exports = {
     getInventoryBatchList,
+    getInventoryBatchListInMarketWithoutSale,
     getProductionHouseBatchList,
     batchScreening,
     addNewBatch,

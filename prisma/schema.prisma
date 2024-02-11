@@ -207,25 +207,25 @@ model ProductionHouseBatch {
 }
 
 model Voucher {
-  VoucherCode       String         @id(map: "Voucher_pk") @default(uuid()) @db.Uuid
-  mid               String         @db.Uuid
-  VoucherName       String         @db.VarChar
+  VoucherCode       String         @id(map: "Voucher_pk") @default(uuid()) @db.VarChar
+  mid               String?        @db.Uuid
+  VoucherDetails    String?        @db.VarChar
   VoucherPercentage Float?
-  validity          DateTime?      @db.Date
+  Validity          DateTime?      @db.Date
   MinPurchase       Float?
   MaxUsage          Int?
-  Company           Company        @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Voucher_Company_mid_fk")
+  Company           Company?       @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Voucher_Company_mid_fk")
   VoucherUsage      VoucherUsage[]
 }
 
 model VoucherUsage {
+  VoucherCode String  @db.VarChar
   sid         String  @db.Uuid
-  VoucherCode String  @db.Uuid
   Usage       Int?
   Shop        Shop    @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "VoucherUsage_Shop_ShopID_fk")
   Voucher     Voucher @relation(fields: [VoucherCode], references: [VoucherCode], onDelete: NoAction, onUpdate: NoAction, map: "VoucherUsage_Voucher_VoucherCode_fk")
 
-  @@id([sid, VoucherCode], map: "VoucherUsage_pk")
+  @@id([VoucherCode, sid], map: "VoucherUsage_pk")
 }
 
 model Order {
