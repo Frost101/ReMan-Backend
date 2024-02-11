@@ -180,12 +180,49 @@ async function getInventoriesList(req, res) {
     // res.json(output);
 }
 
-function shiftToInventory(req, res) {
-    let output = {
-        message: 'Batches shifted to other inventory successfully'
-    };
+async function shiftToInventory(req, res) {
+    // let output = {
+    //     message: 'Batches shifted to other inventory successfully'
+    // };
 
-    res.json(output);
+    // res.json(output);
+
+    const {
+        fromIID,
+        toIID,
+        bid,
+    } = req.body;
+
+    try {
+    
+          res.status(200).json({success: true,
+                          message: "Batch products shipped"});             
+          setTimeout(async () => {
+            await deliveredToInventory(bid, toIID);
+          }, 3000);
+      } catch (error) {
+        console.error('Error retrieving user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+}
+
+
+async function deliveredToInventory(bid, toIID) {
+  try {
+    for(let i = 0; i < bid.length; i++) {
+      const user = await prisma.inventoryBatch.update({
+        where: {
+          bid: bid[i],
+        },
+        data: {
+          iid: toIID,
+        },
+      });
+    }
+
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+  }
 }
 
 module.exports = {
@@ -194,4 +231,5 @@ module.exports = {
     deleteInventory,
     getInventoriesList,
     shiftToInventory,
+    deliveredToInventory,
 }
