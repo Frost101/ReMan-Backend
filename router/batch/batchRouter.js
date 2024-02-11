@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {getInventoryBatchList, getProductionHouseBatchList, batchScreening, addNewBatch, addNewBatch1,  deleteBatch} = require('../../controllers/batch/batchController'); 
+const {getInventoryBatchList, getInventoryBatchListInMarketWithoutSale, getProductionHouseBatchList, batchScreening, addNewBatch, addNewBatch1,  deleteBatch} = require('../../controllers/batch/batchController'); 
 
 //* Initialize router
 const batchRouter = express.Router();
@@ -81,6 +81,69 @@ const batchRouter = express.Router();
 *          description: Internal server error
 */
 batchRouter.post('/inventoryBatchList', getInventoryBatchList);
+
+
+
+
+
+/**
+* @swagger
+* /api/batch/inventoryBatchListWithoutSale:
+*   post:
+*     tags: [Batch]
+*     description: If PID(product ID) and (IID) inventory ID is provided, it will return the batch list of that product which is in that inventory, in marketplace and does not have any sale.
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - iid
+*              - pid
+*            properties: 
+*              iid:
+*                type: string
+*                default: 8b4753af-39a0-458a-88ae-182875e0ec3b
+*              pid:
+*                type: string
+*                default: 288e0918-67ef-448d-b05d-380543e3ebcc
+*     responses:
+*        200:
+*          description: An array of batches
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  batches:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        bid:
+*                          type: integer
+*                          example: 123456   
+*                        ManufacturingDate:
+*                          type: string
+*                          example: 2021-01-01
+*                        ExpiryDate:
+*                          type: string
+*                          example: 2022-01-01
+*                        Quantity:
+*                          type: integer
+*                          example: 1000
+*        401:
+*          description: Unauthorized, Invalid username or password
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+batchRouter.post('/inventoryBatchListWithoutSale', getInventoryBatchListInMarketWithoutSale);
 
 
 

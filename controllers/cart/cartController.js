@@ -209,9 +209,50 @@ function deleteCartInfo(req, res) {
     res.json(output);
 }
 
+
+
+function updateCartInfo(req, res) {
+    let output = {
+        message: 'updating cart successful'
+    };
+
+    res.json(output);
+}
+
+async function deleteCartProductInfo(req, res) {
+
+    try {
+        // Extracting input parameters from the request body
+        const {
+            sid,
+            pid,
+        } = req.body;
+
+        const deleteInfo = await prisma.cart.deleteMany({
+            where: {
+              sid: sid,
+              pid: pid,
+            },
+        });
+
+        // Responding with success
+        res.status(201).json({
+            success: true,
+            message: 'deleting from cart successful',
+        });
+    } catch (error) {
+            // Responding with server errors
+            res.status(500).json({
+                success: false,
+                message: 'Internal Server Error',
+            });
+    }
+}
+
 module.exports = {
     getCartInfo,
     updateCartInfo,
     addToCartInfo,
     deleteCartInfo,
+    deleteCartProductInfo,
 }
