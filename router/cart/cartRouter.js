@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {getCartInfo, updateCartInfo, addToCartInfo, deleteCartInfo} = require('../../controllers/cart/cartController'); 
+const {getCartInfo, updateCartInfo, addToCartInfo, deleteCartInfo, deleteCartProductInfo} = require('../../controllers/cart/cartController'); 
 
 //* Initialize router
 const cartRouter = express.Router();
@@ -264,5 +264,53 @@ cartRouter.post('/addToCart', addToCartInfo);
 *          description: Internal server error
 */
 cartRouter.delete('/deleteCart', deleteCartInfo);
+
+
+
+
+/**
+* @swagger
+* /api/cart/deleteProduct:
+*   delete:
+*     tags: [Cart]
+*     description: Delete Cart Information
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - sid
+*              - pid
+*            properties: 
+*              sid:
+*                type: string
+*                default: 37c86bde-7c02-4bd5-923a-b302efdcf466
+*              pid:
+*                type: string
+*                default: 37c0d786-4ec9-4951-b218-c1ab5ebc8ed0
+*     responses:
+*        200:
+*          description: Success message
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  message:
+*                    type: string
+*                    default: deleting product from cart successful   
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+cartRouter.delete('/deleteProduct', deleteCartProductInfo);
 
 module.exports = cartRouter;
