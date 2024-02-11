@@ -23,26 +23,26 @@ const vouchersRouter = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               voucherCode:
+ *               VoucherCode:
  *                 type: string
  *                 example: "VOUCHER123"
- *               voucherName:
- *                 type: string
- *                 example: "Discount Voucher"
- *               MID:
+ *               manufacturerId:
  *                 type: string
  *                 example: "MANUFACTURER123"
- *               voucherAmount:
- *                 type: number
+ *               VoucherDetails:
+ *                 type: string
+ *                 example: "Discount Voucher"
+ *               VoucherPercentage:
+ *                 type: double
  *                 example: 10.0
- *               validity:
+ *               Validity:
  *                 type: string
  *                 example: "2024-12-31"
- *               minPurchase:
- *                 type: number
+ *               MinPurchase:
+ *                 type: integer
  *                 example: 50.0
- *               maxUsage:
- *                 type: number
+ *               MaxUsage:
+ *                 type: integer
  *                 example: 100
  *     responses:
  *       '201':
