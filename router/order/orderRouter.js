@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails} = require('../../controllers/order/orderController'); 
+const {addNewOrderCash, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails} = require('../../controllers/order/orderController'); 
 
 //* Initialize router
 const orderRouter = express.Router();
@@ -21,7 +21,7 @@ const orderRouter = express.Router();
 
 /**
 * @swagger
-* /api/order/addOrder:
+* /api/order/addOrderCash:
 *   post:
 *     tags: [Order]
 *     description: Add a new Order
@@ -32,54 +32,15 @@ const orderRouter = express.Router();
 *           schema:
 *            type: object
 *            required:
-*              - SID
-*              - OrderDate
-*              - TotalPrice
-*              - OrderFragments
+*              - sid
+*              - VoucherCode
 *            properties: 
-*              SID:
-*                type: integer
-*                default: 123456
-*              OrderDate:
+*              sid:
 *                type: string
-*                default: 09/08/2023
-*              TotalPrice:
-*                type: integer
-*                default: 230000
-*              OrderFragments:
-*                type: array
-*                items:
-*                  type: object
-*                  properties:
-*                    MID:
-*                     type: integer
-*                     example: 123412
-*                    RawPrice:
-*                     type: integer
-*                     example: 230000
-*                    DeliveryCharge:
-*                     type: integer
-*                     example: 500
-*                    ReducedAmount:
-*                     type: integer
-*                     example: 500
-*                    FinalPrice:
-*                     type: integer
-*                     example: 230000
-*                    products:
-*                     type: array
-*                     items:
-*                      type: object
-*                      properties:
-*                        pid:
-*                          type: integer
-*                          example: 423456
-*                        quantity:
-*                          type: integer
-*                          example: 1000
-*                        price:
-*                          type: integer
-*                          example: 30000
+*                default: 37c86bde-7c02-4bd5-923a-b302efdcf466
+*              VoucherCode:
+*                type: string
+*                default: RUCHIBOGO
 *     responses:
 *        200:
 *          description: Adding a new order successful
@@ -101,7 +62,7 @@ const orderRouter = express.Router();
 *        default:
 *          description: Internal server error
 */
-orderRouter.post('/addOrder', addNewOrder);
+orderRouter.post('/addOrderCash', addNewOrderCash);
 
 
 

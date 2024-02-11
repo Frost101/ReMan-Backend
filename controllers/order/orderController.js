@@ -3,12 +3,168 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-function addNewOrder(req, res) {
-    let output = {
-        message: 'adding a new order successful'
-    };
+async function addNewOrderCash(req, res) {
+  const sid = req.body.sid;
+  const VoucherCode = req.body.VoucherCode;
 
-    res.json(output);
+  try{
+  const manufacturerInfo = await prisma.cart.findMany({
+      where: {
+        sid: sid,
+      },
+      distinct: ['mid'],
+      select: {
+          mid: true,
+      },
+  });
+
+  let totalPriceOfOrder = 0;
+
+  for(let i = 0; i < manufacturerInfo.length; i++) {
+
+      const totalDeliveryCharge = await prisma.cart.groupBy({
+          by: ['mid'],
+          where: {
+              sid: sid,
+              mid: manufacturerInfo[i].mid,
+          },
+          _sum: {
+              DeliveryCharge: true,
+              Price: true,
+          }
+      });
+
+      manufacturerInfo[i].DeliveryCharge = totalDeliveryCharge[0]._sum.DeliveryCharge;
+      manufacturerInfo[i].RawPrice = totalDeliveryCharge[0]._sum.Price;
+      manufacturerInfo[i].VoucherCode = 'ZERO';
+      manufacturerInfo[i].ReducedAmount = 0;
+      manufacturerInfo[i].FinalPrice = manufacturerInfo[i].RawPrice + manufacturerInfo[i].DeliveryCharge;
+
+      if(VoucherCode != null) {
+          const voucher = await prisma.voucher.findUnique({
+              where: {
+                  VoucherCode: VoucherCode,
+              },
+              select: {
+                  mid: true,
+                  VoucherPercentage: true,
+              }
+          });
+          if(voucher.mid === manufacturerInfo[i].mid) {
+              manufacturerInfo[i].VoucherCode = VoucherCode;
+              manufacturerInfo[i].ReducedAmount = (manufacturerInfo[i].RawPrice * voucher.VoucherPercentage) / 100.0;
+              manufacturerInfo[i].FinalPrice = manufacturerInfo[i].RawPrice + manufacturerInfo[i].DeliveryCharge - manufacturerInfo[i].ReducedAmount;
+          }
+      }
+      totalPriceOfOrder += manufacturerInfo[i].FinalPrice;
+
+      const products = await prisma.cart.findMany({
+          where: {
+              sid: sid,
+              mid: manufacturerInfo[i].mid,
+          },
+          select: {
+              pid: true,
+              Quantity: true,
+              Price: true,
+          }
+      });
+      manufacturerInfo[i].products = products;
+  }
+  const today = new Date();
+
+  const newOrder = await prisma.order.create({
+      data: {
+          sid: sid,
+          OrderDate: today,
+          TotalPrice: totalPriceOfOrder,
+          PaidAmount: 0,
+          PaymentStatus: 'Not Paid',
+          DeliveryStatus: 'Not Delivered',
+          PaymentMethod: 'Cash On Delivery',
+      }
+  });
+
+  const oid = newOrder.oid;
+  // console.log(oid);
+
+  for(let i = 0; i < manufacturerInfo.length; i++) {
+      const newOrderFragment = await prisma.orderFragment.create({
+          data: {
+              oid: oid,
+              mid: manufacturerInfo[i].mid,
+              RawPrice: manufacturerInfo[i].RawPrice,
+              DeliveryCharge: manufacturerInfo[i].DeliveryCharge,
+              VoucherCode: manufacturerInfo[i].VoucherCode,
+              ReducedAmount: manufacturerInfo[i].ReducedAmount,
+              FinalPrice: manufacturerInfo[i].FinalPrice,
+              PaidAmount: 0,
+              PaymentStatus: 'Not Paid',
+              DeliveryStatus: 'Not Delivered',
+              ShipmentStatus: 'Not Shipped',
+          }
+      });
+
+      for(let j = 0; j < manufacturerInfo[i].products.length; j++) {
+          const newSingleProductOrder = await prisma.singleProductOrder.create({
+              data: {
+                  oid: oid,
+                  mid: manufacturerInfo[i].mid,
+                  pid: manufacturerInfo[i].products[j].pid,
+                  Quantity: manufacturerInfo[i].products[j].Quantity,
+                  ShippedQuantity: 0,
+                  ShipmentStatus: 'Not Shipped',
+                  Price: manufacturerInfo[i].products[j].Price,
+              }
+          });
+      }
+  }
+
+  const voucherCount = await prisma.voucherUsage.findMany({
+      where: {
+          VoucherCode: VoucherCode,
+          sid: sid,
+      },
+      select: {
+          Usage: true,
+      }
+  });
+
+  if(voucherCount.length === 0) {
+      const newVoucherUsage = await prisma.voucherUsage.create({
+          data: {
+              VoucherCode: VoucherCode,
+              sid: sid,
+              Usage: 1,
+          }
+      });
+  }
+  else{
+    const newVoucherUsage = await prisma.voucherUsage.update({
+        where: {
+            VoucherCode: VoucherCode,
+            sid: sid,
+        },
+        data: {
+            Usage: {
+                increment: 1,
+            },
+        },
+    });
+  }  
+  
+  // const deleteCart = await prisma.cart.deleteMany({
+  //     where: {
+  //         sid: sid,
+  //     }
+  // });
+
+  res.status(201).json({success: true,
+                      message: 'Order Added Successfully'});
+  } catch (error) {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
 function updateDeliveryStatus(req, res) {
@@ -405,7 +561,7 @@ function getManufacturerOrderDetails(req, res) {
 }
 
 module.exports = {
-    addNewOrder,
+    addNewOrderCash,
     updateDeliveryStatus,
     getRetailerOrders,
     getManufacturerOrders,
