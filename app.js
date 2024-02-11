@@ -17,7 +17,7 @@ const { requireAuth, checkUser } = require('./middlewares/common/authMiddleware.
 const { notFoundHandler, errorHandler } = require('./middlewares/common/errorHandler.js');
 const apiRouter = require('./router/apiRouter.js');
 
-
+const SSLCommerzPayment = require('sslcommerz-lts');
 
 //* Load env vars
 //* Now you can use process.env.VARIABLE_NAME to access the variable
