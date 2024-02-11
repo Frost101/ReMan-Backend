@@ -58,7 +58,7 @@ const swaggerOptions = {
                 url: `http://localhost:${process.env.PORT}`
             },
             {
-                url: 'https://reman-backend.cyclic.app'
+                url: 'https://reman-backend-v9rf.onrender.com'
             }
         ]
     },
