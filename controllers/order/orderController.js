@@ -50,7 +50,7 @@ async function addNewOrder(req, res) {
       manufacturerInfo[i].ReducedAmount = 0;
       manufacturerInfo[i].FinalPrice = manufacturerInfo[i].RawPrice + manufacturerInfo[i].DeliveryCharge;
 
-      if(VoucherCode != null) {
+      if(VoucherCode != null && VoucherCode != "") {
           const voucher = await prisma.voucher.findUnique({
               where: {
                   VoucherCode: VoucherCode,
