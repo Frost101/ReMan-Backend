@@ -238,6 +238,7 @@ model Order {
   DeliveryStatus     String?              @db.VarChar
   PaymentMethod      String?              @db.VarChar
   PaymentLastDate    DateTime?            @db.Date
+  TransactionID      String?              @db.VarChar
   Shop               Shop                 @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "Order_Shop_ShopID_fk")
   OrderFragment      OrderFragment[]
   SingleProductOrder SingleProductOrder[]

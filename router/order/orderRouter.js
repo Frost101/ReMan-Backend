@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {addNewOrderCash, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails} = require('../../controllers/order/orderController'); 
+const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails} = require('../../controllers/order/orderController'); 
 
 //* Initialize router
 const orderRouter = express.Router();
@@ -21,7 +21,7 @@ const orderRouter = express.Router();
 
 /**
 * @swagger
-* /api/order/addOrderCash:
+* /api/order/addOrder:
 *   post:
 *     tags: [Order]
 *     description: Add a new Order
@@ -34,6 +34,8 @@ const orderRouter = express.Router();
 *            required:
 *              - sid
 *              - VoucherCode
+*              - PaymentMethod
+*              - TransactionID
 *            properties: 
 *              sid:
 *                type: string
@@ -41,6 +43,12 @@ const orderRouter = express.Router();
 *              VoucherCode:
 *                type: string
 *                default: RUCHIBOGO
+*              PaymentMethod:
+*                type: string
+*                default: Cash On Delivery
+*              TransactionID:
+*                type: string
+*                default: null
 *     responses:
 *        200:
 *          description: Adding a new order successful
@@ -62,7 +70,7 @@ const orderRouter = express.Router();
 *        default:
 *          description: Internal server error
 */
-orderRouter.post('/addOrderCash', addNewOrderCash);
+orderRouter.post('/addOrder', addNewOrder);
 
 
 

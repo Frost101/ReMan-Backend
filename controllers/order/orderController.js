@@ -3,9 +3,19 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-async function addNewOrderCash(req, res) {
+async function addNewOrder(req, res) {
   const sid = req.body.sid;
   const VoucherCode = req.body.VoucherCode;
+  const PaymentMethod = req.body.PaymentMethod;
+  const TransactionID = req.body.TransactionID;
+  let PaymentStatus = 'Paid';
+  if(PaymentMethod === 'Cash On Delivery') {
+      PaymentStatus = 'Not Paid';
+  }
+  let PaymentLastDate = null;
+  if(PaymentStatus === 'Paid'){
+      PaymentLastDate = new Date();
+  }  
 
   try{
   const manufacturerInfo = await prisma.cart.findMany({
@@ -72,16 +82,22 @@ async function addNewOrderCash(req, res) {
       manufacturerInfo[i].products = products;
   }
   const today = new Date();
+  let PaidAmount = 0;
+  if(PaymentStatus === 'Paid') {
+      PaidAmount = totalPriceOfOrder;
+  }
 
   const newOrder = await prisma.order.create({
       data: {
           sid: sid,
           OrderDate: today,
           TotalPrice: totalPriceOfOrder,
-          PaidAmount: 0,
-          PaymentStatus: 'Not Paid',
+          PaidAmount: PaidAmount,
+          PaymentStatus: PaymentStatus,
           DeliveryStatus: 'Not Delivered',
-          PaymentMethod: 'Cash On Delivery',
+          PaymentMethod: PaymentMethod,
+          PaymentLastDate: PaymentLastDate,
+          TransactionID: TransactionID,
       }
   });
 
@@ -89,6 +105,9 @@ async function addNewOrderCash(req, res) {
   // console.log(oid);
 
   for(let i = 0; i < manufacturerInfo.length; i++) {
+      if(PaymentStatus === 'Paid') {
+        PaidAmount = manufacturerInfo[i].FinalPrice;
+      }
       const newOrderFragment = await prisma.orderFragment.create({
           data: {
               oid: oid,
@@ -98,9 +117,10 @@ async function addNewOrderCash(req, res) {
               VoucherCode: manufacturerInfo[i].VoucherCode,
               ReducedAmount: manufacturerInfo[i].ReducedAmount,
               FinalPrice: manufacturerInfo[i].FinalPrice,
-              PaidAmount: 0,
-              PaymentStatus: 'Not Paid',
+              PaidAmount: PaidAmount,
+              PaymentStatus: PaymentStatus,
               DeliveryStatus: 'Not Delivered',
+              PaymentLastDate: PaymentLastDate,
               ShipmentStatus: 'Not Shipped',
           }
       });
@@ -140,7 +160,7 @@ async function addNewOrderCash(req, res) {
       });
   }
   else{
-    const newVoucherUsage = await prisma.voucherUsage.update({
+    const newVoucherUsage = await prisma.voucherUsage.updateMany({
         where: {
             VoucherCode: VoucherCode,
             sid: sid,
@@ -561,7 +581,7 @@ function getManufacturerOrderDetails(req, res) {
 }
 
 module.exports = {
-    addNewOrderCash,
+    addNewOrder,
     updateDeliveryStatus,
     getRetailerOrders,
     getManufacturerOrders,

@@ -53,7 +53,8 @@ async function paymentOnline(req, res){
     sslcz.init(data).then(apiResponse => {
         // Redirect the user to payment gateway
         let GatewayPageURL = apiResponse.GatewayPageURL;
-        res.status(200).json({url: GatewayPageURL});
+        res.status(200).json({TransactionID: tran_ID,
+            url: GatewayPageURL});
         console.log('Redirecting to: ', GatewayPageURL);
     });
 }
