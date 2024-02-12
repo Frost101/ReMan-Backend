@@ -23,8 +23,8 @@ async function paymentOnline(req, res){
         total_amount: 100,
         currency: 'BDT',
         tran_id: tran_ID, // use unique tran_id for each api call
-        success_url: 'http://localhost:3000/api/payment/onlinePaymentSuccess',
-        fail_url: 'http://localhost:3000/api/payment/onlinePaymentFail',
+        success_url: 'https://reman-backend-8eli.onrender.com/api/payment/onlinePaymentSuccess',
+        fail_url: 'https://reman-backend-8eli.onrender.com/api/payment/onlinePaymentFail',
         cancel_url: 'http://localhost:3030/cancel',
         ipn_url: 'http://localhost:3030/ipn',
         shipping_method: 'Courier',
