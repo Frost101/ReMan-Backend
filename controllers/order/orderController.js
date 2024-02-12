@@ -257,6 +257,10 @@ async function getManufacturerOrders(req, res) {
       });
   
       if (orders) {
+
+        orders.sort((a, b) => {
+          return new Date(a.Order.OrderDate) - new Date(b.Order.OrderDate);
+        });
         for(let i = 0; i < orders.length; i++) {
             orders[i].ShopName = orders[i].Order.Shop.Name;
             orders[i].ShopLogo = orders[i].Order.Shop.Logo;
