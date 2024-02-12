@@ -10,14 +10,21 @@ const is_live = false //true for live, false for sandbox
 
 
 
-async function paymentWithMobileBanking(req, res){
-    const tran_ID = new ObjectId().toString();
+async function paymentOnline(req, res){
+      // Get current timestamp
+  const timestamp = Date.now();
+
+  // Generate a random string
+  const randomString = Math.random().toString(36).substring(2, 10);
+
+  // Concatenate timestamp and random string
+  const tran_ID = `${timestamp}-${randomString}`;
     const data = {
         total_amount: 100,
         currency: 'BDT',
         tran_id: tran_ID, // use unique tran_id for each api call
-        success_url: 'http://localhost:3030/success',
-        fail_url: 'http://localhost:3030/fail',
+        success_url: 'http://localhost:3000/api/payment/onlinePaymentSuccess',
+        fail_url: 'http://localhost:3000/api/payment/onlinePaymentFail',
         cancel_url: 'http://localhost:3030/cancel',
         ipn_url: 'http://localhost:3030/ipn',
         shipping_method: 'Courier',
@@ -46,10 +53,43 @@ async function paymentWithMobileBanking(req, res){
     sslcz.init(data).then(apiResponse => {
         // Redirect the user to payment gateway
         let GatewayPageURL = apiResponse.GatewayPageURL;
-        res.send({url: GatewayPageURL});
+        res.status(200).json({TransactionID: tran_ID,
+            url: GatewayPageURL});
         console.log('Redirecting to: ', GatewayPageURL);
     });
 }
+
+
+
+async function onlinePaymentSuccessful(req, res){
+
+    res.status(200).json({success: true,
+        message: "Payment Successful"});
+    // let output = {
+    //     retailPoints: 1000,
+    //     availableLoanAmount: 100000,
+    //     payWithInDays: 30,
+    // }
+
+    // res.json(output);
+}
+
+
+
+async function onlinePaymentFailed(req, res){
+
+    res.status(200).json({success: false,
+        message: "Payment Failed"});
+    // let output = {
+    //     retailPoints: 1000,
+    //     availableLoanAmount: 100000,
+    //     payWithInDays: 30,
+    // }
+
+    // res.json(output);
+}
+
+
 
 function getLoanStatus(req, res){
     let output = {
@@ -73,6 +113,9 @@ function updatePayLaterStatus(req, res){
 
 
 module.exports = {
+    paymentOnline,
+    onlinePaymentSuccessful,
+    onlinePaymentFailed,
     getLoanStatus,
     updatePaymentStatus,
     updatePayLaterStatus,
