@@ -176,10 +176,7 @@ async function addNewBatch1(req, res) {
         const quantity = req.body.quantity;
         const inMarketplace = req.body.inMarketplace;
         const sale = req.body.sale;
-
-        // TODO: Perform any necessary validation or business logic
-
-        // TODO: Save inventory details to the database or perform other actions
+        
         const user = await prisma.inventoryBatch.create({
             data: {
               iid: iid,

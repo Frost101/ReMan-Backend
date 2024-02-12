@@ -65,13 +65,6 @@ async function onlinePaymentSuccessful(req, res){
 
     res.status(200).json({success: true,
         message: "Payment Successful"});
-    // let output = {
-    //     retailPoints: 1000,
-    //     availableLoanAmount: 100000,
-    //     payWithInDays: 30,
-    // }
-
-    // res.json(output);
 }
 
 
@@ -80,13 +73,6 @@ async function onlinePaymentFailed(req, res){
 
     res.status(200).json({success: false,
         message: "Payment Failed"});
-    // let output = {
-    //     retailPoints: 1000,
-    //     availableLoanAmount: 100000,
-    //     payWithInDays: 30,
-    // }
-
-    // res.json(output);
 }
 
 

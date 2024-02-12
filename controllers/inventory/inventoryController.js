@@ -66,11 +66,6 @@ async function addNewInventory(req, res) {
             });
         }
     }
-    // let output = {
-    //     message: 'adding a new inventory successful'
-    // };
-
-    // res.json(output);
 }
 
 function checkInventoryStatus(req, res) {
@@ -105,11 +100,6 @@ async function deleteInventory(req, res) {
         res.status(500).json({ error: 'Internal server error' });
       }
     }
-    // let output = {
-    //     message: 'Inventory removed successfully'
-    // };
-
-    // res.json(output);
 }
 
 async function getInventoriesList(req, res) {
@@ -151,41 +141,9 @@ async function getInventoriesList(req, res) {
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
-    // let output = {
-    //     inventories: [{
-    //     iid: 123412,
-    //     inventoryName: 'Shahi House',
-    //     address: '32 Sultan Road, Savar, 6200, Dhaka',
-    //     capacity: 230,
-    //     inventoryType: 'cold storage',
-    //     empty: false,
-    //     owned: true,
-    //     image: 'public/images/shahi_house.jpg',
-    //     productName: ['potato', 'rice', 'wheat'],
-    //     },
-    //     {    
-    //     iid: 123411,
-    //     inventoryName: 'Khan House',
-    //     address: '32 Sultan Khan Road, Savar, 6200, Dhaka',
-    //     capacity: 230,
-    //     type: 'cold storage',
-    //     empty: false,
-    //     owned: true,
-    //     image: 'public/images/khan_house.jpg',
-    //     productName: ['potato', 'rice', 'wheat'],
-    //     }
-    //     ]
-    // };
-
-    // res.json(output);
 }
 
 async function shiftToInventory(req, res) {
-    // let output = {
-    //     message: 'Batches shifted to other inventory successfully'
-    // };
-
-    // res.json(output);
 
     const {
         fromIID,

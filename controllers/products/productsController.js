@@ -496,26 +496,6 @@ async function getProductByCategory(req, res) {
     console.error('Error retrieving user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-    // let output = {
-    //     products: [{
-    //         PID: 123456,
-    //         productName: 'Mojito',
-    //         productImage: 'public/images/mojito.jpg',
-    //         batch : [123456, 256457, 256423],
-    //         quantity: 1000,
-    //         discountRate: 10,
-    //         MID: 123456,
-    //         manufacturerName: 'Fresh',
-    //         manufacturerLogo: 'public/images/fresh.jpg',
-    //         unitPrice: 10,
-    //         weightVolume: 250,
-    //         unit: 'mL',
-    //         rating: 4,
-    //     }
-    // ]
-    // };
-
-    // res.json(output);
 
 }
 
@@ -581,27 +561,6 @@ async function getProductInfo(req, res) {
     console.error('Error retrieving user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-    // let output = {
-    //     products: [{
-    //         PID: 123456,
-    //         productName: 'Mojito',
-    //         productImage: 'public/images/mojito.jpg',
-    //         batch : [123456, 256457, 256423],
-    //         quantity: 1000,
-    //         discountRate: 10,
-    //         MID: 123456,
-    //         manufacturerName: 'Fresh',
-    //         manufacturerLogo: 'public/images/fresh.jpg',
-    //         unitPrice: 10,
-    //         weightVolume: 250,
-    //         unit: 'mL',
-    //         rating: 4,
-    //     }
-    // ]
-    // };
-
-    // res.json(output);
-
 }
 
 
