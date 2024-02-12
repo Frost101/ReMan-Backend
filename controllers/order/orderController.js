@@ -460,9 +460,59 @@ async function updateShipmentInfo(req, res) {
     });
 
     res.status(200).json({message: "Shipment Info Updated"});
+    if(status === 'Shipped'){
+      setTimeout(async () => {
+        await orderDelivered(oid, mid);
+      }, 60000);
+    }
   } catch (error) {
     console.error('Error retrieving user:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
+async function orderDelivered(oid, mid) {
+  try {
+    const paymentStatus = await prisma.orderFragment.findMany({
+      where: {
+        oid: oid,
+        mid: mid,
+      },
+      select: {
+        PaymentStatus: true,
+        FinalPrice: true,
+      }
+    });
+    
+    const updateDeliveryStatus = await prisma.orderFragment.updateMany({
+      where: {
+        oid: oid,
+        mid: mid,
+      },
+      data: {
+        DeliveryStatus: 'Delivered',
+        DeliveryDate: new Date(),
+      },
+    });
+
+    if(paymentStatus[0].PaymentStatus !== 'Paid'){
+      const updateDeliveryStatus = await prisma.orderFragment.updateMany({
+        where: {
+          oid: oid,
+          mid: mid,
+        },
+        data: {
+          PaymentStatus: 'Paid',
+          PaymentLastDate: new Date(),
+          PaidAmount: paymentStatus[0].FinalPrice,
+        },
+      });
+    }
+
+  } catch (error) {
+    console.error('Error retrieving user:', error);
   }
 }
 
