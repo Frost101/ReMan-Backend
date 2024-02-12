@@ -118,6 +118,7 @@ async function addToCartInfo(req, res) {
               pid: pid,
             },
             select:{
+                mid: true,
                 MinQuantityForSale: true,
                 MinimumDeliveryCharge: true,
                 DeliveryChargeIncreaseRate: true,
@@ -130,6 +131,7 @@ async function addToCartInfo(req, res) {
             data: {
               sid: sid,
               pid: pid,
+              mid: product.mid,
               Quantity: Quantity,
               Price: Price,
               DeliveryCharge: deliveryCharge,
