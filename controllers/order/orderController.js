@@ -259,7 +259,7 @@ async function getManufacturerOrders(req, res) {
       if (orders) {
 
         orders.sort((a, b) => {
-          return new Date(a.Order.OrderDate) - new Date(b.Order.OrderDate);
+          return new Date(b.Order.OrderDate) - new Date(a.Order.OrderDate);
         });
         for(let i = 0; i < orders.length; i++) {
             orders[i].ShopName = orders[i].Order.Shop.Name;
