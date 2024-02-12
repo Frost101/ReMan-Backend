@@ -166,18 +166,6 @@ async function getManufacturerCountInfo(req, res) {
     console.error('Error retrieving user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-  // let output = {
-  //         name: 'Meril',
-  //         phoneNumber: ['01988974891', '05776879659'],
-  //         image: 'public/images/meril.jpg',
-  //         rating: 4.87,
-  //         website: 'https://www.meril.com',
-  //         email: 'meril@gmail.com',
-  //         address: '32 Baker Street, Mymensingh',
-  //         tin: 23878931
-  // };
-
-  // res.json(output);
 }
 
 module.exports = {

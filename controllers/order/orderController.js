@@ -257,6 +257,10 @@ async function getManufacturerOrders(req, res) {
       });
   
       if (orders) {
+
+        orders.sort((a, b) => {
+          return new Date(a.Order.OrderDate) - new Date(b.Order.OrderDate);
+        });
         for(let i = 0; i < orders.length; i++) {
             orders[i].ShopName = orders[i].Order.Shop.Name;
             orders[i].ShopLogo = orders[i].Order.Shop.Logo;
@@ -310,35 +314,6 @@ async function getManufacturerOrders(req, res) {
       console.error('Error retrieving order:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
-    // let output = {
-    //     orders: [{
-    //     oid: 233412,
-    //     shopName: 'Hatir Store',
-    //     shopImage: 'public/images/hatir_store.jpg',
-    //     shopPhoneNumber: '01787623092',
-    //     orderDate: '03/08/2023',
-    //     deliveryDate: '17/08/2023',
-    //     totalPrice: 230000,
-    //     paymentStatus: 'Paid',
-    //     deliveryStatus: 'Delivered',
-    //     paymentMethod: 'COD'
-    //     },
-    //     {    
-    //     oid: 233413,
-    //     shopName: 'Kulir Store',
-    //     shopImage: 'public/images/kulir_store.jpg',
-    //     shopPhoneNumber: '01787343092',
-    //     orderDate: '03/08/2023',
-    //     deliveryDate: '19/08/2023',
-    //     totalPrice: 250000,
-    //     paymentStatus: 'Paid',
-    //     deliveryStatus: 'Delivered',
-    //     paymentMethod: 'Bkash'
-    //     }
-    //     ]
-    // };
-
-    // res.json(output);
 }
 
 
