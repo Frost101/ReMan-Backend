@@ -173,11 +173,11 @@ async function addNewOrder(req, res) {
     });
   }  
   
-  // const deleteCart = await prisma.cart.deleteMany({
-  //     where: {
-  //         sid: sid,
-  //     }
-  // });
+  const deleteCart = await prisma.cart.deleteMany({
+      where: {
+          sid: sid,
+      }
+  });
 
   res.status(201).json({success: true,
                       message: 'Order Added Successfully'});
@@ -485,7 +485,7 @@ async function orderDelivered(oid, mid) {
         FinalPrice: true,
       }
     });
-    
+
     const updateDeliveryStatus = await prisma.orderFragment.updateMany({
       where: {
         oid: oid,
