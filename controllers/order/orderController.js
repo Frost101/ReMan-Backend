@@ -140,6 +140,7 @@ async function addNewOrder(req, res) {
       }
   }
 
+  if(VoucherCode != null && VoucherCode != "") {
   const voucherCount = await prisma.voucherUsage.findMany({
       where: {
           VoucherCode: VoucherCode,
@@ -171,7 +172,8 @@ async function addNewOrder(req, res) {
             },
         },
     });
-  }  
+  }
+}  
   
   const deleteCart = await prisma.cart.deleteMany({
       where: {
