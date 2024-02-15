@@ -329,7 +329,9 @@ async function addNewProduct(req, res) {
             MinimumDiscount,
             MaximumDiscount,
             DiscountRate,
-            ProductQuantityForDiscountRate
+            ProductQuantityForDiscountRate,
+            MinimumDeliveryCharge,
+            DeliveryChargeIncreaseRate
         } = req.body;
 
         const user = await prisma.product.create({
@@ -349,6 +351,8 @@ async function addNewProduct(req, res) {
               MaximumDiscount: MaximumDiscount,
               DiscountRate: DiscountRate,
               ProductQuantityForDiscountRate: ProductQuantityForDiscountRate,
+              MinimumDeliveryCharge: MinimumDeliveryCharge,
+              DeliveryChargeIncreaseRate: DeliveryChargeIncreaseRate,
             },
           });
 
