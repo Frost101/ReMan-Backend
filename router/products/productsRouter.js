@@ -640,6 +640,8 @@ productsRouter.put('/productUpdate',updateProductInformation)
 *              - MaximumDiscount
 *              - DiscountRate
 *              - ProductQuantityForDiscountRate
+*              - MinimumDeliveryCharge
+*              - DeliveryChargeIncreaseRate
 *            properties: 
 *              MID:
 *                type: string
@@ -683,6 +685,12 @@ productsRouter.put('/productUpdate',updateProductInformation)
 *              ProductQuantityForDiscountRate:
 *                type: integer
 *                default: 50
+*              MinimumDeliveryCharge:
+*                type: double
+*                default: 100
+*              DeliveryChargeIncreaseRate:
+*                type: double
+*                default: 1.0
 *     responses:
 *        200:
 *          description: Successfully added new product 
