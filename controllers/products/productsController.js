@@ -308,8 +308,83 @@ async function getCategoriesByManufacturer(req, res) {
 
 
 
-function updateProductInformation(req, res) {
-    res.status(200).end();
+async function updateProductInformation(req, res) {
+
+  try {
+    // Extracting input parameters from the request body
+    const {
+        PID,
+        MID,
+        CategoryName,
+        ProductName,
+        Image,
+        Weight_Volume,
+        Unit,
+        UnitPrice,
+        Description,
+        MinQuantityForSale,
+        MinQuantityForDiscount,
+        MinimumDiscount,
+        MaximumDiscount,
+        DiscountRate,
+        ProductQuantityForDiscountRate,
+        MinimumDeliveryCharge,
+        DeliveryChargeIncreaseRate
+    } = req.body;
+
+    const user = await prisma.product.update({
+        where: {
+           pid: PID,
+        },  
+        data: {
+          mid: MID,
+          CategoryName: CategoryName,
+          ProductName: ProductName,
+          Image: Image[0],
+          Weight_volume: Weight_Volume,
+          Unit: Unit,
+          UnitPrice: UnitPrice,
+          Description: Description,
+          MinQuantityForSale: MinQuantityForSale,
+          MinQuantityForDiscount: MinQuantityForDiscount,
+          MinimumDiscount: MinimumDiscount,
+          MaximumDiscount: MaximumDiscount,
+          DiscountRate: DiscountRate,
+          ProductQuantityForDiscountRate: ProductQuantityForDiscountRate,
+          MinimumDeliveryCharge: MinimumDeliveryCharge,
+          DeliveryChargeIncreaseRate: DeliveryChargeIncreaseRate,
+        },
+      }); 
+
+    if(Image.length > 1) {
+
+        const user2 = await prisma.productImage.deleteMany({
+            where: {
+              pid: PID,
+            },
+          });
+        for(let i = 1; i < Image.length; i++) {
+            const user1 = await prisma.productImage.create({
+                data: {
+                  pid: PID,
+                  OtherImage: Image[i],
+                },
+              });
+        }
+    }   
+
+    // Responding with success
+    res.status(200).json({
+        success: true,
+        message: 'Product updated successfully',
+    });
+} catch (error) {
+        // Responding with server errors
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+        });
+    }
 }
 
 async function addNewProduct(req, res) {
@@ -339,7 +414,7 @@ async function addNewProduct(req, res) {
               mid: MID,
               CategoryName: CategoryName,
               ProductName: ProductName,
-              Image: Image,
+              Image: Image[0],
               Weight_volume: Weight_Volume,
               Unit: Unit,
               UnitPrice: UnitPrice,
@@ -354,7 +429,18 @@ async function addNewProduct(req, res) {
               MinimumDeliveryCharge: MinimumDeliveryCharge,
               DeliveryChargeIncreaseRate: DeliveryChargeIncreaseRate,
             },
-          });
+          }); 
+
+        if(Image.length > 1) {
+            for(let i = 1; i < Image.length; i++) {
+                const user1 = await prisma.productImage.create({
+                    data: {
+                      pid: user.pid,
+                      OtherImage: Image[i],
+                    },
+                  });
+            }
+        }   
 
         // Responding with success
         res.status(201).json({
