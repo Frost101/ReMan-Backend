@@ -540,62 +540,74 @@ productsRouter.post('/manufacturerCategories', getCategoriesByManufacturer);
 *            type: object
 *            required:
 *              - PID
-*              - productName
-*              - productImage
-*              - categoryName
-*              - weightVolume
-*              - unit
-*              - unitPrice
-*              - description
-*              - minQuantityForSale
-*              - minQuantityForDiscount
-*              - discountRate
-*              - minimumDiscount
-*              - maximumDiscount
-*              - productQuantityForDiscountRate
+*              - MID
+*              - CategoryName
+*              - ProductName
+*              - Image
+*              - Weight_Volume
+*              - Unit
+*              - UnitPrice
+*              - Description
+*              - MinQuantityForSale
+*              - MinQuantityForDiscount
+*              - MinimumDiscount
+*              - MaximumDiscount
+*              - DiscountRate
+*              - ProductQuantityForDiscountRate
+*              - MinimumDeliveryCharge
+*              - DeliveryChargeIncreaseRate
 *            properties: 
 *              PID:
-*                type: integer
-*                default: 123456
-*              productName:
 *                type: string
-*                default: Mojito
-*              productImage:
+*                default: e7ea9b52-8ab6-4634-8178-1c38ab0340df
+*              MID:
 *                type: string
-*                default: public/images/mojito.jpg
-*              categoryName:
+*                default: e7ea9b52-8ab6-4634-8178-1c38ab0340df
+*              CategoryName:
 *                type: string
-*                default: Beverage
-*              weightVolume:
-*                type: integer
+*                default: Chanachur
+*              ProductName:
+*                type: string
+*                default: pran_spicy_chanachur
+*              Image:
+*                type: array
+*                default: ['public/image/pran_spicy_chanachur1.jpg', 'public/image/pran_spicy_chanachur2.jpg', 'public/image/pran_spicy_chanachur3.jpg']
+*              Weight_Volume:
+*                type: double
 *                default: 250
-*              unit:
+*              Unit:
 *                type: string
-*                default: mL
-*              unitPrice:
-*                type: integer
-*                default: 10
-*              description:
+*                default: g
+*              UnitPrice:
+*                type: double
+*                default: 20
+*              Description:
 *                type: string
-*                default: A refreshing drink
-*              minQuantityForSale:
+*                default: A spicy chanachur to spice up your life
+*              MinQuantityForSale:
 *                type: integer
 *                default: 100
-*              minQuantityForDiscount:
+*              MinQuantityForDiscount:
 *                type: integer
 *                default: 200
-*              discountRate:
+*              MinimumDiscount:
 *                type: double
-*                default: 0.1
-*              minimumDiscount:
-*                type: integer
 *                default: 10
-*              maximumDiscount:
-*                type: integer
+*              MaximumDiscount:
+*                type: double
 *                default: 20
-*              productQuantityForDiscountRate:
+*              DiscountRate:
+*                type: integer
+*                default: 0.1
+*              ProductQuantityForDiscountRate:
 *                type: integer
 *                default: 50
+*              MinimumDeliveryCharge:
+*                type: double
+*                default: 100
+*              DeliveryChargeIncreaseRate:
+*                type: double
+*                default: 1.0
 *     responses:
 *        200:
 *          description: Successfully updated product information   
@@ -645,28 +657,28 @@ productsRouter.put('/productUpdate',updateProductInformation)
 *            properties: 
 *              MID:
 *                type: string
-*                default: 2c397476-c131-4c60-b45a-12bd242ec256
+*                default: e7ea9b52-8ab6-4634-8178-1c38ab0340df
 *              CategoryName:
 *                type: string
-*                default: Beverage
+*                default: Chanachur
 *              ProductName:
 *                type: string
-*                default: Cola
+*                default: pran_spicy_chanachur
 *              Image:
-*                type: string
-*                default: public/image/ruchi_cola.jpg
+*                type: array
+*                default: ['public/image/pran_spicy_chanachur1.jpg', 'public/image/pran_spicy_chanachur2.jpg', 'public/image/pran_spicy_chanachur3.jpg']
 *              Weight_Volume:
 *                type: double
 *                default: 250
 *              Unit:
 *                type: string
-*                default: mL
+*                default: g
 *              UnitPrice:
 *                type: double
 *                default: 20
 *              Description:
 *                type: string
-*                default: A refreshing drink
+*                default: A spicy chanachur to spice up your life
 *              MinQuantityForSale:
 *                type: integer
 *                default: 100

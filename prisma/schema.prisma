@@ -173,6 +173,7 @@ model Product {
   InventoryBatch                 InventoryBatch[]
   Category                       Category               @relation(fields: [CategoryName], references: [CategoryName], onDelete: NoAction, onUpdate: NoAction, map: "Product_Category_CategoryName_fk")
   Company                        Company                @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Product_Company_mid_fk")
+  ProductImage                   ProductImage[]
   ProductionHouseBatch           ProductionHouseBatch[]
   SingleProductOrder             SingleProductOrder[]
 }
@@ -277,4 +278,12 @@ model SingleProductOrder {
   Product         Product @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "SingleProductOrder_Product_pid_fk")
 
   @@id([oid, mid, pid], map: "SingleProductOrder_pk")
+}
+
+model ProductImage {
+  pid        String  @db.Uuid
+  OtherImage String  @db.VarChar
+  Product    Product @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "ProductImage_Product_pid_fk")
+
+  @@id([pid, OtherImage], map: "ProductImage_pk")
 }
