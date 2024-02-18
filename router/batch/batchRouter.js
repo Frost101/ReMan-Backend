@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {getInventoryBatchList, getInventoryBatchListInMarketWithoutSale, getProductionHouseBatchList, batchScreening, addNewBatch, addNewBatch1,  deleteBatch} = require('../../controllers/batch/batchController'); 
+const {getInventoryBatchList, getInventoryBatchListInMarketWithoutSale, getProductionHouseBatchList, batchScreening, addNewBatch, addNewBatch1, giveSaleOnBatches,  deleteBatch} = require('../../controllers/batch/batchController'); 
 
 //* Initialize router
 const batchRouter = express.Router();
@@ -359,6 +359,54 @@ batchRouter.post('/newBatch', addNewBatch);
 *          description: Internal server error
 */
 batchRouter.post('/newBatchInventory', addNewBatch1);
+
+
+
+
+/**
+* @swagger
+* /api/batch/provideSaleOnBatches:
+*   put:
+*     tags: [Batch]
+*     description: Give sale on batches
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - Sale
+*              - bid
+*            properties: 
+*              Sale:
+*                type: double
+*                default: 25.0
+*              bid:
+*                type: array
+*                default: ['62634e68-822a-4c22-8682-e620b0391b3d', '559eab95-f7f1-471a-b04b-65a861451398']
+*     responses:
+*        200:
+*          description: Sale provided on batches successfully
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  message:
+*                    type: string
+*                    default: Sale provided on batches successfully
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+batchRouter.put('/provideSaleOnBatches', giveSaleOnBatches);
 
 
 
