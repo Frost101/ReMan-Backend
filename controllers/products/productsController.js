@@ -642,7 +642,11 @@ async function getProductInfo(req, res) {
           Quantity: true,
         },
       });
-      productInfo.TotalQuantity = totalQuantity[0]._sum.Quantity;
+
+      productInfo.TotalQuantity = 0;
+      if(totalQuantity[0]){
+        productInfo.TotalQuantity = totalQuantity[0]._sum.Quantity;
+      }
       res.status(200).json({productInfo});
     } else {
       res.status(404).json({ error: 'No products found' });
@@ -655,44 +659,79 @@ async function getProductInfo(req, res) {
 
 
 
-function getProductDetails(req, res) {
-    let output = {
-        product: {
-            PID: 123456,
-            productName: 'Mojito',
-            productImages: ['public/images/mojito.jpg', 'public/images/mojito2.jpg', 'public/images/mojito3.jpg' ],
-            batch : [123456, 256457, 256423],
-            quantity: 1000,
-            MID: 123456,
-            manufacturerName: 'Fresh',
-            manufacturerLogo: 'public/images/fresh.jpg',
-            unitPrice: 10,
-            weightVolume: 250,
-            unit: 'mL',
-            rating: 4,
-            reviews: [
-                {
-                    userName: 'user1',
-                    review: 'This is a good product',
-                    rating: 4,
-                },
-                {
-                    userName: 'user2',
-                    review: 'This is a bad product',
-                    rating: 2,
-                },
-            ],
-            description: 'This is a refreshing drink',
-            minOrderQuantity: 100,
-            minQuantityForDiscount: 150,
-            discountRate: 0.2,
-            minimumDiscount: 10,
-            maximumDiscount: 16,
-            productQuantityForDiscountRate: 50,
-        }
-    };
+async function getProductDetails(req, res) {
+  const pid = req.body.pid;
 
-    res.json(output);
+  try {
+    const productInfo = await prisma.product.findUnique({
+      where: {
+        pid: pid,
+      },
+      select: {
+        CategoryName: true,
+        ProductName: true,
+        Image: true,
+        Weight_volume: true,
+        Unit: true,
+        UnitPrice: true,
+        Description: true,
+        Rating: true,
+        MinQuantityForSale: true,
+        MinQuantityForDiscount: true,
+        MinimumDiscount: true,
+        MaximumDiscount: true,
+        DiscountRate: true,
+        ProductQuantityForDiscountRate: true,
+        mid: true,
+        Company: {
+          select: {
+            Name: true,
+            Logo: true,
+          }
+        }
+      },
+    });
+
+    if (productInfo) {
+      productInfo.ManufacturerName = productInfo.Company.Name;
+      productInfo.ManufacturerLogo = productInfo.Company.Logo;
+      delete productInfo.Company;
+      
+      const totalQuantity = await prisma.inventoryBatch.groupBy({
+        by: ['pid'],
+        where: {
+          pid: pid,
+        },
+        _sum: {
+          Quantity: true,
+        },
+      });
+      productInfo.TotalQuantity = 0;
+      if(totalQuantity[0]){
+        productInfo.TotalQuantity = totalQuantity[0]._sum.Quantity;
+      }
+
+      const otherImages = await prisma.productImage.findMany({
+        where: {
+          pid: pid,
+        },
+        select: {
+          OtherImage: true,
+        },
+      });
+      productInfo.OtherImages = otherImages;
+      for(let i = 0; i < otherImages.length; i++) {
+        productInfo.OtherImages[i] = otherImages[i].OtherImage;
+      }
+
+      res.status(200).json({productInfo});
+    } else {
+      res.status(404).json({ error: 'No products found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 
 }
 

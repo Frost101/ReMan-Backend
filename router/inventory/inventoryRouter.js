@@ -287,7 +287,7 @@ inventoryRouter.post('/inventoryList', getInventoriesList);
 *            required:
 *              - ShiftFromIID
 *              - ShiftToIID
-*              - BID
+*              - bid
 *            properties: 
 *              fromIID:
 *                type: string

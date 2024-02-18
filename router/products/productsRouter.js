@@ -1007,7 +1007,7 @@ productsRouter.post('/productInfo', getProductInfo);
 * /api/products/productDetails:
 *   post:
 *     tags: [Products]
-*     description: Get all the details of a product
+*     description: Get product info of a specific product
 *     requestBody:
 *      required: true
 *      content:
@@ -1015,94 +1015,80 @@ productsRouter.post('/productInfo', getProductInfo);
 *           schema:
 *            type: object
 *            required:
-*              - PID
-*            properties: 
-*              PID:
-*                type: integer
-*                default: 123456
+*              - pid
+*            properties:
+*              pid:
+*                type: string
+*                default: 288e0918-67ef-448d-b05d-380543e3ebcc
 *     responses:
 *        200:
-*          description: Successfully added new product
+*          description: Product Description of a single product
 *          response-body:
 *          content:
 *            application/json:
 *              schema:
 *                type: object
 *                properties:
-*                  product:
-*                    type: object
-*                    properties:
-*                      PID:
-*                        type: integer
-*                        example: 123456
-*                      productName:
-*                        type: string
-*                        example: Mojito
-*                      productImages:
-*                        type: array
-*                        example: [public/images/mojito.jpg, public/images/mojito2.jpg, public/images/mojito3.jpg]
-*                      batch:
-*                        type: array
-*                        example: [123456, 256457, 256423]
-*                      quantity:
-*                        type: integer
-*                        example: 1000
-*                      MID:
-*                        type: integer
-*                        example: 123456
-*                      manufacturerName:
-*                        type: string
-*                        example: Fresh
-*                      manufacturerLogo:
-*                        type: string
-*                        example: public/images/fresh.jpg
-*                      unitPrice:
-*                        type: integer
-*                        example: 10
-*                      weightVolume:
-*                        type: integer
-*                        example: 250
-*                      unit:
-*                        type: string
-*                        example: mL
-*                      rating:
-*                        type: integer
-*                        example: 4
-*                      reviews:
-*                        type: array
-*                        items:
-*                          type: object
-*                          properties:
-*                            username:
-*                              type: string
-*                              example: user1
-*                            review:
-*                              type: string
-*                              example: This is a good product
-*                            rating:
-*                              type: integer
-*                              example: 4
-*                      description:
-*                        type: string
-*                        example: A refreshing drink
-*                      minOrderQuantity:
-*                        type: integer
-*                        example: 100
-*                      minQuantityForDiscount:
-*                        type: integer
-*                        example: 150
-*                      discountRate:
-*                        type: double
-*                        example: 0.2
-*                      minimumDiscount:
-*                        type: integer
-*                        example: 10
-*                      maximumDiscount:
-*                        type: integer
-*                        example: 16
-*                      productQuantityForDiscountRate:
-*                        type: integer
-*                        example: 50
+*                  productInfo:
+*                      type: object
+*                      properties:
+*                        CategoryName:
+*                          type: string
+*                          example: Juice
+*                        ProductName:
+*                          type: string
+*                          example: Mojito
+*                        Image:
+*                          type: string
+*                          example: public/images/mojito.jpg
+*                        Weight_volume:
+*                          type: double
+*                          example: 120
+*                        Unit:
+*                          type: string
+*                          example: 1000
+*                        UnitPrice:
+*                          type: double
+*                          example: 10
+*                        Description:
+*                          type: string
+*                          example: 123456
+*                        Rating:
+*                          type: double
+*                          example: 4.7
+*                        MinQuantityForSale:
+*                          type: integer
+*                          example: 100
+*                        MinQuantityForDiscount:
+*                          type: integer
+*                          example: 200
+*                        MinimumDiscount:
+*                          type: double
+*                          example: 5
+*                        MaximumDiscount:
+*                          type: double
+*                          example: 20
+*                        DiscountRate:
+*                          type: double
+*                          example: 0.2
+*                        ProductQuantityForDiscountRate:
+*                          type: integer
+*                          example: 30
+*                        mid:
+*                          type: string
+*                          example: 435465
+*                        ManufacturerName:
+*                          type: string
+*                          example: Mojo
+*                        ManufacturerLogo:
+*                          type: string
+*                          example: public/images/mojito.jpg
+*                        TotalQuantity:
+*                          type: integer
+*                          example: 1000
+*                        OtherImages:
+*                          type: array
+*                          example: ['public/images/mojito1.jpg', 'public/images/mojito2.jpg', 'public/images/mojito3.jpg']      
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
