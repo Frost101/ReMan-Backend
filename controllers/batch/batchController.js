@@ -245,6 +245,65 @@ async function giveSaleOnBatches(req, res) {
 }
 
 
+
+async function addBatchesToMarket(req, res) {
+
+  const {
+    bid,
+  } = req.body;
+
+  try {
+    for(let i = 0; i < bid.length; i++) {
+      const user = await prisma.inventoryBatch.update({
+        where: {
+          bid: bid[i],
+        },
+        data: {
+          MarketStatus: true,
+        },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Batches added to marketplace successfully',
+  });
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+async function removeBatchesFromMarket(req, res) {
+
+  const {
+    bid,
+  } = req.body;
+
+  try {
+    for(let i = 0; i < bid.length; i++) {
+      const user = await prisma.inventoryBatch.update({
+        where: {
+          bid: bid[i],
+        },
+        data: {
+          MarketStatus: false,
+        },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Batches removed from marketplace successfully',
+  });
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
 function deleteBatch(req, res){
     res.status(200).end();
 }
@@ -257,5 +316,7 @@ module.exports = {
     addNewBatch,
     addNewBatch1,
     giveSaleOnBatches,
+    addBatchesToMarket,
+    removeBatchesFromMarket,
     deleteBatch,
 };
