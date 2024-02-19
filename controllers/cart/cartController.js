@@ -189,6 +189,8 @@ async function deleteCartProductInfo(req, res) {
             pid,
         } = req.body;
 
+        console.log(sid, pid, deleteInfo);
+
         const deleteInfo = await prisma.cart.deleteMany({
             where: {
               sid: sid,
