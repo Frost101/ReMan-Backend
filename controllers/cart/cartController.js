@@ -196,6 +196,8 @@ async function deleteCartProductInfo(req, res) {
             },
         });
 
+        console.log(sid, pid, deleteInfo);
+
         // Responding with success
         res.status(201).json({
             success: true,
