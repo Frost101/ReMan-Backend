@@ -63,16 +63,14 @@ async function paymentOnline(req, res){
 
 async function onlinePaymentSuccessful(req, res){
 
-    res.status(200).json({success: true,
-        message: "Payment Successful"});
+    res.redirect('https://reman-retailer.vercel.app/payment/success');
 }
 
 
 
 async function onlinePaymentFailed(req, res){
 
-    res.status(200).json({success: false,
-        message: "Payment Failed"});
+    res.redirect('https://reman-retailer.vercel.app/payment/fail');
 }
 
 
