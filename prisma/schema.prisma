@@ -40,29 +40,30 @@ model Shop {
 }
 
 model Company {
-  mid                String               @id(map: "Company_pk") @default(uuid()) @db.Uuid
-  Name               String?              @db.VarChar
-  PhoneNumber        String?              @db.VarChar
-  tin                String?              @db.VarChar
-  Website            String?              @db.VarChar
-  Email              String?              @unique(map: "Company_pk2") @db.VarChar
-  Password           String?              @db.VarChar
-  Logo               String?              @db.VarChar
-  Rating             Float?
-  HouseNumber        String?              @db.VarChar
-  Street             String?              @db.VarChar
-  zip                Int?
-  Thana              String?              @db.VarChar
-  Division           String?              @db.VarChar
-  AddressDetails     String?              @db.VarChar
-  Cart               Cart[]
-  CompanyOwner       CompanyOwner[]
-  Inventory          Inventory[]
-  OrderFragment      OrderFragment[]
-  Product            Product[]
-  ProductionHouse    ProductionHouse[]
-  SingleProductOrder SingleProductOrder[]
-  Voucher            Voucher[]
+  mid                 String                @id(map: "Company_pk") @default(uuid()) @db.Uuid
+  Name                String?               @db.VarChar
+  PhoneNumber         String?               @db.VarChar
+  tin                 String?               @db.VarChar
+  Website             String?               @db.VarChar
+  Email               String?               @unique(map: "Company_pk2") @db.VarChar
+  Password            String?               @db.VarChar
+  Logo                String?               @db.VarChar
+  Rating              Float?
+  HouseNumber         String?               @db.VarChar
+  Street              String?               @db.VarChar
+  zip                 Int?
+  Thana               String?               @db.VarChar
+  Division            String?               @db.VarChar
+  AddressDetails      String?               @db.VarChar
+  Cart                Cart[]
+  CompanyNotification CompanyNotification[]
+  CompanyOwner        CompanyOwner[]
+  Inventory           Inventory[]
+  OrderFragment       OrderFragment[]
+  Product             Product[]
+  ProductionHouse     ProductionHouse[]
+  SingleProductOrder  SingleProductOrder[]
+  Voucher             Voucher[]
 }
 
 model ShopOwner {
@@ -286,4 +287,14 @@ model ProductImage {
   Product    Product @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "ProductImage_Product_pid_fk")
 
   @@id([pid, OtherImage], map: "ProductImage_pk")
+}
+
+model CompanyNotification {
+  nid         String    @id(map: "CompanyNotification_pk") @default(uuid()) @db.Uuid
+  mid         String    @db.Uuid
+  Message     String?   @db.VarChar
+  DateAndTime DateTime? @db.Date
+  ReadStatus  Boolean?
+  Priority    String?   @db.VarChar
+  Company     Company   @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "CompanyNotification_Company_mid_fk")
 }

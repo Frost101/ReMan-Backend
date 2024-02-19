@@ -183,6 +183,29 @@ async function addNewOrder(req, res) {
 
   res.status(201).json({success: true,
                       message: 'Order Added Successfully'});
+
+
+  const shopName = await prisma.shop.findUnique({
+      where: {
+          ShopID: sid,
+      },
+      select: {
+          Name: true,
+      }
+  });
+  
+  for(let i = 0; i < manufacturerInfo.length; i++) {
+    const notification = await prisma.companyNotification.create({
+        data: {
+            mid: manufacturerInfo[i].mid,
+            Message: shopName.Name + ' has placed an order',
+            DateAndTime: new Date(),
+            ReadStatus: false,
+            Priority: 'Mid',
+        }
+    });
+  }
+
   } catch (error) {
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Internal server error' });

@@ -63,12 +63,17 @@ async function paymentOnline(req, res){
 
 async function onlinePaymentSuccessful(req, res){
 
+    const transactionID = req.body.tran_id;
+    console.log('Transaction Failed: ', transactionID);
+
     res.redirect('https://reman-retailer.vercel.app/payment/success');
 }
 
 
 
 async function onlinePaymentFailed(req, res){
+    const transactionID = req.body.tran_id;
+    console.log('Transaction Failed: ', transactionID);
 
     res.redirect('https://reman-retailer.vercel.app/payment/fail');
 }
