@@ -175,11 +175,13 @@ async function addNewOrder(req, res) {
   }
 }  
   
+  if(PaymentMethod === 'Cash On Delivery') {
   const deleteCart = await prisma.cart.deleteMany({
       where: {
           sid: sid,
       }
   });
+}
 
   res.status(201).json({success: true,
                       message: 'Order Added Successfully'});
