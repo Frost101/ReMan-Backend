@@ -129,12 +129,62 @@ async function getProductionHousesList(req, res) {
     }
 }
 
-function shiftToInventory(req, res) {
-    let output = {
-        message: 'Batches shifted to inventory successfully'
-    };
+async function shiftToInventory(req, res) {
 
-    res.json(output);
+  const {
+      fromPHID,
+      toIID,
+      bid,
+  } = req.body;
+
+  try {
+
+        // Fetch batches from ProductionHouseBatch table
+        const batches = await prisma.productionHouseBatch.findMany({
+          where: {
+            bid: {
+              in: bid,
+            },
+            phid: fromPHID,
+          },
+        });
+
+        // console.log(batches);
+    
+        if (batches.length === 0) {
+          return res.status(404).json({ error: 'No batches found to move.' });
+        }
+    
+        // Delete fetched batches from ProductionHouseBatch table
+        await prisma.productionHouseBatch.deleteMany({
+          where: {
+            bid: {
+              in: bid,
+            },
+            phid: fromPHID,
+          },
+        });
+  
+      for(let i = 0; i < batches.length; i++) {
+        const user = await prisma.inventoryBatch.create({
+          data: {
+            bid: batches[i].bid,
+            iid: toIID,
+            pid: batches[i].pid,
+            ManufacturingDate: batches[i].ManufacturingDate,
+            ExpiryDate: batches[i].ExpiryDate,
+            Quantity: batches[i].Quantity,
+            MarketStatus: false,
+            Sale: 0,
+          },
+        });
+      }
+        res.status(200).json({success: true,
+                        message: "Batch products shifted"});             
+    } catch (error) {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
 module.exports = {

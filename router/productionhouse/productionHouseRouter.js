@@ -232,19 +232,19 @@ productionHouseRouter.post('/productionHouseList', getProductionHousesList);
 *           schema:
 *            type: object
 *            required:
-*              - ShiftFromPHID
-*              - ShiftToIID
-*              - BID
+*              - fromPHID
+*              - toIID
+*              - bid
 *            properties: 
-*              ShiftFromPHID:
-*                type: integer
-*                default: 123412
-*              ShiftToIID:
-*                type: integer
-*                default: 123411
-*              BID:
+*              fromPHID:
+*                type: string
+*                default: a5e62d0b-be4d-4516-8334-2576df8b8282
+*              toIID:
+*                type: string
+*                default: cd2f7a02-aa2d-4c30-9127-b00bf574f974
+*              bid:
 *                type: array
-*                default: [313234, 292931, 131123]
+*                default: ['0f923034-673f-4b73-b517-2f2a65940c6f', 'b5a66dc1-228b-4d9e-a425-8f012ad17cfe']
 *     responses:
 *        200:
 *          description: Product batches shifted from one Production House to an inventory successfully

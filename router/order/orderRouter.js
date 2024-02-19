@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails} = require('../../controllers/order/orderController'); 
+const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails, deleteOrder} = require('../../controllers/order/orderController'); 
 
 //* Initialize router
 const orderRouter = express.Router();
@@ -629,5 +629,49 @@ orderRouter.post('/retailer/singleOrder', getRetailerOrderDetails);
 *          description: Internal server error
 */
 orderRouter.post('/manufacturer/singleOrder', getManufacturerOrderDetails);
+
+
+
+
+/**
+* @swagger
+* /api/order/deleteOrder:
+*   delete:
+*     tags: [Order]
+*     description: Remove an order
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - oid
+*            properties: 
+*              oid:
+*                type: string
+*                default: 35963a39-0a62-4425-90e2-d74b346a5c59
+*     responses:
+*        200:
+*          description: Removing an order successfully
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  message:
+*                    type: string
+*                    default: Order removed successfully  
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+orderRouter.delete('/deleteOrder', deleteOrder);
 
 module.exports = orderRouter;

@@ -164,7 +164,7 @@ async function shiftToInventory(req, res) {
           });
         }
           res.status(200).json({success: true,
-                          message: "Batch products shipped"});             
+                          message: "Batch products shifted"});             
       } catch (error) {
         console.error('Error retrieving user:', error);
         res.status(500).json({ error: 'Internal server error' });
