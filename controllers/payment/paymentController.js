@@ -20,7 +20,7 @@ async function paymentOnline(req, res){
   // Concatenate timestamp and random string
   const tran_ID = `${timestamp}-${randomString}`;
     const data = {
-        total_amount: 100,
+        total_amount: `${req.body.TotalAmount}`,
         currency: 'BDT',
         tran_id: tran_ID, // use unique tran_id for each api call
         success_url: 'https://reman-backend-8eli.onrender.com/api/payment/onlinePaymentSuccess',
