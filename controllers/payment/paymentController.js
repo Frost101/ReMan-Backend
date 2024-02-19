@@ -63,8 +63,28 @@ async function paymentOnline(req, res){
 
 async function onlinePaymentSuccessful(req, res){
 
-    const transactionID = req.body.tran_id;
-    console.log('Transaction Failed: ', transactionID);
+    const TransactionID = req.body.tran_id;
+    console.log('Transaction Successful: ', TransactionID);
+
+    try{
+    const ShopID = await prisma.order.findMany({
+        where: {
+            TransactionID: TransactionID,
+        },
+        select: {
+            sid: true,
+        },
+    });
+
+    const deleteCart = await prisma.cart.deleteMany({
+        where: {
+            sid: ShopID[0].sid,
+        }
+    });
+    } catch (error) {
+        console.error('Error retrieving user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 
     res.redirect('https://reman-retailer.vercel.app/payment/success');
 }
@@ -72,8 +92,40 @@ async function onlinePaymentSuccessful(req, res){
 
 
 async function onlinePaymentFailed(req, res){
-    const transactionID = req.body.tran_id;
-    console.log('Transaction Failed: ', transactionID);
+    const TransactionID = req.body.tran_id;
+    console.log('Transaction Failed: ', TransactionID);
+
+    const oid = await prisma.order.findMany({
+        where: {
+            TransactionID: TransactionID,
+        },
+        select: {
+            oid: true,
+        },
+    });
+
+    try {
+        const user = await prisma.singleProductOrder.deleteMany({
+          where: {
+            oid: oid[0].oid,
+          },
+        });
+    
+        const user1 = await prisma.orderFragment.deleteMany({
+          where: {
+            oid: oid[0].oid,
+          },
+        });
+    
+        const user2 = await prisma.order.delete({
+          where: {
+            oid: oid[0].oid,
+          },
+        });
+    } catch (error) {
+        console.error('Error retrieving user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }    
 
     res.redirect('https://reman-retailer.vercel.app/payment/fail');
 }
