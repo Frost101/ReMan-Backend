@@ -356,6 +356,8 @@ module.exports.ownLeasedInventories = async (req, res) => {
     }
 };
 
+
+
 module.exports.takeLease = async (req, res) => {
     try {
         // Extracting input parameters from the request body
@@ -393,6 +395,41 @@ module.exports.takeLease = async (req, res) => {
         });
     } catch (error) {
         console.error('Error taking lease:', error);
+            // Responding with server errors
+            res.status(500).json({
+                success: false,
+                message: 'Internal Server Error',
+            });
+    }
+};
+
+
+
+
+module.exports.extendLease = async (req, res) => {
+    try {
+        // Extracting input parameters from the request body
+        const { rid, OccupiedTill } = req.body;
+
+        const OccupiedTillDate = new Date(OccupiedTill);
+
+        const rentedInventory = await prisma.rental.update({
+            where: {
+                rid: rid,
+                RentalStatus: 'Rented',
+            },
+            data: {
+                OccupiedTill: OccupiedTillDate,
+            },
+        });
+
+        // Responding with success
+        res.status(200).json({
+            success: true,
+            message: 'Lease Extended successfully',
+        });
+    } catch (error) {
+        console.error('Error extending lease:', error);
             // Responding with server errors
             res.status(500).json({
                 success: false,

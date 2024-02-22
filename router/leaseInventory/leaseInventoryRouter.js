@@ -470,6 +470,70 @@ leaseInventoryRouter.post('/ownLeasedInventories', leaseInventoryController.ownL
  */
 leaseInventoryRouter.put('/takeLease', leaseInventoryController.takeLease);
 
+
+
+
+/**
+ * @swagger
+ * /api/leaseInventory/extendLease:
+ *   put:
+ *     summary: Extend Lease of an inventory
+ *     description: Endpoint for extending lease of an inventory
+ *     tags: [LeaseInventory]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rid:
+ *                 type: string
+ *                 example: d3fcff83-d7bd-4058-ac87-cd11dc000c5b
+ *               OccupiedTill:
+ *                 type: string
+ *                 example: 2024-03-18
+ *     responses:
+ *       '200':
+ *         description: Lease taken successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Lease taken successfully
+ *       '401':
+ *         description: Unauthorized - User authentication required
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Unauthorized, User authentication required
+ *       '403':
+ *         description: Forbidden - Insufficient permissions
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Forbidden, Insufficient permissions
+ *       '404':
+ *         description: Not Found - Inventory not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Not Found, Inventory not found
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal Server Error
+ */
+leaseInventoryRouter.put('/extendLease', leaseInventoryController.extendLease);
+
+
+
 /**
  * @swagger
  * /api/leaseInventory/deleteFromRental:
