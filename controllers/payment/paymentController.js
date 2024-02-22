@@ -80,6 +80,7 @@ async function onlinePaymentSuccessful(req, res) {
         console.log('Order Added: ', response.data);
         res.redirect('https://reman-retailer.vercel.app/payment/success');
     } catch (error) {
+        console.error('Error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 
