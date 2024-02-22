@@ -215,18 +215,21 @@ leaseInventoryRouter.post('/inventoryMarketplace', leaseInventoryController.inve
  *           schema:
  *             type: object
  *             properties:
- *               RID:
+ *               rid:
  *                 type: string
- *                 example: "RENTAL123"
- *               IID:
+ *                 example: d3fcff83-d7bd-4058-ac87-cd11dc000c5b
+ *               iid:
  *                 type: string
- *                 example: "INV001"
- *               LeaseFromMID:
+ *                 example: 6b6fd057-bae2-4786-90e4-916ed809baa2
+ *               OwnerID:
  *                 type: string
- *                 example: "MANUFACTURER456"
- *               LeaseToMID:
+ *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
+ *               OwnedToID:
  *                 type: string
- *                 example: "RENTAL123"
+ *                 example: e7ea9b52-8ab6-4634-8178-1c38ab0340df
+ *               Duration:
+ *                 type: integer
+ *                 example: 20
  *     responses:
  *       '200':
  *         description: Lease taken successfully

@@ -90,6 +90,7 @@ module.exports.inventoryMarketplace = async (req, res) => {
                 RentalStatus: 'Not Rented',
             },
             select: {
+                rid: true,
                 iid: true,
                 FreeFrom: true,
                 FreeTill: true,
@@ -140,14 +141,35 @@ module.exports.inventoryMarketplace = async (req, res) => {
     }
 };
 
-module.exports.takeLease = (req, res) => {
+module.exports.takeLease = async (req, res) => {
     try {
         // Extracting input parameters from the request body
-        const { RID, IID, LeaseFromMID, LeaseToMID } = req.body;
+        const { rid, iid, OwnerID, OwnedToID, Duration } = req.body;
 
-        // TODO: Perform any necessary validation or business logic
+        const OccupiedFrom = new Date();
+        const OccupiedTill = new Date();
+        OccupiedTill.setDate(OccupiedFrom.getDate() + Duration);
 
-        // TODO: Save lease details to the database or perform other actions
+        const rentedInventory = await prisma.rental.update({
+            where: {
+                rid: rid,
+            },
+            data: {
+                OwnedToID: OwnedToID,
+                OccupiedFrom: OccupiedFrom,
+                OccupiedTill: OccupiedTill,
+                RentalStatus: 'Rented',
+            },
+        });
+
+        const changeMid = await prisma.inventory.update({
+            where: {
+                iid: iid,
+            },
+            data: {
+                mid: OwnedToID,
+            }
+        });
 
         // Responding with success
         res.status(200).json({
@@ -156,33 +178,11 @@ module.exports.takeLease = (req, res) => {
         });
     } catch (error) {
         console.error('Error taking lease:', error);
-
-        // Responding with client errors
-        if (error instanceof NotFoundError) {
-            // Assuming NotFoundError is a custom error class for not found errors
-            res.status(404).json({
-                success: false,
-                message: 'Not Found: Inventory not found',
-            });
-        } else if (error instanceof UnauthorizedError) {
-            // Assuming UnauthorizedError is a custom error class for authentication errors
-            res.status(401).json({
-                success: false,
-                message: 'Unauthorized: User authentication required',
-            });
-        } else if (error instanceof ForbiddenError) {
-            // Assuming ForbiddenError is a custom error class for authorization errors
-            res.status(403).json({
-                success: false,
-                message: 'Forbidden: Insufficient permissions',
-            });
-        } else {
             // Responding with server errors
             res.status(500).json({
                 success: false,
                 message: 'Internal Server Error',
             });
-        }
     }
 };
 
