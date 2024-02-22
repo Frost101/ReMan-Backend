@@ -175,7 +175,7 @@ async function addNewOrder(req, res) {
   }
 }  
   
-  if(PaymentMethod === 'Cash On Delivery') {
+  if(PaymentMethod === 'Cash On Delivery' || PaymentMethod === 'Online Payment') {
   const deleteCart = await prisma.cart.deleteMany({
       where: {
           sid: sid,
