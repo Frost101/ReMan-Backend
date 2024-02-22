@@ -280,6 +280,82 @@ module.exports.leasedInventoriesTaken = async (req, res) => {
     }
 };
 
+
+
+
+module.exports.ownLeasedInventories = async (req, res) => {
+    const mid = req.body.mid;
+    try {
+
+        const inventoryMarketplaceData = await prisma.rental.findMany({
+            where: {
+                OwnedToID: mid,
+                RentalStatus: 'Rented',
+            },
+            select: {
+                rid: true,
+                iid: true,
+                FreeFrom: true,
+                FreeTill: true,
+                PerDayRent: true,
+                Details: true,
+                OccupiedFrom: true,
+                OccupiedTill: true,
+                Inventory: {
+                    select: {
+                        InventoryName: true,
+                        Capacity: true,
+                        Type: true,
+                        Details: true,
+                        HouseNumber: true,
+                        Street: true,
+                        zip: true,
+                        Thana: true,
+                        Division: true,
+                        AddressDetails: true,
+                        Image: true,
+                    }
+                },
+                OwnerID: true,
+                Company_Rental_OwnerIDToCompany: {
+                    select: {
+                        Name: true,
+                        Logo: true,
+                    }
+                },
+            }
+        });
+
+        for(let i = 0; i < inventoryMarketplaceData.length; i++) {
+            inventoryMarketplaceData[i].InventoryName = inventoryMarketplaceData[i].Inventory.InventoryName;
+            inventoryMarketplaceData[i].Capacity = inventoryMarketplaceData[i].Inventory.Capacity;
+            inventoryMarketplaceData[i].Type = inventoryMarketplaceData[i].Inventory.Type;
+            inventoryMarketplaceData[i].Details = inventoryMarketplaceData[i].Inventory.Details;
+            inventoryMarketplaceData[i].HouseNumber = inventoryMarketplaceData[i].Inventory.HouseNumber;
+            inventoryMarketplaceData[i].Street = inventoryMarketplaceData[i].Inventory.Street;
+            inventoryMarketplaceData[i].zip = inventoryMarketplaceData[i].Inventory.zip;
+            inventoryMarketplaceData[i].Thana = inventoryMarketplaceData[i].Inventory.Thana;
+            inventoryMarketplaceData[i].Division = inventoryMarketplaceData[i].Inventory.Division;
+            inventoryMarketplaceData[i].AddressDetails = inventoryMarketplaceData[i].Inventory.AddressDetails;
+            inventoryMarketplaceData[i].Image = inventoryMarketplaceData[i].Inventory.Image;
+            delete inventoryMarketplaceData[i].Inventory;
+            inventoryMarketplaceData[i].CompanyName = inventoryMarketplaceData[i].Company_Rental_OwnerIDToCompany.Name;
+            inventoryMarketplaceData[i].CompanyLogo = inventoryMarketplaceData[i].Company_Rental_OwnerIDToCompany.Logo;
+            delete inventoryMarketplaceData[i].Company_Rental_OwnerIDToCompany;
+        }
+        // Responding with success and the array of inventories
+        res.status(200).json(inventoryMarketplaceData);
+    } catch (error) {
+        console.error('Error fetching inventory marketplace:', error);
+
+        // Responding with server errors
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+        });
+    }
+};
+
 module.exports.takeLease = async (req, res) => {
     try {
         // Extracting input parameters from the request body
@@ -325,14 +401,16 @@ module.exports.takeLease = async (req, res) => {
     }
 };
 
-module.exports.deleteFromRental = (req, res) => {
+module.exports.deleteFromRental = async (req, res) => {
     try {
         // Extracting input parameters from the request body
-        const { RID } = req.body;
+        const { rid } = req.body;
 
-        // TODO: Perform any necessary validation or business logic
-
-        // TODO: Remove inventory from rental in the database or perform other actions
+        const deleteRental = await prisma.rental.delete({
+            where: {
+                rid: rid,
+            }
+        });
 
         // Responding with success
         res.status(200).json({
@@ -342,31 +420,10 @@ module.exports.deleteFromRental = (req, res) => {
     } catch (error) {
         console.error('Error removing inventory from rental:', error);
 
-        // Responding with client errors
-        if (error instanceof NotFoundError) {
-            // Assuming NotFoundError is a custom error class for not found errors
-            res.status(404).json({
-                success: false,
-                message: 'Not Found: Inventory not found in rental',
-            });
-        } else if (error instanceof UnauthorizedError) {
-            // Assuming UnauthorizedError is a custom error class for authentication errors
-            res.status(401).json({
-                success: false,
-                message: 'Unauthorized: User authentication required',
-            });
-        } else if (error instanceof ForbiddenError) {
-            // Assuming ForbiddenError is a custom error class for authorization errors
-            res.status(403).json({
-                success: false,
-                message: 'Forbidden: Insufficient permissions',
-            });
-        } else {
             // Responding with server errors
             res.status(500).json({
                 success: false,
                 message: 'Internal Server Error',
             });
-        }
     }
 };

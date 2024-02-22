@@ -335,6 +335,73 @@ leaseInventoryRouter.post('/leasedInventoriesNotTaken', leaseInventoryController
  */
 leaseInventoryRouter.post('/leasedInventoriesTaken', leaseInventoryController.leasedInventoriesTaken);
 
+
+
+
+/**
+ * @swagger
+ * /api/leaseInventory/ownLeasedInventories:
+ *   post:
+ *     summary: Get inventories currently on lease and taken by ownself
+ *     description: Endpoint for showing inventories currently on lease and taken by ownself
+ *     tags: [LeaseInventory]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               mid:
+ *                 type: string
+ *                 example: e7ea9b52-8ab6-4634-8178-1c38ab0340df
+ *     responses:
+ *       '200':
+ *         description: Array of inventories fetched successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               - RID: "RENTAL001"
+ *                 IID: "INV001"
+ *                 MID: "MANUFACTURER123"
+ *                 Duration: 30
+ *                 PaymentPerDay: 10.0
+ *                 InventoryName: "Warehouse A"
+ *                 Capacity: 1000
+ *                 Type: "Warehouse"
+ *                 HouseNumber: "123"
+ *                 Street: "Main Street"
+ *                 ZIP: "12345"
+ *                 Thana: "Cityville Thana"
+ *                 Division: "Dhaka"
+ *                 AddressDetails: "123 Main Street, Cityville"
+ *                 Image: "warehouse_image_url.jpg"
+ *               - RID: "RENTAL002"
+ *                 IID: "INV002"
+ *                 MID: "MANUFACTURER456"
+ *                 Duration: 15
+ *                 PaymentPerDay: 8.0
+ *                 InventoryName: "Storage Facility B"
+ *                 Capacity: 500
+ *                 Type: "Storage"
+ *                 HouseNumber: "456"
+ *                 Street: "Oak Avenue"
+ *                 ZIP: "67890"
+ *                 Thana: "Townsville Thana"
+ *                 Division: "Chittagong"
+ *                 AddressDetails: "456 Oak Avenue, Townsville"
+ *                 Image: "storage_image_url.jpg"
+ *               # Add more inventory objects as needed
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal Server Error
+ */
+leaseInventoryRouter.post('/ownLeasedInventories', leaseInventoryController.ownLeasedInventories);
+
 /**
  * @swagger
  * /api/leaseInventory/takeLease:
@@ -417,9 +484,9 @@ leaseInventoryRouter.put('/takeLease', leaseInventoryController.takeLease);
  *           schema:
  *             type: object
  *             properties:
- *               RID:
+ *               rid:
  *                 type: string
- *                 example: "RENTAL123"
+ *                 example: d92e31e0-3b5b-4a30-96f4-025c21e91f30
  *     responses:
  *       '200':
  *         description: Inventory removed from rental successfully
