@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
@@ -10,17 +11,17 @@ const is_live = false //true for live, false for sandbox
 
 
 
-async function paymentOnline(req, res){
-      // Get current timestamp
-  const timestamp = Date.now();
+async function paymentOnline(req, res) {
+    // Get current timestamp
+    const timestamp = Date.now();
 
-  // Generate a random string
-  const randomString = Math.random().toString(36).substring(2, 10);
+    // Generate a random string
+    const randomString = Math.random().toString(36).substring(2, 10);
 
-  // Concatenate timestamp and random string
-  const tran_ID = `${timestamp}-${randomString}`;
+    // Concatenate timestamp and random string
+    const tran_ID = `${timestamp}-${randomString}`;
     const data = {
-        total_amount: `${req.body.TotalAmount}`,
+        total_amount: eq.body.TotalAmount,
         currency: 'BDT',
         tran_id: tran_ID, // use unique tran_id for each api call
         success_url: 'https://reman-backend-8eli.onrender.com/api/payment/onlinePaymentSuccess',
@@ -48,91 +49,109 @@ async function paymentOnline(req, res){
         ship_state: 'Dhaka',
         ship_postcode: 1000,
         ship_country: 'Bangladesh',
+        value_a: req.body.sid,
+        value_b: req.body.VoucherCode,
     };
     const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live)
     sslcz.init(data).then(apiResponse => {
         // Redirect the user to payment gateway
         let GatewayPageURL = apiResponse.GatewayPageURL;
-        res.status(200).json({TransactionID: tran_ID,
-            url: GatewayPageURL});
+        res.status(200).json({
+            // TransactionID: tran_ID,
+            url: GatewayPageURL
+        });
         console.log('Redirecting to: ', GatewayPageURL);
     });
 }
 
 
 
-async function onlinePaymentSuccessful(req, res){
+async function onlinePaymentSuccessful(req, res) {
 
-    const TransactionID = req.body.tran_id;
-    console.log('Transaction Successful: ', TransactionID);
+    const postData = {
+        sid: req.body.value_a,
+        VoucherCode: req.body.value_b,
+        PaymentMethod: "Online Payment",
+        TransactionID: req.body.tran_id
+    };
 
-    try{
-    const ShopID = await prisma.order.findMany({
-        where: {
-            TransactionID: TransactionID,
-        },
-        select: {
-            sid: true,
-        },
-    });
-
-    const deleteCart = await prisma.cart.deleteMany({
-        where: {
-            sid: ShopID[0].sid,
-        }
-    });
+    try {
+        const response = await axios.post('/order/addOrder', postData);
+        res.redirect('https://reman-retailer.vercel.app/payment/success');
     } catch (error) {
-        console.error('Error retrieving user:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 
-    res.redirect('https://reman-retailer.vercel.app/payment/success');
+    // const TransactionID = req.body.tran_id;
+    // console.log('Transaction Successful: ', TransactionID);
+
+    // try {
+    //     const ShopID = await prisma.order.findMany({
+    //         where: {
+    //             TransactionID: TransactionID,
+    //         },
+    //         select: {
+    //             sid: true,
+    //         },
+    //     });
+
+    //     const deleteCart = await prisma.cart.deleteMany({
+    //         where: {
+    //             sid: ShopID[0].sid,
+    //         }
+    //     });
+    // } catch (error) {
+    //     console.error('Error retrieving user:', error);
+    //     res.status(500).json({ error: 'Internal server error' });
+    // }
+
+    // res.redirect('https://reman-retailer.vercel.app/payment/success');
 }
 
 
 
-async function onlinePaymentFailed(req, res){
-    const TransactionID = req.body.tran_id;
-    console.log('Transaction Failed: ', TransactionID);
+async function onlinePaymentFailed(req, res) {
+    // const TransactionID = req.body.tran_id;
+    // console.log('Transaction Failed: ', TransactionID);
 
-    const oid = await prisma.order.findMany({
-        where: {
-            TransactionID: TransactionID,
-        },
-        select: {
-            oid: true,
-        },
-    });
+    // const oid = await prisma.order.findMany({
+    //     where: {
+    //         TransactionID: TransactionID,
+    //     },
+    //     select: {
+    //         oid: true,
+    //     },
+    // });
 
-    try {
-        const user = await prisma.singleProductOrder.deleteMany({
-          where: {
-            oid: oid[0].oid,
-          },
-        });
-    
-        const user1 = await prisma.orderFragment.deleteMany({
-          where: {
-            oid: oid[0].oid,
-          },
-        });
-    
-        const user2 = await prisma.order.delete({
-          where: {
-            oid: oid[0].oid,
-          },
-        });
-    } catch (error) {
-        console.error('Error retrieving user:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }    
+    // try {
+    //     const user = await prisma.singleProductOrder.deleteMany({
+    //         where: {
+    //             oid: oid[0].oid,
+    //         },
+    //     });
+
+    //     const user1 = await prisma.orderFragment.deleteMany({
+    //         where: {
+    //             oid: oid[0].oid,
+    //         },
+    //     });
+
+    //     const user2 = await prisma.order.delete({
+    //         where: {
+    //             oid: oid[0].oid,
+    //         },
+    //     });
+    // } catch (error) {
+    //     console.error('Error retrieving user:', error);
+    //     res.status(500).json({ error: 'Internal server error' });
+    // }
 
     res.redirect('https://reman-retailer.vercel.app/payment/fail');
 }
 
 
 
-function getLoanStatus(req, res){
+function getLoanStatus(req, res) {
     let output = {
         retailPoints: 1000,
         availableLoanAmount: 100000,
@@ -143,12 +162,12 @@ function getLoanStatus(req, res){
 }
 
 
-function updatePaymentStatus(req, res){
+function updatePaymentStatus(req, res) {
     res.status(200).end();
 }
 
 
-function updatePayLaterStatus(req, res){
+function updatePayLaterStatus(req, res) {
     res.status(200).end();
 }
 
