@@ -40,30 +40,32 @@ model Shop {
 }
 
 model Company {
-  mid                 String                @id(map: "Company_pk") @default(uuid()) @db.Uuid
-  Name                String?               @db.VarChar
-  PhoneNumber         String?               @db.VarChar
-  tin                 String?               @db.VarChar
-  Website             String?               @db.VarChar
-  Email               String?               @unique(map: "Company_pk2") @db.VarChar
-  Password            String?               @db.VarChar
-  Logo                String?               @db.VarChar
-  Rating              Float?
-  HouseNumber         String?               @db.VarChar
-  Street              String?               @db.VarChar
-  zip                 Int?
-  Thana               String?               @db.VarChar
-  Division            String?               @db.VarChar
-  AddressDetails      String?               @db.VarChar
-  Cart                Cart[]
-  CompanyNotification CompanyNotification[]
-  CompanyOwner        CompanyOwner[]
-  Inventory           Inventory[]
-  OrderFragment       OrderFragment[]
-  Product             Product[]
-  ProductionHouse     ProductionHouse[]
-  SingleProductOrder  SingleProductOrder[]
-  Voucher             Voucher[]
+  mid                              String                @id(map: "Company_pk") @default(uuid()) @db.Uuid
+  Name                             String?               @db.VarChar
+  PhoneNumber                      String?               @db.VarChar
+  tin                              String?               @db.VarChar
+  Website                          String?               @db.VarChar
+  Email                            String?               @unique(map: "Company_pk2") @db.VarChar
+  Password                         String?               @db.VarChar
+  Logo                             String?               @db.VarChar
+  Rating                           Float?
+  HouseNumber                      String?               @db.VarChar
+  Street                           String?               @db.VarChar
+  zip                              Int?
+  Thana                            String?               @db.VarChar
+  Division                         String?               @db.VarChar
+  AddressDetails                   String?               @db.VarChar
+  Cart                             Cart[]
+  CompanyNotification              CompanyNotification[]
+  CompanyOwner                     CompanyOwner[]
+  Inventory                        Inventory[]
+  OrderFragment                    OrderFragment[]
+  Product                          Product[]
+  ProductionHouse                  ProductionHouse[]
+  Rental_Rental_OwnerIDToCompany   Rental[]              @relation("Rental_OwnerIDToCompany")
+  Rental_Rental_OwnedToIDToCompany Rental[]              @relation("Rental_OwnedToIDToCompany")
+  SingleProductOrder               SingleProductOrder[]
+  Voucher                          Voucher[]
 }
 
 model ShopOwner {
@@ -122,15 +124,16 @@ model Inventory {
   Image          String?          @db.VarChar
   Details        String?          @db.VarChar
   EmptyStatus    Boolean?
-  OwnerStatus    Boolean?
   HouseNumber    String?          @db.VarChar
   Street         String?          @db.VarChar
   zip            Int?
   Thana          String?          @db.VarChar
   Division       String?          @db.VarChar
   AddressDetails String?          @db.VarChar
+  RealOwner      String?          @db.Uuid
   Company        Company          @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Inventory_Company_mid_fk")
   InventoryBatch InventoryBatch[]
+  Rental         Rental[]
 }
 
 model InventoryBatch {
@@ -297,4 +300,22 @@ model CompanyNotification {
   ReadStatus  Boolean?
   Priority    String?   @db.VarChar
   Company     Company   @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "CompanyNotification_Company_mid_fk")
+}
+
+model Rental {
+  rid                               String     @id(map: "Rental_pk") @default(uuid()) @db.Uuid
+  iid                               String?    @db.Uuid
+  OwnerID                           String?    @db.Uuid
+  OwnedToID                         String?    @db.Uuid
+  PerDayRent                        Float?
+  Details                           String?    @db.VarChar
+  FreeFrom                          DateTime?  @db.Date
+  FreeTill                          DateTime?  @db.Date
+  OccupiedFrom                      DateTime?  @db.Date
+  OccupiedTill                      DateTime?  @db.Date
+  RentalStatus                      String?    @db.VarChar
+  TransactionID                     String?    @db.VarChar
+  Company_Rental_OwnerIDToCompany   Company?   @relation("Rental_OwnerIDToCompany", fields: [OwnerID], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Rental_Company_mid_fk")
+  Company_Rental_OwnedToIDToCompany Company?   @relation("Rental_OwnedToIDToCompany", fields: [OwnedToID], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Rental_Company_mid_fk2")
+  Inventory                         Inventory? @relation(fields: [iid], references: [iid], onDelete: NoAction, onUpdate: NoAction, map: "Rental_Inventory_iid_fk")
 }

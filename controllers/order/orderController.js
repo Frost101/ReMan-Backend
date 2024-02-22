@@ -416,6 +416,32 @@ async function updateShipmentInfo(req, res) {
       },
     });
 
+    const deleteBatch = await prisma.inventoryBatch.delete({
+      where: {
+        bid: bid,
+        Quantity: 0,
+      },
+    });
+
+    if(deleteBatch.length !== 0) {
+    const fromIIDBatches = await prisma.inventoryBatch.findMany({
+      where: {
+        iid: deleteBatch.iid,
+      },
+    });
+
+    if(fromIIDBatches.length === 0) {
+      const user = await prisma.inventory.update({
+        where: {
+          iid: deleteBatch.iid,
+        },
+        data: {
+          EmptyStatus: true,
+        },
+      });
+    }
+  }
+
     const updateShippedProduct = await prisma.singleProductOrder.updateMany({
       where: {
         oid: oid,

@@ -179,6 +179,15 @@ async function shiftToInventory(req, res) {
           },
         });
       }
+
+      const updateInventoryStatus = await prisma.inventory.update({
+        where: {
+          iid: toIID,
+        },
+        data: {
+          EmptyStatus: false,
+        },
+      });
         res.status(200).json({success: true,
                         message: "Batch products shifted"});             
     } catch (error) {

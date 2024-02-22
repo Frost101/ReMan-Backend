@@ -206,6 +206,70 @@ vouchersRouter.post('/fetchVouchers', vouchersController.fetchVouchers);
 
 /**
  * @swagger
+ * /api/vouchers/fetchVouchersByManufacturer:
+ *   post:
+ *     summary: Fetch vouchers for a Manufacturer
+ *     description: Endpoint for fetching vouchers for a Manufacturer
+ *     tags: [Vouchers]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               manufacturerId:
+ *                 type: string
+ *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
+ *     responses:
+ *       '200':
+ *         description: Array of vouchers fetched successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               - voucherCode: "VOUCHER123"
+ *                 voucherName: "Discount Voucher"
+ *                 MID: "MANUFACTURER123"
+ *                 voucherAmount: 10.0
+ *                 validity: "2024-12-31"
+ *                 minPurchase: 50.0
+ *                 maxUsage: 100
+ *               - voucherCode: "VOUCHER456"
+ *                 voucherName: "Special Offer"
+ *                 MID: "MANUFACTURER456"
+ *                 voucherAmount: 15.0
+ *                 validity: "2024-11-30"
+ *                 minPurchase: 60.0
+ *                 maxUsage: 200
+ *               # Add more voucher objects as needed
+ *       '401':
+ *         description: Unauthorized - User authentication required
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Unauthorized, User authentication required
+ *       '403':
+ *         description: Forbidden - Insufficient permissions
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Forbidden, Insufficient permissions
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal Server Error
+ */
+vouchersRouter.post('/fetchVouchersByManufacturer', vouchersController.fetchVouchersByManufacturer);
+
+
+
+/**
+ * @swagger
  * /api/vouchers/updateVoucher:
  *   put:
  *     summary: Update an existing voucher
@@ -218,27 +282,24 @@ vouchersRouter.post('/fetchVouchers', vouchersController.fetchVouchers);
  *           schema:
  *             type: object
  *             properties:
- *               voucherCode:
+ *               VoucherCode:
  *                 type: string
- *                 example: "VOUCHER123"
- *               voucherName:
+ *                 example: RUCHIBOGO
+ *               VoucherDetails:
  *                 type: string
- *                 example: "Discount Voucher"
- *               MID:
+ *                 example: Apply this to get 3.5% discount on all products
+ *               VoucherPercentage:
+ *                 type: double
+ *                 example: 3.5
+ *               Validity:
  *                 type: string
- *                 example: "MANUFACTURER123"
- *               voucherAmount:
- *                 type: number
- *                 example: 10.0
- *               validity:
- *                 type: string
- *                 example: "2024-12-31"
- *               minPurchase:
- *                 type: number
- *                 example: 50.0
- *               maxUsage:
- *                 type: number
- *                 example: 100
+ *                 example: 2024-12-31
+ *               MinPurchase:
+ *                 type: double
+ *                 example: 10000.0
+ *               MaxUsage:
+ *                 type: integer
+ *                 example: 15
  *     responses:
  *       '200':
  *         description: Voucher updated successfully

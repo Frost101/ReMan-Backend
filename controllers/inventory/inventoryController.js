@@ -34,7 +34,7 @@ async function addNewInventory(req, res) {
               Image: Image,
               Details: Details,
               EmptyStatus: true,
-              OwnerStatus: true,
+              RealOwner: MID,
               HouseNumber: HouseNumber,
               Street: Street,
               zip: ZIP,
@@ -119,7 +119,7 @@ async function getInventoriesList(req, res) {
           Image: true,
           Details: true,
           EmptyStatus: true,
-          OwnerStatus: true,
+          RealOwner: true,
           HouseNumber: true,
           Street: true,
           zip: true,
@@ -163,6 +163,32 @@ async function shiftToInventory(req, res) {
             },
           });
         }
+
+        const user = await prisma.inventory.update({
+            where: {
+              iid: toIID,
+            },
+            data: {
+              EmptyStatus: false,
+            },
+          });
+
+          const fromIIDBatches = await prisma.inventoryBatch.findMany({
+            where: {
+              iid: fromIID,
+            },
+          });
+
+          if(fromIIDBatches.length === 0) {
+            const user = await prisma.inventory.update({
+              where: {
+                iid: fromIID,
+              },
+              data: {
+                EmptyStatus: true,
+              },
+            });
+          }
           res.status(200).json({success: true,
                           message: "Batch products shifted"});             
       } catch (error) {

@@ -23,9 +23,9 @@ const leaseInventoryRouter = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               MID:
+ *               mid:
  *                 type: string
- *                 example: "MANUFACTURER123"
+ *                 example: "2c397476-c131-4c60-b45a-12bd242ec256"
  *     responses:
  *       '200':
  *         description: Array of empty inventories fetched successfully
@@ -83,18 +83,21 @@ leaseInventoryRouter.post('/emptyInventoryList', leaseInventoryController.emptyI
  *           schema:
  *             type: object
  *             properties:
- *               IID:
+ *               iid:
  *                 type: string
- *                 example: "INV001"
- *               MID:
+ *                 example: 6b6fd057-bae2-4786-90e4-916ed809baa2
+ *               mid:
  *                 type: string
- *                 example: "MANUFACTURER123"
+ *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
  *               Duration:
- *                 type: number
+ *                 type: integer
  *                 example: 30  # Lease duration in days
- *               PaymentPerDay:
- *                 type: number
- *                 example: 10.0  # Payment amount per day
+ *               PerDayRent:
+ *                 type: double
+ *                 example: 100.0  # Payment amount per day
+ *               Details:
+ *                 type: string
+ *                 example: It is for seasonal foods and fresh storage
  *     responses:
  *       '200':
  *         description: Lease given successfully
@@ -137,10 +140,20 @@ leaseInventoryRouter.post('/giveLease', leaseInventoryController.giveLease);
 /**
  * @swagger
  * /api/leaseInventory/inventoryMarketplace:
- *   get:
- *     summary: Get inventories currently on lease and not taken
+ *   post:
+ *     summary: Get inventories currently on lease and not taken of others
  *     description: Endpoint for showing inventories currently on lease and not taken
  *     tags: [LeaseInventory]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               mid:
+ *                 type: string
+ *                 example: e7ea9b52-8ab6-4634-8178-1c38ab0340df
  *     responses:
  *       '200':
  *         description: Array of inventories fetched successfully
@@ -186,7 +199,208 @@ leaseInventoryRouter.post('/giveLease', leaseInventoryController.giveLease);
  *               success: false
  *               message: Internal Server Error
  */
-leaseInventoryRouter.get('/inventoryMarketplace', leaseInventoryController.inventoryMarketplace);
+leaseInventoryRouter.post('/inventoryMarketplace', leaseInventoryController.inventoryMarketplace);
+
+
+
+
+/**
+ * @swagger
+ * /api/leaseInventory/leasedInventoriesNotTaken:
+ *   post:
+ *     summary: Get inventories currently on lease and not taken
+ *     description: Endpoint for showing inventories currently on lease and not taken
+ *     tags: [LeaseInventory]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               mid:
+ *                 type: string
+ *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
+ *     responses:
+ *       '200':
+ *         description: Array of inventories fetched successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               - RID: "RENTAL001"
+ *                 IID: "INV001"
+ *                 MID: "MANUFACTURER123"
+ *                 Duration: 30
+ *                 PaymentPerDay: 10.0
+ *                 InventoryName: "Warehouse A"
+ *                 Capacity: 1000
+ *                 Type: "Warehouse"
+ *                 HouseNumber: "123"
+ *                 Street: "Main Street"
+ *                 ZIP: "12345"
+ *                 Thana: "Cityville Thana"
+ *                 Division: "Dhaka"
+ *                 AddressDetails: "123 Main Street, Cityville"
+ *                 Image: "warehouse_image_url.jpg"
+ *               - RID: "RENTAL002"
+ *                 IID: "INV002"
+ *                 MID: "MANUFACTURER456"
+ *                 Duration: 15
+ *                 PaymentPerDay: 8.0
+ *                 InventoryName: "Storage Facility B"
+ *                 Capacity: 500
+ *                 Type: "Storage"
+ *                 HouseNumber: "456"
+ *                 Street: "Oak Avenue"
+ *                 ZIP: "67890"
+ *                 Thana: "Townsville Thana"
+ *                 Division: "Chittagong"
+ *                 AddressDetails: "456 Oak Avenue, Townsville"
+ *                 Image: "storage_image_url.jpg"
+ *               # Add more inventory objects as needed
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal Server Error
+ */
+leaseInventoryRouter.post('/leasedInventoriesNotTaken', leaseInventoryController.leasedInventoriesNotTaken);
+
+
+
+
+/**
+ * @swagger
+ * /api/leaseInventory/leasedInventoriesTaken:
+ *   post:
+ *     summary: Get inventories currently on lease and taken
+ *     description: Endpoint for showing inventories currently on lease and taken
+ *     tags: [LeaseInventory]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               mid:
+ *                 type: string
+ *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
+ *     responses:
+ *       '200':
+ *         description: Array of inventories fetched successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               - RID: "RENTAL001"
+ *                 IID: "INV001"
+ *                 MID: "MANUFACTURER123"
+ *                 Duration: 30
+ *                 PaymentPerDay: 10.0
+ *                 InventoryName: "Warehouse A"
+ *                 Capacity: 1000
+ *                 Type: "Warehouse"
+ *                 HouseNumber: "123"
+ *                 Street: "Main Street"
+ *                 ZIP: "12345"
+ *                 Thana: "Cityville Thana"
+ *                 Division: "Dhaka"
+ *                 AddressDetails: "123 Main Street, Cityville"
+ *                 Image: "warehouse_image_url.jpg"
+ *               - RID: "RENTAL002"
+ *                 IID: "INV002"
+ *                 MID: "MANUFACTURER456"
+ *                 Duration: 15
+ *                 PaymentPerDay: 8.0
+ *                 InventoryName: "Storage Facility B"
+ *                 Capacity: 500
+ *                 Type: "Storage"
+ *                 HouseNumber: "456"
+ *                 Street: "Oak Avenue"
+ *                 ZIP: "67890"
+ *                 Thana: "Townsville Thana"
+ *                 Division: "Chittagong"
+ *                 AddressDetails: "456 Oak Avenue, Townsville"
+ *                 Image: "storage_image_url.jpg"
+ *               # Add more inventory objects as needed
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal Server Error
+ */
+leaseInventoryRouter.post('/leasedInventoriesTaken', leaseInventoryController.leasedInventoriesTaken);
+
+
+
+
+/**
+ * @swagger
+ * /api/leaseInventory/ownLeasedInventories:
+ *   post:
+ *     summary: Get inventories currently on lease and taken by ownself
+ *     description: Endpoint for showing inventories currently on lease and taken by ownself
+ *     tags: [LeaseInventory]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               mid:
+ *                 type: string
+ *                 example: e7ea9b52-8ab6-4634-8178-1c38ab0340df
+ *     responses:
+ *       '200':
+ *         description: Array of inventories fetched successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               - RID: "RENTAL001"
+ *                 IID: "INV001"
+ *                 MID: "MANUFACTURER123"
+ *                 Duration: 30
+ *                 PaymentPerDay: 10.0
+ *                 InventoryName: "Warehouse A"
+ *                 Capacity: 1000
+ *                 Type: "Warehouse"
+ *                 HouseNumber: "123"
+ *                 Street: "Main Street"
+ *                 ZIP: "12345"
+ *                 Thana: "Cityville Thana"
+ *                 Division: "Dhaka"
+ *                 AddressDetails: "123 Main Street, Cityville"
+ *                 Image: "warehouse_image_url.jpg"
+ *               - RID: "RENTAL002"
+ *                 IID: "INV002"
+ *                 MID: "MANUFACTURER456"
+ *                 Duration: 15
+ *                 PaymentPerDay: 8.0
+ *                 InventoryName: "Storage Facility B"
+ *                 Capacity: 500
+ *                 Type: "Storage"
+ *                 HouseNumber: "456"
+ *                 Street: "Oak Avenue"
+ *                 ZIP: "67890"
+ *                 Thana: "Townsville Thana"
+ *                 Division: "Chittagong"
+ *                 AddressDetails: "456 Oak Avenue, Townsville"
+ *                 Image: "storage_image_url.jpg"
+ *               # Add more inventory objects as needed
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal Server Error
+ */
+leaseInventoryRouter.post('/ownLeasedInventories', leaseInventoryController.ownLeasedInventories);
 
 /**
  * @swagger
@@ -202,18 +416,21 @@ leaseInventoryRouter.get('/inventoryMarketplace', leaseInventoryController.inven
  *           schema:
  *             type: object
  *             properties:
- *               RID:
+ *               rid:
  *                 type: string
- *                 example: "RENTAL123"
- *               IID:
+ *                 example: d3fcff83-d7bd-4058-ac87-cd11dc000c5b
+ *               iid:
  *                 type: string
- *                 example: "INV001"
- *               LeaseFromMID:
+ *                 example: 6b6fd057-bae2-4786-90e4-916ed809baa2
+ *               OwnerID:
  *                 type: string
- *                 example: "MANUFACTURER456"
- *               LeaseToMID:
+ *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
+ *               OwnedToID:
  *                 type: string
- *                 example: "RENTAL123"
+ *                 example: e7ea9b52-8ab6-4634-8178-1c38ab0340df
+ *               Duration:
+ *                 type: integer
+ *                 example: 20
  *     responses:
  *       '200':
  *         description: Lease taken successfully
@@ -253,6 +470,70 @@ leaseInventoryRouter.get('/inventoryMarketplace', leaseInventoryController.inven
  */
 leaseInventoryRouter.put('/takeLease', leaseInventoryController.takeLease);
 
+
+
+
+/**
+ * @swagger
+ * /api/leaseInventory/extendLease:
+ *   put:
+ *     summary: Extend Lease of an inventory
+ *     description: Endpoint for extending lease of an inventory
+ *     tags: [LeaseInventory]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rid:
+ *                 type: string
+ *                 example: d3fcff83-d7bd-4058-ac87-cd11dc000c5b
+ *               OccupiedTill:
+ *                 type: string
+ *                 example: 2024-03-18
+ *     responses:
+ *       '200':
+ *         description: Lease taken successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Lease taken successfully
+ *       '401':
+ *         description: Unauthorized - User authentication required
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Unauthorized, User authentication required
+ *       '403':
+ *         description: Forbidden - Insufficient permissions
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Forbidden, Insufficient permissions
+ *       '404':
+ *         description: Not Found - Inventory not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Not Found, Inventory not found
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal Server Error
+ */
+leaseInventoryRouter.put('/extendLease', leaseInventoryController.extendLease);
+
+
+
 /**
  * @swagger
  * /api/leaseInventory/deleteFromRental:
@@ -267,9 +548,9 @@ leaseInventoryRouter.put('/takeLease', leaseInventoryController.takeLease);
  *           schema:
  *             type: object
  *             properties:
- *               RID:
+ *               rid:
  *                 type: string
- *                 example: "RENTAL123"
+ *                 example: d92e31e0-3b5b-4a30-96f4-025c21e91f30
  *     responses:
  *       '200':
  *         description: Inventory removed from rental successfully
