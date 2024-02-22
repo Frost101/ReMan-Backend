@@ -76,7 +76,8 @@ async function onlinePaymentSuccessful(req, res) {
     };
 
     try {
-        const response = await axios.post('/order/addOrder', postData);
+        const response = await axios.post('/api/order/addOrder', postData);
+        console.log('Order Added: ', response.data);
         res.redirect('https://reman-retailer.vercel.app/payment/success');
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
