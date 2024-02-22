@@ -230,6 +230,7 @@ async function giveSaleOnBatches(req, res) {
         },
         data: {
           Sale: Sale,
+          MarketStatus: true,
         },
       });
     }
