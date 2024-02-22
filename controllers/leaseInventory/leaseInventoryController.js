@@ -78,49 +78,55 @@ module.exports.giveLease = async (req, res) => {
     }
 };
 
-module.exports.inventoryMarketplace = (req, res) => {
+module.exports.inventoryMarketplace = async (req, res) => {
+    const mid = req.body.mid;
     try {
-        // TODO: Fetch inventories from the database based on lease status or other criteria
 
-        // Example inventories data for demonstration purposes
-        const inventoryMarketplaceData = [
-            {
-                RID: "RETAILER001",
-                IID: "INV001",
-                MID: "MANUFACTURER123",
-                Duration: 30,
-                PaymentPerDay: 10.0,
-                InventoryName: "Warehouse A",
-                Capacity: 1000,
-                Type: "Warehouse",
-                HouseNumber: "123",
-                Street: "Main Street",
-                ZIP: "12345",
-                Thana: "Cityville Thana",
-                Division: "Dhaka",
-                AddressDetails: "123 Main Street, Cityville",
-                Image: "warehouse_image_url.jpg",
+        const inventoryMarketplaceData = await prisma.rental.findMany({
+            where: {
+                NOT: {
+                    OwnerID: mid,
+                },
+                RentalStatus: 'Not Rented',
             },
-            {
-                RID: "RETAILER002",
-                IID: "INV002",
-                MID: "MANUFACTURER456",
-                Duration: 15,
-                PaymentPerDay: 8.0,
-                InventoryName: "Storage Facility B",
-                Capacity: 500,
-                Type: "Storage",
-                HouseNumber: "456",
-                Street: "Oak Avenue",
-                ZIP: "67890",
-                Thana: "Townsville Thana",
-                Division: "Chittagong",
-                AddressDetails: "456 Oak Avenue, Townsville",
-                Image: "storage_image_url.jpg",
-            },
-            // Add more inventory objects as needed
-        ];
+            select: {
+                iid: true,
+                FreeFrom: true,
+                FreeTill: true,
+                PerDayRent: true,
+                Details: true,
+                Inventory: {
+                    select: {
+                        InventoryName: true,
+                        Capacity: true,
+                        Type: true,
+                        Details: true,
+                        HouseNumber: true,
+                        Street: true,
+                        zip: true,
+                        Thana: true,
+                        Division: true,
+                        AddressDetails: true,
+                        Image: true,
+                    }
+                }
+            }
+        });
 
+        for(let i = 0; i < inventoryMarketplaceData.length; i++) {
+            inventoryMarketplaceData[i].InventoryName = inventoryMarketplaceData[i].Inventory.InventoryName;
+            inventoryMarketplaceData[i].Capacity = inventoryMarketplaceData[i].Inventory.Capacity;
+            inventoryMarketplaceData[i].Type = inventoryMarketplaceData[i].Inventory.Type;
+            inventoryMarketplaceData[i].Details = inventoryMarketplaceData[i].Inventory.Details;
+            inventoryMarketplaceData[i].HouseNumber = inventoryMarketplaceData[i].Inventory.HouseNumber;
+            inventoryMarketplaceData[i].Street = inventoryMarketplaceData[i].Inventory.Street;
+            inventoryMarketplaceData[i].zip = inventoryMarketplaceData[i].Inventory.zip;
+            inventoryMarketplaceData[i].Thana = inventoryMarketplaceData[i].Inventory.Thana;
+            inventoryMarketplaceData[i].Division = inventoryMarketplaceData[i].Inventory.Division;
+            inventoryMarketplaceData[i].AddressDetails = inventoryMarketplaceData[i].Inventory.AddressDetails;
+            inventoryMarketplaceData[i].Image = inventoryMarketplaceData[i].Inventory.Image;
+            delete inventoryMarketplaceData[i].Inventory;
+        }
         // Responding with success and the array of inventories
         res.status(200).json(inventoryMarketplaceData);
     } catch (error) {

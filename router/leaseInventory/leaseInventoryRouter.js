@@ -140,10 +140,20 @@ leaseInventoryRouter.post('/giveLease', leaseInventoryController.giveLease);
 /**
  * @swagger
  * /api/leaseInventory/inventoryMarketplace:
- *   get:
+ *   post:
  *     summary: Get inventories currently on lease and not taken
  *     description: Endpoint for showing inventories currently on lease and not taken
  *     tags: [LeaseInventory]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               mid:
+ *                 type: string
+ *                 example: e7ea9b52-8ab6-4634-8178-1c38ab0340df
  *     responses:
  *       '200':
  *         description: Array of inventories fetched successfully
@@ -189,7 +199,7 @@ leaseInventoryRouter.post('/giveLease', leaseInventoryController.giveLease);
  *               success: false
  *               message: Internal Server Error
  */
-leaseInventoryRouter.get('/inventoryMarketplace', leaseInventoryController.inventoryMarketplace);
+leaseInventoryRouter.post('/inventoryMarketplace', leaseInventoryController.inventoryMarketplace);
 
 /**
  * @swagger
