@@ -25,7 +25,7 @@ const leaseInventoryRouter = express.Router();
  *             properties:
  *               MID:
  *                 type: string
- *                 example: "MANUFACTURER123"
+ *                 example: "2c397476-c131-4c60-b45a-12bd242ec256"
  *     responses:
  *       '200':
  *         description: Array of empty inventories fetched successfully

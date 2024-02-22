@@ -1,32 +1,35 @@
-module.exports.emptyInventoryList = (req, res) => {
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
+
+module.exports.emptyInventoryList = async (req, res) => {
     try {
         // Extracting input parameters from the request body
         const { MID } = req.body;
 
-        // TODO: Perform any necessary validation or business logic
-
-        // TODO: Fetch empty inventories from the database or perform other actions
-
         // Example empty inventories data
-        const emptyInventories = [
-            {
-                IID: "INV001",
-                InventoryName: "Warehouse A",
-                Address: "123 Main Street, Cityville",
-                Capacity: 1000,
-                Type: "Warehouse",
-                Image: "warehouse_image_url.jpg",
+        const emptyInventories = await prisma.inventory.findMany({
+            where: {
+                mid: MID,
+                RealOwner: MID,
+                EmptyStatus: true,
             },
-            {
-                IID: "INV002",
-                InventoryName: "Storage Facility B",
-                Address: "456 Oak Avenue, Townsville",
-                Capacity: 500,
-                Type: "Storage",
-                Image: "storage_image_url.jpg",
-            },
-            // Add more empty inventory objects as needed
-        ];
+            select: {
+                iid: true,
+                InventoryName: true,
+                Capacity: true,
+                Type: true,
+                Details: true,
+                HouseNumber: true,
+                Street: true,
+                zip: true,
+                Thana: true,
+                Division: true,
+                AddressDetails: true,
+                Image: true,
+            }
+        });    
 
         // Responding with success and the array of empty inventories
         res.status(200).json(emptyInventories);
