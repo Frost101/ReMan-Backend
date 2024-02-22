@@ -122,13 +122,13 @@ model Inventory {
   Image          String?          @db.VarChar
   Details        String?          @db.VarChar
   EmptyStatus    Boolean?
-  OwnerStatus    Boolean?
   HouseNumber    String?          @db.VarChar
   Street         String?          @db.VarChar
   zip            Int?
   Thana          String?          @db.VarChar
   Division       String?          @db.VarChar
   AddressDetails String?          @db.VarChar
+  RealOwner      String?          @db.Uuid
   Company        Company          @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Inventory_Company_mid_fk")
   InventoryBatch InventoryBatch[]
 }
