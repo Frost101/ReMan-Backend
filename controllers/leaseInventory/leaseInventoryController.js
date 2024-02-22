@@ -6,13 +6,13 @@ const prisma = new PrismaClient();
 module.exports.emptyInventoryList = async (req, res) => {
     try {
         // Extracting input parameters from the request body
-        const { MID } = req.body;
+        const { mid } = req.body;
 
         // Example empty inventories data
         const emptyInventories = await prisma.inventory.findMany({
             where: {
-                mid: MID,
-                RealOwner: MID,
+                mid: mid,
+                RealOwner: mid,
                 EmptyStatus: true,
             },
             select: {
@@ -34,39 +34,34 @@ module.exports.emptyInventoryList = async (req, res) => {
         // Responding with success and the array of empty inventories
         res.status(200).json(emptyInventories);
     } catch (error) {
-        console.error('Error fetching empty inventories:', error);
-
-        // Responding with client errors
-        if (error instanceof UnauthorizedError) {
-            // Assuming UnauthorizedError is a custom error class for authentication errors
-            res.status(401).json({
-                success: false,
-                message: 'Unauthorized: User authentication required',
-            });
-        } else if (error instanceof ForbiddenError) {
-            // Assuming ForbiddenError is a custom error class for authorization errors
-            res.status(403).json({
-                success: false,
-                message: 'Forbidden: Insufficient permissions',
-            });
-        } else {
             // Responding with server errors
             res.status(500).json({
                 success: false,
                 message: 'Internal Server Error',
             });
-        }
     }
 };
 
-module.exports.giveLease = (req, res) => {
+module.exports.giveLease = async (req, res) => {
     try {
         // Extracting input parameters from the request body
-        const { IID, MID, Duration, PaymentPerDay } = req.body;
+        const { iid, mid, Duration, PerDayRent, Details } = req.body;
+        const FreeFromDate = new Date();
+        const FreeTillDate = new Date();
+        FreeTillDate.setDate(FreeFromDate.getDate() + Duration);
 
-        // TODO: Perform any necessary validation or business logic
-
-        // TODO: Save lease details to the database or perform other actions
+        const rentedInventory = await prisma.rental.create({
+            data: {
+                iid: iid,
+                OwnerID: mid,
+                OwnedToID: mid,
+                FreeFrom: FreeFromDate,
+                FreeTill: FreeTillDate,
+                PerDayRent: PerDayRent,
+                Details: Details,
+                RentalStatus: 'Not Rented',
+            },
+        });
 
         // Responding with success
         res.status(200).json({
@@ -74,34 +69,12 @@ module.exports.giveLease = (req, res) => {
             message: 'Lease given successfully',
         });
     } catch (error) {
-        console.error('Error giving lease:', error);
-
-        // Responding with client errors
-        if (error instanceof NotFoundError) {
-            // Assuming NotFoundError is a custom error class for not found errors
-            res.status(404).json({
-                success: false,
-                message: 'Not Found: Inventory not found',
-            });
-        } else if (error instanceof UnauthorizedError) {
-            // Assuming UnauthorizedError is a custom error class for authentication errors
-            res.status(401).json({
-                success: false,
-                message: 'Unauthorized: User authentication required',
-            });
-        } else if (error instanceof ForbiddenError) {
-            // Assuming ForbiddenError is a custom error class for authorization errors
-            res.status(403).json({
-                success: false,
-                message: 'Forbidden: Insufficient permissions',
-            });
-        } else {
+            console.error('Error giving lease:', error);
             // Responding with server errors
             res.status(500).json({
                 success: false,
                 message: 'Internal Server Error',
             });
-        }
     }
 };
 

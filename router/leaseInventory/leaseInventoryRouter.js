@@ -23,7 +23,7 @@ const leaseInventoryRouter = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               MID:
+ *               mid:
  *                 type: string
  *                 example: "2c397476-c131-4c60-b45a-12bd242ec256"
  *     responses:
@@ -83,18 +83,21 @@ leaseInventoryRouter.post('/emptyInventoryList', leaseInventoryController.emptyI
  *           schema:
  *             type: object
  *             properties:
- *               IID:
+ *               iid:
  *                 type: string
- *                 example: "INV001"
- *               MID:
+ *                 example: 6b6fd057-bae2-4786-90e4-916ed809baa2
+ *               mid:
  *                 type: string
- *                 example: "MANUFACTURER123"
+ *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
  *               Duration:
- *                 type: number
+ *                 type: integer
  *                 example: 30  # Lease duration in days
- *               PaymentPerDay:
- *                 type: number
- *                 example: 10.0  # Payment amount per day
+ *               PerDayRent:
+ *                 type: double
+ *                 example: 100.0  # Payment amount per day
+ *               Details:
+ *                 type: string
+ *                 example: It is for seasonal foods and fresh storage
  *     responses:
  *       '200':
  *         description: Lease given successfully
