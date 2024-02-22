@@ -141,7 +141,7 @@ leaseInventoryRouter.post('/giveLease', leaseInventoryController.giveLease);
  * @swagger
  * /api/leaseInventory/inventoryMarketplace:
  *   post:
- *     summary: Get inventories currently on lease and not taken
+ *     summary: Get inventories currently on lease and not taken of others
  *     description: Endpoint for showing inventories currently on lease and not taken
  *     tags: [LeaseInventory]
  *     requestBody:
@@ -200,6 +200,140 @@ leaseInventoryRouter.post('/giveLease', leaseInventoryController.giveLease);
  *               message: Internal Server Error
  */
 leaseInventoryRouter.post('/inventoryMarketplace', leaseInventoryController.inventoryMarketplace);
+
+
+
+
+/**
+ * @swagger
+ * /api/leaseInventory/leasedInventoriesNotTaken:
+ *   post:
+ *     summary: Get inventories currently on lease and not taken
+ *     description: Endpoint for showing inventories currently on lease and not taken
+ *     tags: [LeaseInventory]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               mid:
+ *                 type: string
+ *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
+ *     responses:
+ *       '200':
+ *         description: Array of inventories fetched successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               - RID: "RENTAL001"
+ *                 IID: "INV001"
+ *                 MID: "MANUFACTURER123"
+ *                 Duration: 30
+ *                 PaymentPerDay: 10.0
+ *                 InventoryName: "Warehouse A"
+ *                 Capacity: 1000
+ *                 Type: "Warehouse"
+ *                 HouseNumber: "123"
+ *                 Street: "Main Street"
+ *                 ZIP: "12345"
+ *                 Thana: "Cityville Thana"
+ *                 Division: "Dhaka"
+ *                 AddressDetails: "123 Main Street, Cityville"
+ *                 Image: "warehouse_image_url.jpg"
+ *               - RID: "RENTAL002"
+ *                 IID: "INV002"
+ *                 MID: "MANUFACTURER456"
+ *                 Duration: 15
+ *                 PaymentPerDay: 8.0
+ *                 InventoryName: "Storage Facility B"
+ *                 Capacity: 500
+ *                 Type: "Storage"
+ *                 HouseNumber: "456"
+ *                 Street: "Oak Avenue"
+ *                 ZIP: "67890"
+ *                 Thana: "Townsville Thana"
+ *                 Division: "Chittagong"
+ *                 AddressDetails: "456 Oak Avenue, Townsville"
+ *                 Image: "storage_image_url.jpg"
+ *               # Add more inventory objects as needed
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal Server Error
+ */
+leaseInventoryRouter.post('/leasedInventoriesNotTaken', leaseInventoryController.leasedInventoriesNotTaken);
+
+
+
+
+/**
+ * @swagger
+ * /api/leaseInventory/leasedInventoriesTaken:
+ *   post:
+ *     summary: Get inventories currently on lease and taken
+ *     description: Endpoint for showing inventories currently on lease and taken
+ *     tags: [LeaseInventory]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               mid:
+ *                 type: string
+ *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
+ *     responses:
+ *       '200':
+ *         description: Array of inventories fetched successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               - RID: "RENTAL001"
+ *                 IID: "INV001"
+ *                 MID: "MANUFACTURER123"
+ *                 Duration: 30
+ *                 PaymentPerDay: 10.0
+ *                 InventoryName: "Warehouse A"
+ *                 Capacity: 1000
+ *                 Type: "Warehouse"
+ *                 HouseNumber: "123"
+ *                 Street: "Main Street"
+ *                 ZIP: "12345"
+ *                 Thana: "Cityville Thana"
+ *                 Division: "Dhaka"
+ *                 AddressDetails: "123 Main Street, Cityville"
+ *                 Image: "warehouse_image_url.jpg"
+ *               - RID: "RENTAL002"
+ *                 IID: "INV002"
+ *                 MID: "MANUFACTURER456"
+ *                 Duration: 15
+ *                 PaymentPerDay: 8.0
+ *                 InventoryName: "Storage Facility B"
+ *                 Capacity: 500
+ *                 Type: "Storage"
+ *                 HouseNumber: "456"
+ *                 Street: "Oak Avenue"
+ *                 ZIP: "67890"
+ *                 Thana: "Townsville Thana"
+ *                 Division: "Chittagong"
+ *                 AddressDetails: "456 Oak Avenue, Townsville"
+ *                 Image: "storage_image_url.jpg"
+ *               # Add more inventory objects as needed
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal Server Error
+ */
+leaseInventoryRouter.post('/leasedInventoriesTaken', leaseInventoryController.leasedInventoriesTaken);
 
 /**
  * @swagger

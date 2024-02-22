@@ -141,6 +141,145 @@ module.exports.inventoryMarketplace = async (req, res) => {
     }
 };
 
+
+
+module.exports.leasedInventoriesNotTaken = async (req, res) => {
+    const mid = req.body.mid;
+    try {
+
+        const inventoryMarketplaceData = await prisma.rental.findMany({
+            where: {
+                OwnerID: mid,
+                RentalStatus: 'Not Rented',
+            },
+            select: {
+                rid: true,
+                iid: true,
+                FreeFrom: true,
+                FreeTill: true,
+                PerDayRent: true,
+                Details: true,
+                Inventory: {
+                    select: {
+                        InventoryName: true,
+                        Capacity: true,
+                        Type: true,
+                        Details: true,
+                        HouseNumber: true,
+                        Street: true,
+                        zip: true,
+                        Thana: true,
+                        Division: true,
+                        AddressDetails: true,
+                        Image: true,
+                    }
+                }
+            }
+        });
+
+        for(let i = 0; i < inventoryMarketplaceData.length; i++) {
+            inventoryMarketplaceData[i].InventoryName = inventoryMarketplaceData[i].Inventory.InventoryName;
+            inventoryMarketplaceData[i].Capacity = inventoryMarketplaceData[i].Inventory.Capacity;
+            inventoryMarketplaceData[i].Type = inventoryMarketplaceData[i].Inventory.Type;
+            inventoryMarketplaceData[i].Details = inventoryMarketplaceData[i].Inventory.Details;
+            inventoryMarketplaceData[i].HouseNumber = inventoryMarketplaceData[i].Inventory.HouseNumber;
+            inventoryMarketplaceData[i].Street = inventoryMarketplaceData[i].Inventory.Street;
+            inventoryMarketplaceData[i].zip = inventoryMarketplaceData[i].Inventory.zip;
+            inventoryMarketplaceData[i].Thana = inventoryMarketplaceData[i].Inventory.Thana;
+            inventoryMarketplaceData[i].Division = inventoryMarketplaceData[i].Inventory.Division;
+            inventoryMarketplaceData[i].AddressDetails = inventoryMarketplaceData[i].Inventory.AddressDetails;
+            inventoryMarketplaceData[i].Image = inventoryMarketplaceData[i].Inventory.Image;
+            delete inventoryMarketplaceData[i].Inventory;
+        }
+        // Responding with success and the array of inventories
+        res.status(200).json(inventoryMarketplaceData);
+    } catch (error) {
+        console.error('Error fetching inventory marketplace:', error);
+
+        // Responding with server errors
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+        });
+    }
+};
+
+
+
+
+module.exports.leasedInventoriesTaken = async (req, res) => {
+    const mid = req.body.mid;
+    try {
+
+        const inventoryMarketplaceData = await prisma.rental.findMany({
+            where: {
+                OwnerID: mid,
+                RentalStatus: 'Rented',
+            },
+            select: {
+                rid: true,
+                iid: true,
+                FreeFrom: true,
+                FreeTill: true,
+                PerDayRent: true,
+                Details: true,
+                OccupiedFrom: true,
+                OccupiedTill: true,
+                Inventory: {
+                    select: {
+                        InventoryName: true,
+                        Capacity: true,
+                        Type: true,
+                        Details: true,
+                        HouseNumber: true,
+                        Street: true,
+                        zip: true,
+                        Thana: true,
+                        Division: true,
+                        AddressDetails: true,
+                        Image: true,
+                    }
+                },
+                OwnedToID: true,
+                Company_Rental_OwnedToIDToCompany: {
+                    select: {
+                        Name: true,
+                        Logo: true,
+                    }
+                },
+            }
+        });
+
+        for(let i = 0; i < inventoryMarketplaceData.length; i++) {
+            inventoryMarketplaceData[i].InventoryName = inventoryMarketplaceData[i].Inventory.InventoryName;
+            inventoryMarketplaceData[i].Capacity = inventoryMarketplaceData[i].Inventory.Capacity;
+            inventoryMarketplaceData[i].Type = inventoryMarketplaceData[i].Inventory.Type;
+            inventoryMarketplaceData[i].Details = inventoryMarketplaceData[i].Inventory.Details;
+            inventoryMarketplaceData[i].HouseNumber = inventoryMarketplaceData[i].Inventory.HouseNumber;
+            inventoryMarketplaceData[i].Street = inventoryMarketplaceData[i].Inventory.Street;
+            inventoryMarketplaceData[i].zip = inventoryMarketplaceData[i].Inventory.zip;
+            inventoryMarketplaceData[i].Thana = inventoryMarketplaceData[i].Inventory.Thana;
+            inventoryMarketplaceData[i].Division = inventoryMarketplaceData[i].Inventory.Division;
+            inventoryMarketplaceData[i].AddressDetails = inventoryMarketplaceData[i].Inventory.AddressDetails;
+            inventoryMarketplaceData[i].Image = inventoryMarketplaceData[i].Inventory.Image;
+            delete inventoryMarketplaceData[i].Inventory;
+            inventoryMarketplaceData[i].CompanyName = inventoryMarketplaceData[i].Company_Rental_OwnedToIDToCompany.Name;
+            inventoryMarketplaceData[i].CompanyLogo = inventoryMarketplaceData[i].Company_Rental_OwnedToIDToCompany.Logo;
+            delete inventoryMarketplaceData[i].Company_Rental_OwnedToIDToCompany;
+        }
+        // Responding with success and the array of inventories
+        res.status(200).json(inventoryMarketplaceData);
+    } catch (error) {
+        console.error('Error fetching inventory marketplace:', error);
+
+        // Responding with server errors
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+        });
+    }
+};
+
 module.exports.takeLease = async (req, res) => {
     try {
         // Extracting input parameters from the request body
