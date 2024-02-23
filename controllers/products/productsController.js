@@ -332,6 +332,8 @@ async function updateProductInformation(req, res) {
         DeliveryChargeIncreaseRate
     } = req.body;
 
+    console.log(req.body);
+
     const user = await prisma.product.update({
         where: {
            pid: PID,
@@ -379,6 +381,7 @@ async function updateProductInformation(req, res) {
         message: 'Product updated successfully',
     });
 } catch (error) {
+    console.error('Error updating product:', error);
         // Responding with server errors
         res.status(500).json({
             success: false,
