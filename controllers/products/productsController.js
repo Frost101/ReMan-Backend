@@ -616,6 +616,8 @@ async function getProductInfo(req, res) {
         MaximumDiscount: true,
         DiscountRate: true,
         ProductQuantityForDiscountRate: true,
+        MinimumDeliveryCharge: true,
+        DeliveryChargeIncreaseRate: true,
         mid: true,
         Company: {
           select: {
@@ -682,6 +684,8 @@ async function getProductDetails(req, res) {
         MaximumDiscount: true,
         DiscountRate: true,
         ProductQuantityForDiscountRate: true,
+        MinimumDeliveryCharge: true,
+        DeliveryChargeIncreaseRate: true,
         mid: true,
         Company: {
           select: {
