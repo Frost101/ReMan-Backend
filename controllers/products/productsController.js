@@ -356,13 +356,13 @@ async function updateProductInformation(req, res) {
         },
       }); 
 
-    if(Image.length > 1) {
+      const user2 = await prisma.productImage.deleteMany({
+        where: {
+          pid: PID,
+        },
+      });
 
-        const user2 = await prisma.productImage.deleteMany({
-            where: {
-              pid: PID,
-            },
-          });
+    if(Image.length > 1) {
         for(let i = 1; i < Image.length; i++) {
             const user1 = await prisma.productImage.create({
                 data: {
