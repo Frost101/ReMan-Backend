@@ -132,7 +132,27 @@ async function getInventoriesList(req, res) {
         }
       });
   
-      if (inventories) {   
+      if (inventories) {
+        
+        for(let i = 0; i < inventories.length; i++) {
+          // console.log(emptyInventories[i].iid)
+          const inRental = await prisma.rental.findMany({
+              where: {
+                  iid: inventories[i].iid,
+                  RentalStatus: 'Not Rented',
+              },
+              select: {
+                  rid: true,
+              }
+          });
+
+          if(inRental.length > 0) {
+              inventories.splice(i, 1);
+              i--;
+          }
+          // console.log(emptyInventories);
+          // console.log("Length: ", emptyInventories.length);
+      }
         res.status(200).json({inventories});
       } else {
         res.status(404).json({ error: 'No inventories found' });

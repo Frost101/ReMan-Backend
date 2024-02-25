@@ -32,9 +32,30 @@ module.exports.emptyInventoryList = async (req, res) => {
         });    
 
         // Responding with success and the array of empty inventories
+
+        for(let i = 0; i < emptyInventories.length; i++) {
+            // console.log(emptyInventories[i].iid)
+            const inRental = await prisma.rental.findMany({
+                where: {
+                    iid: emptyInventories[i].iid,
+                    RentalStatus: 'Not Rented',
+                },
+                select: {
+                    rid: true,
+                }
+            });
+
+            if(inRental.length > 0) {
+                emptyInventories.splice(i, 1);
+                i--;
+            }
+            // console.log(emptyInventories);
+            // console.log("Length: ", emptyInventories.length);
+        }
         res.status(200).json(emptyInventories);
     } catch (error) {
             // Responding with server errors
+            console.error('Error empty inventories:', error);
             res.status(500).json({
                 success: false,
                 message: 'Internal Server Error',
