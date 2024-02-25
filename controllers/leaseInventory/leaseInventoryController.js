@@ -32,9 +32,30 @@ module.exports.emptyInventoryList = async (req, res) => {
         });    
 
         // Responding with success and the array of empty inventories
+
+        for(let i = 0; i < emptyInventories.length; i++) {
+            // console.log(emptyInventories[i].iid)
+            const inRental = await prisma.rental.findMany({
+                where: {
+                    iid: emptyInventories[i].iid,
+                    RentalStatus: 'Not Rented',
+                },
+                select: {
+                    rid: true,
+                }
+            });
+
+            if(inRental.length > 0) {
+                emptyInventories.splice(i, 1);
+                i--;
+            }
+            // console.log(emptyInventories);
+            // console.log("Length: ", emptyInventories.length);
+        }
         res.status(200).json(emptyInventories);
     } catch (error) {
             // Responding with server errors
+            console.error('Error empty inventories:', error);
             res.status(500).json({
                 success: false,
                 message: 'Internal Server Error',
@@ -50,9 +71,10 @@ module.exports.giveLease = async (req, res) => {
         const FreeTillDate = new Date();
         FreeTillDate.setDate(FreeFromDate.getDate() + Duration);
 
-        const rentedInventory = await prisma.rental.create({
+        for(let i = 0; i < iid.length; i++) {
+        const rentedInventories = await prisma.rental.create({
             data: {
-                iid: iid,
+                iid: iid[i],
                 OwnerID: mid,
                 OwnedToID: mid,
                 FreeFrom: FreeFromDate,
@@ -62,6 +84,7 @@ module.exports.giveLease = async (req, res) => {
                 RentalStatus: 'Not Rented',
             },
         });
+        }
 
         // Responding with success
         res.status(200).json({
@@ -109,6 +132,14 @@ module.exports.inventoryMarketplace = async (req, res) => {
                         Division: true,
                         AddressDetails: true,
                         Image: true,
+                        Company: {
+                            select: {
+                                Name: true,
+                                Logo: true,
+                                PhoneNumber: true,
+                                Email: true,
+                            }
+                        },
                     }
                 }
             }
@@ -126,6 +157,10 @@ module.exports.inventoryMarketplace = async (req, res) => {
             inventoryMarketplaceData[i].Division = inventoryMarketplaceData[i].Inventory.Division;
             inventoryMarketplaceData[i].AddressDetails = inventoryMarketplaceData[i].Inventory.AddressDetails;
             inventoryMarketplaceData[i].Image = inventoryMarketplaceData[i].Inventory.Image;
+            inventoryMarketplaceData[i].OwnerName = inventoryMarketplaceData[i].Inventory.Company.Name;
+            inventoryMarketplaceData[i].OwnerLogo = inventoryMarketplaceData[i].Inventory.Company.Logo;
+            inventoryMarketplaceData[i].OwnerPhoneNumber = inventoryMarketplaceData[i].Inventory.Company.PhoneNumber;
+            inventoryMarketplaceData[i].OwnerEmail = inventoryMarketplaceData[i].Inventory.Company.Email;
             delete inventoryMarketplaceData[i].Inventory;
         }
         // Responding with success and the array of inventories

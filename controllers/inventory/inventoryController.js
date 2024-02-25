@@ -132,7 +132,27 @@ async function getInventoriesList(req, res) {
         }
       });
   
-      if (inventories) {   
+      if (inventories) {
+        
+        for(let i = 0; i < inventories.length; i++) {
+          // console.log(emptyInventories[i].iid)
+          const inRental = await prisma.rental.findMany({
+              where: {
+                  iid: inventories[i].iid,
+                  RentalStatus: 'Not Rented',
+              },
+              select: {
+                  rid: true,
+              }
+          });
+
+          if(inRental.length > 0) {
+              inventories.splice(i, 1);
+              i--;
+          }
+          // console.log(emptyInventories);
+          // console.log("Length: ", emptyInventories.length);
+      }
         res.status(200).json({inventories});
       } else {
         res.status(404).json({ error: 'No inventories found' });
@@ -141,6 +161,56 @@ async function getInventoriesList(req, res) {
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
+}
+
+
+
+
+async function getInventoryInfo(req, res) {
+
+  const iid = req.body.iid;
+
+  try {
+    const inventory = await prisma.inventory.findUnique({
+      where: {
+        iid: iid,
+      },
+      select: {
+        InventoryName: true,
+        Capacity: true,
+        Type: true,
+        Image: true,
+        Details: true,
+        EmptyStatus: true,
+        RealOwner: true,
+        HouseNumber: true,
+        Street: true,
+        zip: true,
+        Thana: true,
+        Division: true,
+        AddressDetails: true,
+        mid: true,
+        Company: {
+          select: {
+            Name: true,
+            Logo: true,
+          }
+        },
+      }
+    });
+
+    if (inventory) {
+      inventory.OwnerName = inventory.Company.Name;
+      inventory.OwnerLogo = inventory.Company.Logo;
+      delete inventory.Company;   
+      res.status(200).json({inventory});
+    } else {
+      res.status(404).json({ error: 'No inventories found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 async function shiftToInventory(req, res) {
@@ -204,5 +274,6 @@ module.exports = {
     checkInventoryStatus,
     deleteInventory,
     getInventoriesList,
+    getInventoryInfo,
     shiftToInventory,
 }
