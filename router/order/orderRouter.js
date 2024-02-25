@@ -158,9 +158,9 @@ orderRouter.put('/deliveryStatus', updateDeliveryStatus);
 *            required:
 *              - SID
 *            properties: 
-*              SID:
-*                type: integer
-*                default: 123456
+*              sid:
+*                type: string
+*                default: ffeca534-d5ac-4e37-a713-883f1f3045da
 *     responses:
 *        200:
 *          description: An array of Orders of a Retailer
@@ -175,27 +175,54 @@ orderRouter.put('/deliveryStatus', updateDeliveryStatus);
 *                    items:
 *                      type: object
 *                      properties:
-*                        oid:
-*                          type: integer
+*                        mid:
+*                          type: string
 *                          example: 233412
-*                        orderDate:
+*                        RawPrice:
+*                          type: double
+*                          example: 4532
+*                        DeliveryCharge:
+*                          type: double
+*                          example: 34346
+*                        VoucherCode:
 *                          type: string
-*                          example: 03/08/2023
-*                        deliveryDate:
-*                          type: string
-*                          example: 17/08/2023
-*                        totalPrice:
-*                          type: integer
 *                          example: 230000
-*                        paymentStatus:
+*                        ReducedAmount:
+*                          type: double
+*                          example: 45636
+*                        FinalPrice:
+*                          type: double
+*                          example: 4563634
+*                        PaymentStatus:
 *                          type: string
-*                          example: Paid
-*                        deliveryStatus:
+*                          example: COD
+*                        DeliveryStatus:
 *                          type: string
-*                          example: Delivered
-*                        paymentMethod:
+*                          example: COD
+*                        DeliveryDate:
 *                          type: string
 *                          example: COD  
+*                        ShipmentStatus:
+*                          type: string
+*                          example: COD  
+*                        ManufacturerName:
+*                          type: string
+*                          example: COD
+*                        ManufacturerLogo:
+*                          type: string
+*                          example: COD  
+*                        OrderDate:
+*                          type: string
+*                          example: COD  
+*                        PaymentMethod:
+*                          type: string
+*                          example: COD  
+*                        oid:
+*                          type: string
+*                          example: COD  
+*                        TransactionID:
+*                          type: string
+*                          example: COD        
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
@@ -443,11 +470,14 @@ orderRouter.post('/manufacturer', getManufacturerOrders);
 *           schema:
 *            type: object
 *            required:
-*              - OrderID
+*              - oid
 *            properties: 
-*              OrderID:
-*                type: integer
-*                default: 233412
+*              oid:
+*                type: string
+*                default: 8a5a5615-b5de-424c-8faf-df8c50e680aa
+*              mid:
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
 *     responses:
 *        200:
 *          description: Product batches shifted from one inventory to other inventory successfully
