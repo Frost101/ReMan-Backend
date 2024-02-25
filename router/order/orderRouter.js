@@ -158,9 +158,9 @@ orderRouter.put('/deliveryStatus', updateDeliveryStatus);
 *            required:
 *              - SID
 *            properties: 
-*              SID:
-*                type: integer
-*                default: 123456
+*              sid:
+*                type: string
+*                default: ffeca534-d5ac-4e37-a713-883f1f3045da
 *     responses:
 *        200:
 *          description: An array of Orders of a Retailer
