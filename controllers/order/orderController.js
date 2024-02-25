@@ -223,29 +223,6 @@ function updateDeliveryStatus(req, res) {
 }
 
 async function getRetailerOrders(req, res) {
-    // let output = {
-    //     orders: [{
-    //     oid: 233412,
-    //     orderDate: '03/08/2023',
-    //     deliveryDate: '17/08/2023',
-    //     totalPrice: 230000,
-    //     paymentStatus: 'Paid',
-    //     deliveryStatus: 'Delivered',
-    //     paymentMethod: 'COD'
-    //     },
-    //     {    
-    //     oid: 233413,
-    //     orderDate: '03/08/2023',
-    //     deliveryDate: '19/08/2023',
-    //     totalPrice: 250000,
-    //     paymentStatus: 'Paid',
-    //     deliveryStatus: 'Delivered',
-    //     paymentMethod: 'Bkash'
-    //     }
-    //     ]
-    // };
-
-    // res.json(output);
 
   try{
     const sid = req.body.sid;
@@ -640,61 +617,87 @@ async function orderDelivered(oid, mid) {
 
 
 
-function getRetailerOrderDetails(req, res) {
-    let output = {
-        orderDate: '03/08/2023',
-        totalPrice: 230000,
-        paymentStatus: 'Paid',
-        deliveryStatus: 'Delivered',
-        paymentMethod: 'COD',
-        orderFragments: [{
-            manufacturerName: 'Keya',
-            manufacturerLogo: 'public/images/keya.jpg',
-            deliveryDate: '17/08/2023',
-            rawPrice: 115000,
-            deliveryCharge: 500,
-            reducedAmount: 500,
-            finalPrice: 115000,
-            paymentStatus: 'Paid',
-            deliveryStatus: 'Delivered',
-            products: [{
-                productName: 'Keya Soap',
-                image: 'public/images/keya_soap.jpg',
-                quantity: 2000,
-                price: 60000
-            },{
-                productName: 'Keya Shampoo',
-                image: 'public/images/keya_shampoo.jpg',
-                quantity: 1500,
-                price: 55000
-            }]
-            },
-            {    
-            manufacturerName: 'Meril',
-            manufacturerLogo: 'public/images/meril.jpg',
-            deliveryDate: '19/08/2023',
-            rawPrice: 115000,
-            deliveryCharge: 500,
-            reducedAmount: 500,
-            finalPrice: 115000,
-            paymentStatus: 'Paid',
-            deliveryStatus: 'Delivered',
-            products: [{
-                productName: 'Meril Soap',
-                image: 'public/images/meril_soap.jpg',
-                quantity: 2000,
-                price: 60000
-            },{
-                productName: 'Meril Shampoo',
-                image: 'public/images/meril_shampoo.jpg',
-                quantity: 1500,
-                price: 55000
-            }]
-            }
-        ]
-    };
+async function getRetailerOrderDetails(req, res) {
+  try{
+    const oid = req.body.oid;
+    const mid = req.body.mid;
 
-    res.json(output);
+      const orderDetailedInfo = await prisma.orderFragment.findMany({
+        where: {
+          oid: oid,
+          mid: mid,
+        },
+        select: {
+          mid: true,
+          RawPrice: true,
+          DeliveryCharge: true,
+          VoucherCode: true,
+          ReducedAmount: true,
+          FinalPrice: true,
+          PaymentStatus: true,
+          DeliveryStatus: true,
+          DeliveryDate: true,
+          ShipmentStatus: true,
+          Company: {
+            select: {
+              Name: true,
+              Logo: true,
+            }  
+          },
+          Order: {
+            select: {
+              OrderDate: true,
+              PaymentMethod: true,
+              TransactionID: true,
+            }
+          },
+        },
+      });
+
+      if(orderDetailedInfo.length !== 0) {
+          orderDetailedInfo[0].ManufacturerName = orderDetailedInfo[0].Company.Name;
+          orderDetailedInfo[0].ManufacturerLogo = orderDetailedInfo[0].Company.Logo;
+          delete orderDetailedInfo[0].Company;
+
+          if(orderDetailedInfo[0].VoucherCode === 'ZERO') {
+            orderDetailedInfo[0].VoucherCode = null;
+          }  
+
+          orderDetailedInfo[0].OrderDate = orderDetailedInfo[0].Order.OrderDate;
+          orderDetailedInfo[0].PaymentMethod = orderDetailedInfo[0].Order.PaymentMethod;
+          orderDetailedInfo[0].TransactionID = orderDetailedInfo[0].Order.TransactionID;
+          delete orderDetailedInfo[0].Order;
+
+          const products = await prisma.singleProductOrder.findMany({
+              where: {
+                oid: oid,
+                mid: mid,
+              },
+              select: {
+                pid: true,
+                Quantity: true,
+                Price: true,
+                Product: {
+                  select: {
+                    ProductName: true,
+                    Image: true,
+                  },
+                },
+              },
+          });
+          for(let j = 0; j < products.length; j++) {
+              products[j].ProductName = products[j].Product.ProductName;
+              products[j].Image = products[j].Product.Image;
+              delete products[j].Product;
+          }
+          orderDetailedInfo[0].Products = products;
+      }
+    // const orderInfo = orderDetailedInfo[0];  
+    res.status(200).json(orderDetailedInfo[0]);
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 function getManufacturerOrderDetails(req, res) {
