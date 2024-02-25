@@ -109,6 +109,14 @@ module.exports.inventoryMarketplace = async (req, res) => {
                         Division: true,
                         AddressDetails: true,
                         Image: true,
+                        Company: {
+                            select: {
+                                Name: true,
+                                Logo: true,
+                                PhoneNumber: true,
+                                Email: true,
+                            }
+                        },
                     }
                 }
             }
@@ -126,6 +134,10 @@ module.exports.inventoryMarketplace = async (req, res) => {
             inventoryMarketplaceData[i].Division = inventoryMarketplaceData[i].Inventory.Division;
             inventoryMarketplaceData[i].AddressDetails = inventoryMarketplaceData[i].Inventory.AddressDetails;
             inventoryMarketplaceData[i].Image = inventoryMarketplaceData[i].Inventory.Image;
+            inventoryMarketplaceData[i].OwnerName = inventoryMarketplaceData[i].Inventory.Company.Name;
+            inventoryMarketplaceData[i].OwnerLogo = inventoryMarketplaceData[i].Inventory.Company.Logo;
+            inventoryMarketplaceData[i].OwnerPhoneNumber = inventoryMarketplaceData[i].Inventory.Company.PhoneNumber;
+            inventoryMarketplaceData[i].OwnerEmail = inventoryMarketplaceData[i].Inventory.Company.Email;
             delete inventoryMarketplaceData[i].Inventory;
         }
         // Responding with success and the array of inventories

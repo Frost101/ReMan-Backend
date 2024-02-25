@@ -32,19 +32,18 @@ const leaseInventoryRouter = express.Router();
  *         content:
  *           application/json:
  *             example:
- *               - IID: "INV001"
+ *               - iid: "INV001"
  *                 InventoryName: "Warehouse A"
- *                 Address: "123 Main Street, Cityville"
  *                 Capacity: 1000
  *                 Type: "Warehouse"
+ *                 Details: "A flavor-packed journey featuring the perfect blend of chips and Chanachur delights."
+ *                 HouseNumber: "123"
+ *                 Street: "Main Street"
+ *                 zip: "12345"
+ *                 Thana: "Cityville Thana"
+ *                 Division: "Dhaka"
+ *                 AddressDetails: "123 Main Street, Cityville"
  *                 Image: "warehouse_image_url.jpg"
- *               - IID: "INV002"
- *                 InventoryName: "Storage Facility B"
- *                 Address: "456 Oak Avenue, Townsville"
- *                 Capacity: 500
- *                 Type: "Storage"
- *                 Image: "storage_image_url.jpg"
- *               # Add more empty inventory objects as needed
  *       '401':
  *         description: Unauthorized - User authentication required
  *         content:
@@ -160,37 +159,26 @@ leaseInventoryRouter.post('/giveLease', leaseInventoryController.giveLease);
  *         content:
  *           application/json:
  *             example:
- *               - RID: "RENTAL001"
- *                 IID: "INV001"
- *                 MID: "MANUFACTURER123"
- *                 Duration: 30
- *                 PaymentPerDay: 10.0
- *                 InventoryName: "Warehouse A"
- *                 Capacity: 1000
- *                 Type: "Warehouse"
+ *               - rid: "RENTAL001"
+ *                 iid: "INV001"
+ *                 FreeFrom: "MANUFACTURER123"
+ *                 FreeTill: 30
+ *                 PerDayRent: 10.0
+ *                 Details: "Warehouse A"
+ *                 InventoryName: 1000
+ *                 Capacity: "Warehouse"
+ *                 Type: "123"
  *                 HouseNumber: "123"
  *                 Street: "Main Street"
- *                 ZIP: "12345"
+ *                 zip: "12345"
  *                 Thana: "Cityville Thana"
  *                 Division: "Dhaka"
  *                 AddressDetails: "123 Main Street, Cityville"
  *                 Image: "warehouse_image_url.jpg"
- *               - RID: "RENTAL002"
- *                 IID: "INV002"
- *                 MID: "MANUFACTURER456"
- *                 Duration: 15
- *                 PaymentPerDay: 8.0
- *                 InventoryName: "Storage Facility B"
- *                 Capacity: 500
- *                 Type: "Storage"
- *                 HouseNumber: "456"
- *                 Street: "Oak Avenue"
- *                 ZIP: "67890"
- *                 Thana: "Townsville Thana"
- *                 Division: "Chittagong"
- *                 AddressDetails: "456 Oak Avenue, Townsville"
- *                 Image: "storage_image_url.jpg"
- *               # Add more inventory objects as needed
+ *                 OwnerName: "Ruchi"
+ *                 OwnerLogo: "public/ruchi.png"
+ *                 OwnerPhoneNumber: "01703486743" 
+ *                 OwnerEmail: "ruchi@gmail.com" 
  *       '500':
  *         description: Internal Server Error
  *         content:
@@ -227,37 +215,22 @@ leaseInventoryRouter.post('/inventoryMarketplace', leaseInventoryController.inve
  *         content:
  *           application/json:
  *             example:
- *               - RID: "RENTAL001"
- *                 IID: "INV001"
- *                 MID: "MANUFACTURER123"
- *                 Duration: 30
- *                 PaymentPerDay: 10.0
+ *               - rid: "RENTAL001"
+ *                 iid: "INV001"
+ *                 FreeFrom: "2024-02-22T00:00:00.000Z"
+ *                 FreeTill: "2024-04-22T00:00:00.000Z"
+ *                 PerDayRent: 200
+ *                 Details: "Offering a tantalizing mix of chips and refreshing juices for a snacking experience like no other."
  *                 InventoryName: "Warehouse A"
  *                 Capacity: 1000
  *                 Type: "Warehouse"
  *                 HouseNumber: "123"
  *                 Street: "Main Street"
- *                 ZIP: "12345"
+ *                 zip: "12345"
  *                 Thana: "Cityville Thana"
  *                 Division: "Dhaka"
  *                 AddressDetails: "123 Main Street, Cityville"
  *                 Image: "warehouse_image_url.jpg"
- *               - RID: "RENTAL002"
- *                 IID: "INV002"
- *                 MID: "MANUFACTURER456"
- *                 Duration: 15
- *                 PaymentPerDay: 8.0
- *                 InventoryName: "Storage Facility B"
- *                 Capacity: 500
- *                 Type: "Storage"
- *                 HouseNumber: "456"
- *                 Street: "Oak Avenue"
- *                 ZIP: "67890"
- *                 Thana: "Townsville Thana"
- *                 Division: "Chittagong"
- *                 AddressDetails: "456 Oak Avenue, Townsville"
- *                 Image: "storage_image_url.jpg"
- *               # Add more inventory objects as needed
  *       '500':
  *         description: Internal Server Error
  *         content:
@@ -294,37 +267,27 @@ leaseInventoryRouter.post('/leasedInventoriesNotTaken', leaseInventoryController
  *         content:
  *           application/json:
  *             example:
- *               - RID: "RENTAL001"
- *                 IID: "INV001"
- *                 MID: "MANUFACTURER123"
- *                 Duration: 30
- *                 PaymentPerDay: 10.0
- *                 InventoryName: "Warehouse A"
- *                 Capacity: 1000
- *                 Type: "Warehouse"
- *                 HouseNumber: "123"
- *                 Street: "Main Street"
- *                 ZIP: "12345"
- *                 Thana: "Cityville Thana"
- *                 Division: "Dhaka"
- *                 AddressDetails: "123 Main Street, Cityville"
- *                 Image: "warehouse_image_url.jpg"
- *               - RID: "RENTAL002"
- *                 IID: "INV002"
- *                 MID: "MANUFACTURER456"
- *                 Duration: 15
- *                 PaymentPerDay: 8.0
- *                 InventoryName: "Storage Facility B"
- *                 Capacity: 500
- *                 Type: "Storage"
- *                 HouseNumber: "456"
- *                 Street: "Oak Avenue"
- *                 ZIP: "67890"
- *                 Thana: "Townsville Thana"
- *                 Division: "Chittagong"
- *                 AddressDetails: "456 Oak Avenue, Townsville"
- *                 Image: "storage_image_url.jpg"
- *               # Add more inventory objects as needed
+ *               - rid: "d3fcff83-d7bd-4058-ac87-cd11dc000c5b"
+ *                 iid: "6b6fd057-bae2-4786-90e4-916ed809baa2"
+ *                 FreeFrom: "2024-02-22T00:00:00.000Z"
+ *                 FreeTill: "2024-03-23T00:00:00.000Z"
+ *                 PerDayRent: 100
+ *                 Details: "Fresh Food Storage"
+ *                 OccupiedFrom: "2024-02-22T00:00:00.000Z"
+ *                 OccupiedTill: "2024-03-19T00:00:00.000Z"
+ *                 OwnedToID: "e7ea9b52-8ab6-4634-8178-1c38ab0340df"
+ *                 InventoryName: "Inventory8"
+ *                 Capacity: 2200
+ *                 Type: "Cold Stoarge"
+ *                 HouseNumber: "D-120"
+ *                 Street: "Dholabari Street"
+ *                 zip: 6100
+ *                 Thana: "Karampur"
+ *                 Division: "Tangail"
+ *                 AddressDetails: "Near the jame mosjid"
+ *                 Image: "public/images/Inventory8.jpg"
+ *                 CompanyName: "Pran"
+ *                 CompanyLogo: "public/pran.png"
  *       '500':
  *         description: Internal Server Error
  *         content:
@@ -361,37 +324,27 @@ leaseInventoryRouter.post('/leasedInventoriesTaken', leaseInventoryController.le
  *         content:
  *           application/json:
  *             example:
- *               - RID: "RENTAL001"
- *                 IID: "INV001"
- *                 MID: "MANUFACTURER123"
- *                 Duration: 30
- *                 PaymentPerDay: 10.0
- *                 InventoryName: "Warehouse A"
- *                 Capacity: 1000
- *                 Type: "Warehouse"
- *                 HouseNumber: "123"
- *                 Street: "Main Street"
- *                 ZIP: "12345"
- *                 Thana: "Cityville Thana"
- *                 Division: "Dhaka"
- *                 AddressDetails: "123 Main Street, Cityville"
- *                 Image: "warehouse_image_url.jpg"
- *               - RID: "RENTAL002"
- *                 IID: "INV002"
- *                 MID: "MANUFACTURER456"
- *                 Duration: 15
- *                 PaymentPerDay: 8.0
- *                 InventoryName: "Storage Facility B"
- *                 Capacity: 500
- *                 Type: "Storage"
- *                 HouseNumber: "456"
- *                 Street: "Oak Avenue"
- *                 ZIP: "67890"
- *                 Thana: "Townsville Thana"
- *                 Division: "Chittagong"
- *                 AddressDetails: "456 Oak Avenue, Townsville"
- *                 Image: "storage_image_url.jpg"
- *               # Add more inventory objects as needed
+ *               - rid: "d3fcff83-d7bd-4058-ac87-cd11dc000c5b"
+ *                 iid: "6b6fd057-bae2-4786-90e4-916ed809baa2"
+ *                 FreeFrom: "2024-02-22T00:00:00.000Z"
+ *                 FreeTill: "2024-03-23T00:00:00.000Z"
+ *                 PerDayRent: 100
+ *                 Details: "Fresh Food Storage"
+ *                 OccupiedFrom: "2024-02-22T00:00:00.000Z"
+ *                 OccupiedTill: "2024-03-19T00:00:00.000Z"
+ *                 OwnerID: "2c397476-c131-4c60-b45a-12bd242ec256"
+ *                 InventoryName: "Inventory8"
+ *                 Capacity: 2200
+ *                 Type: "Cold Stoarge"
+ *                 HouseNumber: "D-120"
+ *                 Street: "Dholabari Street"
+ *                 zip: 6100
+ *                 Thana: "Karampur"
+ *                 Division: "Tangail"
+ *                 AddressDetails: "Near the jame mosjid"
+ *                 Image: "public/images/Inventory8.jpg"
+ *                 CompanyName: "Ruchi"
+ *                 CompanyLogo: "public/ruchi.png"
  *       '500':
  *         description: Internal Server Error
  *         content:

@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {addNewInventory, checkInventoryStatus, deleteInventory, getInventoriesList, shiftToInventory} = require('../../controllers/inventory/inventoryController'); 
+const {addNewInventory, checkInventoryStatus, deleteInventory, getInventoriesList, getInventoryInfo, shiftToInventory} = require('../../controllers/inventory/inventoryController'); 
 
 //* Initialize router
 const inventoryRouter = express.Router();
@@ -252,8 +252,8 @@ inventoryRouter.delete('/deleteInventory', deleteInventory);
 *                        EmptyStatus:
 *                          type: boolean
 *                          example: true
-*                        OwnedStatus:
-*                          type: boolean
+*                        RealOwner:
+*                          type: string
 *                          example: true
 *                        Address:
 *                          type: string
@@ -268,6 +268,100 @@ inventoryRouter.delete('/deleteInventory', deleteInventory);
 *          description: Internal server error
 */
 inventoryRouter.post('/inventoryList', getInventoriesList);
+
+
+
+
+/**
+* @swagger
+* /api/inventory/inventoryInfo:
+*   post:
+*     tags: [Inventory]
+*     description: Show the information of a specific inventory
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - manufacturerId
+*            properties: 
+*              iid:
+*                type: string
+*                default: 8b4753af-39a0-458a-88ae-182875e0ec3b
+*     responses:
+*        200:
+*          description: Inventory information of a specific inventory
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  inventories:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        mid:
+*                          type: string
+*                          example: 123412
+*                        InventoryName:
+*                          type: string
+*                          example: Shahi House
+*                        Capacity:
+*                          type: double
+*                          example: 230
+*                        Type:
+*                          type: string
+*                          example: cold storage
+*                        Image:
+*                          type: string
+*                          example: public/images/shahi_house.jpg
+*                        Details:
+*                          type: string
+*                          example: Fresh Food Storage
+*                        EmptyStatus:
+*                          type: boolean
+*                          example: true
+*                        RealOwner:
+*                          type: string
+*                          example: true
+*                        HouseNumber:
+*                          type: string
+*                          example: 32 Sultan Road, Savar, 6200, Dhaka
+*                        Street:
+*                          type: string
+*                          example: 32 Sultan Road, Savar, 6200, Dhaka
+*                        zip:
+*                          type: integer
+*                          example: 3200
+*                        Thana:
+*                          type: string
+*                          example: 32 Sultan Road, Savar, 6200, Dhaka
+*                        Division:
+*                          type: string
+*                          example: 32 Sultan Road, Savar, 6200, Dhaka
+*                        AddressDetails:
+*                          type: string
+*                          example: 32 Sultan Road, Savar, 6200, Dhaka
+*                        OwnerName:
+*                          type: string
+*                          example: 32 Sultan Road, Savar, 6200, Dhaka
+*                        OwnerLogo:
+*                          type: string
+*                          example: 32 Sultan Road, Savar, 6200, Dhaka
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+inventoryRouter.post('/inventoryInfo', getInventoryInfo);
 
 
 
