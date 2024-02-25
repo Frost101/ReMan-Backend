@@ -119,6 +119,7 @@ module.exports.inventoryMarketplace = async (req, res) => {
                 FreeTill: true,
                 PerDayRent: true,
                 Details: true,
+                OwnerID: true,
                 Inventory: {
                     select: {
                         InventoryName: true,
