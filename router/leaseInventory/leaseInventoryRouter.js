@@ -83,8 +83,8 @@ leaseInventoryRouter.post('/emptyInventoryList', leaseInventoryController.emptyI
  *             type: object
  *             properties:
  *               iid:
- *                 type: string
- *                 example: 6b6fd057-bae2-4786-90e4-916ed809baa2
+ *                 type: array
+ *                 example: ['c768f6e6-9f98-4b90-ac0e-133ca970b0e1', 'cd2f7a02-aa2d-4c30-9127-b00bf574f974']
  *               mid:
  *                 type: string
  *                 example: 2c397476-c131-4c60-b45a-12bd242ec256

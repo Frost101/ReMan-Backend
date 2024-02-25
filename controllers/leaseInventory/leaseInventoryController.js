@@ -71,9 +71,10 @@ module.exports.giveLease = async (req, res) => {
         const FreeTillDate = new Date();
         FreeTillDate.setDate(FreeFromDate.getDate() + Duration);
 
-        const rentedInventory = await prisma.rental.create({
+        for(let i = 0; i < iid.length; i++) {
+        const rentedInventories = await prisma.rental.create({
             data: {
-                iid: iid,
+                iid: iid[i],
                 OwnerID: mid,
                 OwnedToID: mid,
                 FreeFrom: FreeFromDate,
@@ -83,6 +84,7 @@ module.exports.giveLease = async (req, res) => {
                 RentalStatus: 'Not Rented',
             },
         });
+        }
 
         // Responding with success
         res.status(200).json({
