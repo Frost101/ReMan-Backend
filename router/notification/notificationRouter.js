@@ -52,18 +52,18 @@ const notificationRouter = express.Router();
 *                      type: object
 *                      properties:
 *                        nid:
-*                          type: integer
+*                          type: string
 *                          example: 123456
-*                        message:
+*                        Message:
 *                          type: string
 *                          example: Your order has been placed
-*                        time:
+*                        DateAndTime:
 *                          type: string
 *                          example: 11:09 pm
-*                        date:
+*                        Priority:
 *                          type: string
 *                          example: 11/12/2022
-*                        readStatus:
+*                        ReadStatus:
 *                          type: boolean
 *                          example: false   
 *        401:
@@ -113,20 +113,20 @@ notificationRouter.post('/allNotificationsRetailer', getAllNotificationsForRetai
 *                      type: object
 *                      properties:
 *                        nid:
-*                          type: integer
+*                          type: string
 *                          example: 123456
-*                        message:
+*                        Message:
 *                          type: string
 *                          example: Your order has been placed
-*                        time:
+*                        DateAndTime:
 *                          type: string
 *                          example: 11:09 pm
-*                        date:
+*                        Priority:
 *                          type: string
 *                          example: 11/12/2022
-*                        readStatus:
+*                        ReadStatus:
 *                          type: boolean
-*                          example: false   
+*                          example: false    
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
@@ -174,20 +174,17 @@ notificationRouter.post('/allNotificationsManufacturer', getAllNotificationsForM
 *                      type: object
 *                      properties:
 *                        nid:
-*                          type: integer
+*                          type: string
 *                          example: 123456
-*                        message:
+*                        Message:
 *                          type: string
 *                          example: Your order has been placed
-*                        time:
+*                        DateAndTime:
 *                          type: string
 *                          example: 11:09 pm
-*                        date:
+*                        Priority:
 *                          type: string
-*                          example: 11/12/2022
-*                        readStatus:
-*                          type: boolean
-*                          example: false  
+*                          example: 11/12/2022  
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:
@@ -235,20 +232,17 @@ notificationRouter.post('/unreadNotificationsRetailer', getUnreadNotificationsFo
 *                      type: object
 *                      properties:
 *                        nid:
-*                          type: integer
+*                          type: string
 *                          example: 123456
-*                        message:
+*                        Message:
 *                          type: string
 *                          example: Your order has been placed
-*                        time:
+*                        DateAndTime:
 *                          type: string
 *                          example: 11:09 pm
-*                        date:
+*                        Priority:
 *                          type: string
-*                          example: 11/12/2022
-*                        readStatus:
-*                          type: boolean
-*                          example: false  
+*                          example: 11/12/2022 
 *        401:
 *          description: Unauthorized, Invalid username or password, or user not found
 *        403:

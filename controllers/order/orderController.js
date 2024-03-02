@@ -937,6 +937,37 @@ async function deliveryStatus(req, res) {
   }
 }
 
+
+
+async function addReviewRating(req, res) {
+
+  const oid = req.body.oid;
+  const mid = req.body.mid;
+  const pid = req.body.pid;
+  const Rating = req.body.Rating;
+  const Review = req.body.Review;
+
+  try {
+    const review = await prisma.singleProductOrder.updateMany({
+      where: {
+        oid: oid,
+        mid: mid,
+        pid: pid,
+      },
+      data: {
+        Rating: Rating,
+        Review: Review,
+      },
+    });
+
+    res.status(200).json({success: true,
+                         message: 'Rating and Review Added Successfully'});
+  } catch (error) {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
     addNewOrder,
     updateDeliveryStatus,
@@ -948,5 +979,6 @@ module.exports = {
     getManufacturerOrderDetails,
     deleteOrder,
     deliveryStatus,
-    getRetailerOrdersWithDeliveryStatus
+    getRetailerOrdersWithDeliveryStatus,
+    addReviewRating,
 }

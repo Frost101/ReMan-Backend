@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails, deleteOrder, deliveryStatus, getRetailerOrdersWithDeliveryStatus} = require('../../controllers/order/orderController'); 
+const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails, deleteOrder, deliveryStatus, getRetailerOrdersWithDeliveryStatus, addReviewRating} = require('../../controllers/order/orderController'); 
 
 //* Initialize router
 const orderRouter = express.Router();
@@ -828,5 +828,66 @@ orderRouter.get('/getAllDeliveryStatus', deliveryStatus);
 *          description: Internal server error
 */
 orderRouter.post('/retailerWithDeliveryStatus', getRetailerOrdersWithDeliveryStatus);
+
+
+
+/**
+* @swagger
+* /api/order/addReviewRating:
+*   post:
+*     tags: [Order]
+*     description: Add review and rating to a product
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - oid
+*              - mid
+*              - pid
+*              - Rating
+*              - Review
+*            properties: 
+*              oid:
+*                type: string
+*                default: 762e3548-15cc-4d3b-8161-ec67301ded34
+*              mid:
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
+*              pid:
+*                type: string
+*                default: 4c5cf7b4-ecd5-453a-abd9-2be12291c7c3
+*              Rating:
+*                type: double
+*                default: 5
+*              Review:
+*                type: string
+*                default: Good product
+*     responses:
+*        200:
+*          description: Review and Rating added successfully
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  message:
+*                    type: string
+*                    default: Order removed successfully  
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+orderRouter.post('/addReviewRating', addReviewRating);
+
+
 
 module.exports = orderRouter;
