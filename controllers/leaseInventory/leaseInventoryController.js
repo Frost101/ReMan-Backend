@@ -91,6 +91,27 @@ module.exports.giveLease = async (req, res) => {
             success: true,
             message: 'Lease given successfully',
         });
+
+        for(let i = 0; i < iid.length; i++){
+            const inventoryInfo = await prisma.inventory.findUnique({
+                where: {
+                    iid: iid[i],
+                },
+                select: {
+                    InventoryName: true,
+                }
+            });
+
+            const notification = await prisma.companyNotification.create({
+                data: {
+                    mid: mid,
+                    Message: 'Your inventory ' + inventoryInfo.InventoryName + ' has been added to the Inventory Marketplace.',
+                    DateAndTime: new Date(),
+                    ReadStatus: false,
+                    Priority: 'Low',
+                },
+            });
+        }
     } catch (error) {
             console.error('Error giving lease:', error);
             // Responding with server errors
@@ -428,6 +449,34 @@ module.exports.takeLease = async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Lease taken successfully',
+        });
+
+        const inventoryInfo = await prisma.inventory.findUnique({
+            where: {
+                iid: iid,
+            },
+            select: {
+                InventoryName: true,
+            }
+        });
+
+        const OwnedToInfo = await prisma.company.findUnique({
+            where: {
+                mid: OwnedToID,
+            },
+            select: {
+                Name: true,
+            }
+        });
+
+        const notification = await prisma.companyNotification.create({
+            data: {
+                mid: OwnerID,
+                Message: 'Your inventory ' + inventoryInfo.InventoryName + ' has been taken on lease for ' + Duration + ' days by ' + OwnedToInfo.Name,
+                DateAndTime: new Date(),
+                ReadStatus: false,
+                Priority: 'Mid',
+            },
         });
     } catch (error) {
         console.error('Error taking lease:', error);

@@ -17,26 +17,27 @@ model person {
 }
 
 model Shop {
-  Name           String?        @db.VarChar
-  Type           String?        @db.VarChar
-  PhoneNumber    String         @unique(map: "Shop_pk2") @db.VarChar
-  tin            String         @db.VarChar
-  RetailPoints   Int?
-  Website        String?        @db.VarChar
-  Email          String?        @db.VarChar
-  Password       String?        @db.VarChar
-  Logo           String?        @db.VarChar
-  ShopID         String         @id(map: "Shop_pk") @default(uuid()) @db.Uuid
-  HouseNumber    String?        @db.VarChar
-  Street         String?        @db.VarChar
-  zip            Int?
-  Thana          String?        @db.VarChar
-  Division       String?        @db.VarChar
-  AddressDetails String?        @db.VarChar
-  Cart           Cart[]
-  Order          Order[]
-  ShopOwner      ShopOwner[]
-  VoucherUsage   VoucherUsage[]
+  Name             String?            @db.VarChar
+  Type             String?            @db.VarChar
+  PhoneNumber      String             @unique(map: "Shop_pk2") @db.VarChar
+  tin              String             @db.VarChar
+  RetailPoints     Int?
+  Website          String?            @db.VarChar
+  Email            String?            @db.VarChar
+  Password         String?            @db.VarChar
+  Logo             String?            @db.VarChar
+  ShopID           String             @id(map: "Shop_pk") @default(uuid()) @db.Uuid
+  HouseNumber      String?            @db.VarChar
+  Street           String?            @db.VarChar
+  zip              Int?
+  Thana            String?            @db.VarChar
+  Division         String?            @db.VarChar
+  AddressDetails   String?            @db.VarChar
+  Cart             Cart[]
+  Order            Order[]
+  ShopNotification ShopNotification[]
+  ShopOwner        ShopOwner[]
+  VoucherUsage     VoucherUsage[]
 }
 
 model Company {
@@ -318,4 +319,14 @@ model Rental {
   Company_Rental_OwnerIDToCompany   Company?   @relation("Rental_OwnerIDToCompany", fields: [OwnerID], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Rental_Company_mid_fk")
   Company_Rental_OwnedToIDToCompany Company?   @relation("Rental_OwnedToIDToCompany", fields: [OwnedToID], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "Rental_Company_mid_fk2")
   Inventory                         Inventory? @relation(fields: [iid], references: [iid], onDelete: NoAction, onUpdate: NoAction, map: "Rental_Inventory_iid_fk")
+}
+
+model ShopNotification {
+  nid         String    @id(map: "ShopNotification_pk") @default(uuid()) @db.Uuid
+  sid         String    @db.Uuid
+  Message     String?   @db.VarChar
+  DateAndTime DateTime? @db.Date
+  ReadStatus  Boolean?
+  Priority    String?   @db.VarChar
+  Shop        Shop      @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "ShopNotification_Shop_ShopID_fk")
 }

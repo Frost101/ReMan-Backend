@@ -1,48 +1,159 @@
-function getAllNotifications(req, res) {
-    let output = {
-        notifications: [{
-        nid: 123456,    
-        message: 'Your order has been placed',
-        time: '11:09 pm',
-        date: '11/12/2022',
-        readStatus: false,
-        },
-        {    
-        nid: 123434,    
-        message: 'Your order has been placed',
-        time: '11:19 pm',
-        date: '11/12/2023',
-        readStatus: false,
-        }
-        ]
-    };
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
 
-    res.json(output);
+const prisma = new PrismaClient();
+
+
+async function getAllNotificationsForRetailer(req, res) {
+
+    const sid = req.body.sid;
+
+    try {
+        const notifications = await prisma.shopNotification.findMany({
+            where: {
+                sid: sid
+            },
+            select: {
+                nid: true,
+                Message: true,
+                DateAndTime: true,
+                ReadStatus: true,
+                Priority: true
+            }
+        });
+
+        res.status(200).json({notifications});
+
+        const updateNotifications = await prisma.shopNotification.updateMany({
+            where: {
+                sid: sid
+            },
+            data: {
+                ReadStatus: true
+            }
+        });
+    }
+    catch (error) {
+        console.error('Error retrieving notification:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+
 }
 
 
 
-function getUnreadNotifications(req, res) {
-    let output = {
-        notifications: [{
-        nid: 123456,    
-        message: 'Your order has been placed',
-        time: '11:09 pm',
-        date: '11/12/2022',
-        readStatus: false,
-        },
-        {    
-        nid: 123434,    
-        message: 'Your order has been placed',
-        time: '11:19 pm',
-        date: '11/12/2023',
-        readStatus: false,
-        }
-        ]
-    };
 
-    res.json(output);
+async function getAllNotificationsForManufacturer(req, res) {
+
+    const mid = req.body.mid;
+
+    try {
+        const notifications = await prisma.companyNotification.findMany({
+            where: {
+                mid: mid
+            },
+            select: {
+                nid: true,
+                Message: true,
+                DateAndTime: true,
+                ReadStatus: true,
+                Priority: true
+            }
+        });
+
+        res.status(200).json({notifications});
+
+        const updateNotifications = await prisma.companyNotification.updateMany({
+            where: {
+                mid: mid
+            },
+            data: {
+                ReadStatus: true
+            }
+        });
+    }
+    catch (error) {
+        console.error('Error retrieving notification:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
+
+
+
+
+async function getUnreadNotificationsForRetailer(req, res) {
+
+    const sid = req.body.sid;
+
+    try {
+        const notifications = await prisma.shopNotification.findMany({
+            where: {
+                sid: sid,
+                ReadStatus: false,
+            },
+            select: {
+                nid: true,
+                Message: true,
+                DateAndTime: true,
+                Priority: true
+            }
+        });
+
+        res.status(200).json({notifications});
+
+        const updateNotifications = await prisma.shopNotification.updateMany({
+            where: {
+                sid: sid
+            },
+            data: {
+                ReadStatus: true
+            }
+        });
+    }
+    catch (error) {
+        console.error('Error retrieving notification:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
+
+async function getUnreadNotificationsForManufacturer(req, res) {
+
+    const mid = req.body.mid;
+
+    try {
+        const notifications = await prisma.companyNotification.findMany({
+            where: {
+                mid: mid,
+                ReadStatus: false,
+            },
+            select: {
+                nid: true,
+                Message: true,
+                DateAndTime: true,
+                Priority: true
+            }
+        });
+
+        res.status(200).json({notifications});
+
+        const updateNotifications = await prisma.companyNotification.updateMany({
+            where: {
+                mid: mid
+            },
+            data: {
+                ReadStatus: true
+            }
+        });
+    }
+    catch (error) {
+        console.error('Error retrieving notification:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
 
 function updateNotificationStatus(req, res) {
     let output = {
@@ -52,17 +163,54 @@ function updateNotificationStatus(req, res) {
     res.json(output);
 }
 
-function deleteNotification(req, res) {
-    let output = {
-        message: 'Notification deleted'
-    };
 
-    res.json(output);
+
+async function deleteNotificationForRetailer(req, res) {
+    const nid = req.body.nid;
+
+    try {
+        const deleteNotification = await prisma.shopNotification.delete({
+            where: {
+                nid: nid
+            }
+        });
+
+        res.status(200).json({success: true,
+             message: 'Notification deleted successfully'});
+    }
+    catch (error) {
+        console.error('Error deleting notification:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
+
+async function deleteNotificationForManufacturer(req, res) {
+    const nid = req.body.nid;
+
+    try {
+        const deleteNotification = await prisma.companyNotification.delete({
+            where: {
+                nid: nid
+            }
+        });
+
+        res.status(200).json({success: true,
+             message: 'Notification deleted successfully'});
+    }
+    catch (error) {
+        console.error('Error deleting notification:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
 module.exports = {
-    getAllNotifications,
-    getUnreadNotifications,
+    getAllNotificationsForRetailer,
+    getAllNotificationsForManufacturer,
+    getUnreadNotificationsForRetailer,
+    getUnreadNotificationsForManufacturer,
     updateNotificationStatus,
-    deleteNotification,
+    deleteNotificationForRetailer,
+    deleteNotificationForManufacturer
 }

@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails, deleteOrder} = require('../../controllers/order/orderController'); 
+const {addNewOrder, updateDeliveryStatus, getRetailerOrders, getManufacturerOrders, getOrderedProductInfo, updateShipmentInfo, getRetailerOrderDetails, getManufacturerOrderDetails, deleteOrder, deliveryStatus, getRetailerOrdersWithDeliveryStatus} = require('../../controllers/order/orderController'); 
 
 //* Initialize router
 const orderRouter = express.Router();
@@ -703,5 +703,130 @@ orderRouter.post('/manufacturer/singleOrder', getManufacturerOrderDetails);
 *          description: Internal server error
 */
 orderRouter.delete('/deleteOrder', deleteOrder);
+
+
+/**
+* @swagger
+* /api/order/getAllDeliveryStatus:
+*   get:
+*     tags: [Order]
+*     description: Get the delivery status of an order
+*     responses:
+*        200:
+*          description: Removing an order successfully
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  message:
+*                    type: string
+*                    default: Order removed successfully  
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+orderRouter.get('/getAllDeliveryStatus', deliveryStatus);
+
+
+/**
+* @swagger
+* /api/order/retailerWithDeliveryStatus:
+*   post:
+*     tags: [Order]
+*     description: Get all orders of a retailer
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - SID
+*            properties: 
+*              sid:
+*                type: string
+*                default: ffeca534-d5ac-4e37-a713-883f1f3045da
+*              DeliveryStatus:
+*                type: string
+*                default: Not Delivered
+*     responses:
+*        200:
+*          description: An array of Orders of a Retailer
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  orders:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        mid:
+*                          type: string
+*                          example: 233412
+*                        RawPrice:
+*                          type: double
+*                          example: 4532
+*                        DeliveryCharge:
+*                          type: double
+*                          example: 34346
+*                        VoucherCode:
+*                          type: string
+*                          example: 230000
+*                        ReducedAmount:
+*                          type: double
+*                          example: 45636
+*                        FinalPrice:
+*                          type: double
+*                          example: 4563634
+*                        PaymentStatus:
+*                          type: string
+*                          example: COD
+*                        DeliveryStatus:
+*                          type: string
+*                          example: COD
+*                        DeliveryDate:
+*                          type: string
+*                          example: COD  
+*                        ShipmentStatus:
+*                          type: string
+*                          example: COD  
+*                        ManufacturerName:
+*                          type: string
+*                          example: COD
+*                        ManufacturerLogo:
+*                          type: string
+*                          example: COD  
+*                        OrderDate:
+*                          type: string
+*                          example: COD  
+*                        PaymentMethod:
+*                          type: string
+*                          example: COD  
+*                        oid:
+*                          type: string
+*                          example: COD  
+*                        TransactionID:
+*                          type: string
+*                          example: COD        
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+orderRouter.post('/retailerWithDeliveryStatus', getRetailerOrdersWithDeliveryStatus);
 
 module.exports = orderRouter;
