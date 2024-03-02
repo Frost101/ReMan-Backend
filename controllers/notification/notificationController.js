@@ -19,7 +19,10 @@ async function getAllNotificationsForRetailer(req, res) {
                 DateAndTime: true,
                 ReadStatus: true,
                 Priority: true
-            }
+            },
+            orderBy: {
+                DateAndTime: 'desc'
+            },
         });
 
         res.status(200).json({notifications});
@@ -58,7 +61,10 @@ async function getAllNotificationsForManufacturer(req, res) {
                 DateAndTime: true,
                 ReadStatus: true,
                 Priority: true
-            }
+            },
+            orderBy: {
+                DateAndTime: 'desc'
+            },
         });
 
         res.status(200).json({notifications});
@@ -96,7 +102,10 @@ async function getUnreadNotificationsForRetailer(req, res) {
                 Message: true,
                 DateAndTime: true,
                 Priority: true
-            }
+            },
+            orderBy: {
+                DateAndTime: 'desc'
+            },
         });
 
         res.status(200).json({notifications});
@@ -133,7 +142,10 @@ async function getUnreadNotificationsForManufacturer(req, res) {
                 Message: true,
                 DateAndTime: true,
                 Priority: true
-            }
+            },
+            orderBy: {
+                DateAndTime: 'desc'
+            },
         });
 
         res.status(200).json({notifications});

@@ -297,7 +297,7 @@ model CompanyNotification {
   nid         String    @id(map: "CompanyNotification_pk") @default(uuid()) @db.Uuid
   mid         String    @db.Uuid
   Message     String?   @db.VarChar
-  DateAndTime DateTime? @db.Date
+  DateAndTime DateTime? @db.Timestamp(6)
   ReadStatus  Boolean?
   Priority    String?   @db.VarChar
   Company     Company   @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "CompanyNotification_Company_mid_fk")
@@ -325,7 +325,7 @@ model ShopNotification {
   nid         String    @id(map: "ShopNotification_pk") @default(uuid()) @db.Uuid
   sid         String    @db.Uuid
   Message     String?   @db.VarChar
-  DateAndTime DateTime? @db.Date
+  DateAndTime DateTime? @db.Timestamp(6)
   ReadStatus  Boolean?
   Priority    String?   @db.VarChar
   Shop        Shop      @relation(fields: [sid], references: [ShopID], onDelete: NoAction, onUpdate: NoAction, map: "ShopNotification_Shop_ShopID_fk")
