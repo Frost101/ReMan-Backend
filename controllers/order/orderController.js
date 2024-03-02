@@ -208,6 +208,16 @@ async function addNewOrder(req, res) {
     });
   }
 
+  const notification = await prisma.shopNotification.create({
+      data: {
+          sid: sid,
+          Message: 'Your Order has been Placed Successfully',
+          DateAndTime: new Date(),
+          ReadStatus: false,
+          Priority: 'Mid',
+      }
+  });
+
   } catch (error) {
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -288,6 +298,83 @@ async function getRetailerOrders(req, res) {
       });
     }
     res.status(200).json({orders});
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+async function getRetailerOrdersWithDeliveryStatus(req, res) {
+
+  try{
+    // console.log(req.body);
+    const sid = req.body.sid;
+    const DeliveryStatus = req.body.DeliveryStatus;
+    let orders = [];
+    const orderIDs = await prisma.order.findMany({
+      where: {
+        sid: sid,
+      },
+      select: {
+        oid: true,
+        OrderDate: true,
+        PaymentMethod: true,
+        TransactionID: true,
+      },
+    });
+
+    for(let i = 0; i < orderIDs.length; i++) {
+      const orderFragments = await prisma.orderFragment.findMany({
+        where: {
+          oid: orderIDs[i].oid,
+          DeliveryStatus: DeliveryStatus,
+        },
+        select: {
+          mid: true,
+          RawPrice: true,
+          DeliveryCharge: true,
+          VoucherCode: true,
+          ReducedAmount: true,
+          FinalPrice: true,
+          PaymentStatus: true,
+          DeliveryStatus: true,
+          DeliveryDate: true,
+          ShipmentStatus: true,
+          Company: {
+            select: {
+              Name: true,
+              Logo: true,
+            }  
+          }
+        },
+      });
+
+      if(orderFragments.length !== 0) {
+        for(let j = 0; j < orderFragments.length; j++) {
+          orderFragments[j].ManufacturerName = orderFragments[j].Company.Name;
+          orderFragments[j].ManufacturerLogo = orderFragments[j].Company.Logo;
+          delete orderFragments[j].Company;
+
+          if(orderFragments[j].VoucherCode === 'ZERO') {
+            orderFragments[j].VoucherCode = null;
+          }  
+
+          orderFragments[j].OrderDate = orderIDs[i].OrderDate;
+          orderFragments[j].PaymentMethod = orderIDs[i].PaymentMethod;
+          orderFragments[j].oid = orderIDs[i].oid;
+          orderFragments[j].TransactionID = orderIDs[i].TransactionID;
+          orders.push(orderFragments[j]);
+        }
+      }
+    }
+    if(orders){
+      orders.sort((a, b) => {
+        return new Date(b.OrderDate) - new Date(a.OrderDate);
+      });
+    }
+    res.status(200).json({orders});
+    // console.log(orders);
   } catch (error) {
     console.error('Error retrieving user:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -769,6 +856,24 @@ async function deleteOrder(req, res) {
   }
 }
 
+
+async function deliveryStatus(req, res) {
+
+  try {
+    const deliveryStatus = await prisma.orderFragment.findMany({
+      distinct: ['DeliveryStatus'],
+      select: {
+        DeliveryStatus: true,
+      },
+    });
+
+    res.status(200).json({deliveryStatus});
+  } catch (error) {
+          console.error('Error retrieving user:', error);
+          res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
     addNewOrder,
     updateDeliveryStatus,
@@ -779,4 +884,6 @@ module.exports = {
     getRetailerOrderDetails,
     getManufacturerOrderDetails,
     deleteOrder,
+    deliveryStatus,
+    getRetailerOrdersWithDeliveryStatus
 }
