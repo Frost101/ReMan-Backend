@@ -218,6 +218,18 @@ async function addNewOrder(req, res) {
       }
   });
 
+  let retailPointIncrement = Math.round(totalPriceOfOrder / 100.0);
+  const updateRetailer = await prisma.shop.update({
+      where: {
+          ShopID: sid,
+      },
+      data: {
+          RetailPoints: {
+              increment: retailPointIncrement,
+          },
+      },
+  });
+
   } catch (error) {
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Internal server error' });
