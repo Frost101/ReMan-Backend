@@ -98,7 +98,7 @@ vouchersRouter.post('/addVoucher', vouchersController.addVoucher);
  *           schema:
  *             type: object
  *             properties:
- *               voucherCode:
+ *               VoucherCode:
  *                 type: string
  *                 example: "VOUCHER123"
  *     responses:

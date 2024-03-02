@@ -55,8 +55,22 @@ module.exports.deleteVoucher = async (req, res) => {
     try {
         // Extracting input parameters from the request body
         
+        const updateOrderFragmentTable = await prisma.orderFragment.updateMany({
+            where: {
+                VoucherCode: req.body.VoucherCode,
+            },
+            data: {
+                VoucherCode: 'ZERO',
+            },
+        });
 
-        const deleteVoucher = await prisma.voucher.delete({
+        const deleteVoucherUsage = await prisma.voucherUsage.deleteMany({
+            where: {
+                VoucherCode: req.body.VoucherCode,
+            },
+        });
+
+        const deleteVoucher = await prisma.voucher.deleteMany({
             where: {
                 VoucherCode: req.body.VoucherCode,
             },
