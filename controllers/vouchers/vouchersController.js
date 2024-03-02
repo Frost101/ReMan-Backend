@@ -54,11 +54,11 @@ module.exports.addVoucher = async (req, res) => {
 module.exports.deleteVoucher = async (req, res) => {
     try {
         // Extracting input parameters from the request body
-        const { voucherCode } = req.body;
+        
 
         const deleteVoucher = await prisma.voucher.delete({
             where: {
-                VoucherCode: voucherCode,
+                VoucherCode: req.body.VoucherCode,
             },
         });
 
@@ -68,6 +68,8 @@ module.exports.deleteVoucher = async (req, res) => {
             message: 'Voucher deleted successfully',
         });
     } catch (error) {
+
+            console.log('Error deleting voucher:', error);
             // Responding with server errors
             res.status(500).json({
                 success: false,
