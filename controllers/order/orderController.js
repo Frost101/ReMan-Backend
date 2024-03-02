@@ -549,7 +549,7 @@ async function updateShipmentInfo(req, res) {
       },
     });
 
-    const deleteBatch = await prisma.inventoryBatch.delete({
+    const deleteBatch = await prisma.inventoryBatch.deleteMany({
       where: {
         bid: bid,
         Quantity: 0,
@@ -645,6 +645,25 @@ async function updateShipmentInfo(req, res) {
       },
     });
 
+    const product = await prisma.product.findUnique({
+      where: {
+        pid: pid,
+      },
+      select: {
+        ProductName: true,
+      },
+    });
+
+    const notification = await prisma.companyNotification.create({
+      data: {
+          mid: mid,
+          Message: Quantity + ' of your ' + product.ProductName + ' have been shipped for order id ' + oid,
+          DateAndTime: new Date(),
+          ReadStatus: false,
+          Priority: 'Low',
+      }
+    });
+
     res.status(200).json({message: "Shipment Info Updated"});
     if(status === 'Shipped'){
       setTimeout(async () => {
@@ -696,6 +715,50 @@ async function orderDelivered(oid, mid) {
         },
       });
     }
+
+    const shopInfo = await prisma.order.findUnique({
+      where: {
+        oid: oid,
+      },
+      select: {
+        sid: true,
+        Shop: {
+          select: {
+            Name: true,
+          }  
+        },
+      }
+    });
+
+    const manufacturerInfo = await prisma.company.findUnique({
+      where: {
+        mid: mid,
+      },
+      select: {
+        Name: true,
+      }
+    });
+
+    const notification1 = await prisma.shopNotification.create({
+      data: {
+          sid: shopInfo.sid,
+          Message: 'Your Order ' + oid + ' from ' + manufacturerInfo.Name + ' has been delivered successfully',
+          DateAndTime: new Date(),
+          ReadStatus: false,
+          Priority: 'Mid',
+      }
+    });
+
+    const notification2 = await prisma.companyNotification.create({
+      data: {
+          mid: mid,
+          Message: 'Your Order ' + oid + ' has been delivered successfully to ' + shopInfo.Shop.Name,
+          DateAndTime: new Date(),
+          ReadStatus: false,
+          Priority: 'Mid',
+      }
+    });
+
 
   } catch (error) {
     console.error('Error retrieving user:', error);
