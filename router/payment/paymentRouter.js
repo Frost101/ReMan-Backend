@@ -314,7 +314,7 @@ paymentRouter.post('/onlinePaymentFail', onlinePaymentFailed);
 
 /**
 * @swagger
-* /api/payment/onlinePaymentFailForExtendingLease:
+* /api/payment/onlinePaymentFailForTakingLease:
 *   post:
 *     tags: [Payment]
 *     description: Return status of online payment failed
