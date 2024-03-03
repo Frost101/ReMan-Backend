@@ -12,6 +12,8 @@ const is_live = false //true for live, false for sandbox
 
 
 async function paymentOnline(req, res) {
+
+    try{
     // Get current timestamp
     const timestamp = Date.now();
 
@@ -62,6 +64,145 @@ async function paymentOnline(req, res) {
         });
         console.log('Redirecting to: ', GatewayPageURL);
     });
+    }
+    catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
+
+
+async function paymentOnlineForTakingLease(req, res) {
+
+
+    try{
+    const { rid, iid, OwnerID, OwnedToID, Duration } = req.body;
+    // Get current timestamp
+    const timestamp = Date.now();
+
+    // Generate a random string
+    const randomString = Math.random().toString(36).substring(2, 10);
+
+    // Concatenate timestamp and random string
+    const tran_ID = `${timestamp}-${randomString}`;
+    const data = {
+        total_amount: Duration,
+        currency: 'BDT',
+        tran_id: tran_ID, // use unique tran_id for each api call
+        success_url: 'http://localhost:3000/api/payment/onlinePaymentSuccessForTakingLease',
+        fail_url: 'http://localhost:3000/api/payment/onlinePaymentFailForTakingLease',
+        cancel_url: 'http://localhost:3030/cancel',
+        ipn_url: 'http://localhost:3030/ipn',
+        shipping_method: 'Courier',
+        product_name: 'Computer.',
+        product_category: 'Electronic',
+        product_profile: 'general',
+        cus_name: 'Customer Name',
+        cus_email: 'customer@example.com',
+        cus_add1: 'Dhaka',
+        cus_add2: 'Dhaka',
+        cus_city: 'Dhaka',
+        cus_state: 'Dhaka',
+        cus_postcode: '1000',
+        cus_country: 'Bangladesh',
+        cus_phone: '01711111111',
+        cus_fax: '01711111111',
+        ship_name: 'Customer Name',
+        ship_add1: 'Dhaka',
+        ship_add2: 'Dhaka',
+        ship_city: 'Dhaka',
+        ship_state: 'Dhaka',
+        ship_postcode: 1000,
+        ship_country: 'Bangladesh',
+        value_a: rid,
+        value_b: iid,
+        value_c: Duration,
+        value_d: OwnedToID,
+    };
+    const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live)
+    sslcz.init(data).then(apiResponse => {
+        // Redirect the user to payment gateway
+        let GatewayPageURL = apiResponse.GatewayPageURL;
+        // console.log(apiResponse);
+        res.status(200).json({
+            // TransactionID: tran_ID,
+            url: GatewayPageURL
+        });
+        console.log('Redirecting to: ', GatewayPageURL);
+    });
+    }
+    catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }    
+}
+
+
+
+
+async function paymentOnlineForExtendingLease(req, res) {
+
+
+    try{
+    const { rid, OccupiedTill } = req.body;
+    // Get current timestamp
+    const timestamp = Date.now();
+
+    // Generate a random string
+    const randomString = Math.random().toString(36).substring(2, 10);
+
+    // Concatenate timestamp and random string
+    const tran_ID = `${timestamp}-${randomString}`;
+    const data = {
+        total_amount: 1000,
+        currency: 'BDT',
+        tran_id: tran_ID, // use unique tran_id for each api call
+        success_url: 'http://localhost:3000/api/payment/onlinePaymentSuccessForExtendingLease',
+        fail_url: 'http://localhost:3000/api/payment/onlinePaymentFailForExtendingLease',
+        cancel_url: 'http://localhost:3030/cancel',
+        ipn_url: 'http://localhost:3030/ipn',
+        shipping_method: 'Courier',
+        product_name: 'Computer.',
+        product_category: 'Electronic',
+        product_profile: 'general',
+        cus_name: 'Customer Name',
+        cus_email: 'customer@example.com',
+        cus_add1: 'Dhaka',
+        cus_add2: 'Dhaka',
+        cus_city: 'Dhaka',
+        cus_state: 'Dhaka',
+        cus_postcode: '1000',
+        cus_country: 'Bangladesh',
+        cus_phone: '01711111111',
+        cus_fax: '01711111111',
+        ship_name: 'Customer Name',
+        ship_add1: 'Dhaka',
+        ship_add2: 'Dhaka',
+        ship_city: 'Dhaka',
+        ship_state: 'Dhaka',
+        ship_postcode: 1000,
+        ship_country: 'Bangladesh',
+        value_a: rid,
+        value_b: OccupiedTill,
+    };
+    const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live)
+    sslcz.init(data).then(apiResponse => {
+        // Redirect the user to payment gateway
+        let GatewayPageURL = apiResponse.GatewayPageURL;
+        // console.log(apiResponse);
+        res.status(200).json({
+            // TransactionID: tran_ID,
+            url: GatewayPageURL
+        });
+        console.log('Redirecting to: ', GatewayPageURL);
+    });
+    }
+    catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }    
 }
 
 
@@ -79,6 +220,102 @@ async function onlinePaymentSuccessful(req, res) {
         const response = await axios.post('https://reman-backend-8eli.onrender.com/api/order/addOrder', postData);
         console.log('Order Added: ', response.data);
         res.redirect('https://reman-retailer.vercel.app/payment/success');
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+
+    // const TransactionID = req.body.tran_id;
+    // console.log('Transaction Successful: ', TransactionID);
+
+    // try {
+    //     const ShopID = await prisma.order.findMany({
+    //         where: {
+    //             TransactionID: TransactionID,
+    //         },
+    //         select: {
+    //             sid: true,
+    //         },
+    //     });
+
+    //     const deleteCart = await prisma.cart.deleteMany({
+    //         where: {
+    //             sid: ShopID[0].sid,
+    //         }
+    //     });
+    // } catch (error) {
+    //     console.error('Error retrieving user:', error);
+    //     res.status(500).json({ error: 'Internal server error' });
+    // }
+
+    // res.redirect('https://reman-retailer.vercel.app/payment/success');
+}
+
+
+
+
+async function onlinePaymentSuccessfulForTakingLease(req, res) {
+
+    const postData = {
+        rid: req.body.value_a,
+        iid: req.body.value_b,
+        OwnedToID: req.body.value_d,
+        Duration: req.body.value_c,
+        TransactionID: req.body.tran_id
+    };
+
+    try {
+        const response = await axios.put('http://localhost:3000/api/leaseInventory/takeLease', postData);
+        // console.log('Take Lease Successful: ', response.data);
+        // res.redirect('https://reman-retailer.vercel.app/payment/success');
+        res.status(200).json(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+
+    // const TransactionID = req.body.tran_id;
+    // console.log('Transaction Successful: ', TransactionID);
+
+    // try {
+    //     const ShopID = await prisma.order.findMany({
+    //         where: {
+    //             TransactionID: TransactionID,
+    //         },
+    //         select: {
+    //             sid: true,
+    //         },
+    //     });
+
+    //     const deleteCart = await prisma.cart.deleteMany({
+    //         where: {
+    //             sid: ShopID[0].sid,
+    //         }
+    //     });
+    // } catch (error) {
+    //     console.error('Error retrieving user:', error);
+    //     res.status(500).json({ error: 'Internal server error' });
+    // }
+
+    // res.redirect('https://reman-retailer.vercel.app/payment/success');
+}
+
+
+
+
+async function onlinePaymentSuccessfulForExtendingLease(req, res) {
+
+    const postData = {
+        rid: req.body.value_a,
+        OccupiedTill: req.body.value_b,
+        TransactionID: req.body.tran_id
+    };
+
+    try {
+        const response = await axios.put('http://localhost:3000/api/leaseInventory/extendLease', postData);
+        // console.log('Take Lease Successful: ', response.data);
+        // res.redirect('https://reman-retailer.vercel.app/payment/success');
+        res.status(200).json(response.data);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -153,6 +390,91 @@ async function onlinePaymentFailed(req, res) {
 
 
 
+
+async function onlinePaymentFailedForTakingLease(req, res) {
+    // const TransactionID = req.body.tran_id;
+    // console.log('Transaction Failed: ', TransactionID);
+
+    // const oid = await prisma.order.findMany({
+    //     where: {
+    //         TransactionID: TransactionID,
+    //     },
+    //     select: {
+    //         oid: true,
+    //     },
+    // });
+
+    // try {
+    //     const user = await prisma.singleProductOrder.deleteMany({
+    //         where: {
+    //             oid: oid[0].oid,
+    //         },
+    //     });
+
+    //     const user1 = await prisma.orderFragment.deleteMany({
+    //         where: {
+    //             oid: oid[0].oid,
+    //         },
+    //     });
+
+    //     const user2 = await prisma.order.delete({
+    //         where: {
+    //             oid: oid[0].oid,
+    //         },
+    //     });
+    // } catch (error) {
+    //     console.error('Error retrieving user:', error);
+    //     res.status(500).json({ error: 'Internal server error' });
+    // }
+
+    // res.redirect('https://reman-retailer.vercel.app/payment/fail');
+    res.status(200).json({ message: "Payment Failed" });
+}
+
+
+
+async function onlinePaymentFailedForExtendingLease(req, res) {
+    // const TransactionID = req.body.tran_id;
+    // console.log('Transaction Failed: ', TransactionID);
+
+    // const oid = await prisma.order.findMany({
+    //     where: {
+    //         TransactionID: TransactionID,
+    //     },
+    //     select: {
+    //         oid: true,
+    //     },
+    // });
+
+    // try {
+    //     const user = await prisma.singleProductOrder.deleteMany({
+    //         where: {
+    //             oid: oid[0].oid,
+    //         },
+    //     });
+
+    //     const user1 = await prisma.orderFragment.deleteMany({
+    //         where: {
+    //             oid: oid[0].oid,
+    //         },
+    //     });
+
+    //     const user2 = await prisma.order.delete({
+    //         where: {
+    //             oid: oid[0].oid,
+    //         },
+    //     });
+    // } catch (error) {
+    //     console.error('Error retrieving user:', error);
+    //     res.status(500).json({ error: 'Internal server error' });
+    // }
+
+    // res.redirect('https://reman-retailer.vercel.app/payment/fail');
+    res.status(200).json({ message: "Payment Failed" });
+}
+
+
+
 function getLoanStatus(req, res) {
     let output = {
         retailPoints: 1000,
@@ -176,8 +498,14 @@ function updatePayLaterStatus(req, res) {
 
 module.exports = {
     paymentOnline,
+    paymentOnlineForTakingLease,
+    paymentOnlineForExtendingLease,
     onlinePaymentSuccessful,
+    onlinePaymentSuccessfulForTakingLease,
+    onlinePaymentSuccessfulForExtendingLease,
     onlinePaymentFailed,
+    onlinePaymentFailedForTakingLease,
+    onlinePaymentFailedForExtendingLease,
     getLoanStatus,
     updatePaymentStatus,
     updatePayLaterStatus,

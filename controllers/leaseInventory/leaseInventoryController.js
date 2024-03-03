@@ -1,5 +1,6 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const { parse } = require('dotenv');
 
 const prisma = new PrismaClient();
 
@@ -418,10 +419,12 @@ module.exports.ownLeasedInventories = async (req, res) => {
 module.exports.takeLease = async (req, res) => {
     try {
         // Extracting input parameters from the request body
-        const { rid, iid, OwnerID, OwnedToID, Duration } = req.body;
+        let { rid, iid, OwnedToID, Duration, TransactionID } = req.body;
+        console.log(req.body);
+        Duration = parseInt(Duration);
 
         const OccupiedFrom = new Date();
-        const OccupiedTill = new Date();
+        let OccupiedTill = new Date();
         OccupiedTill.setDate(OccupiedFrom.getDate() + Duration);
 
         const rentedInventory = await prisma.rental.update({
@@ -433,6 +436,7 @@ module.exports.takeLease = async (req, res) => {
                 OccupiedFrom: OccupiedFrom,
                 OccupiedTill: OccupiedTill,
                 RentalStatus: 'Rented',
+                TransactionID: TransactionID,
             },
         });
 
@@ -457,6 +461,7 @@ module.exports.takeLease = async (req, res) => {
             },
             select: {
                 InventoryName: true,
+                RealOwner: true,
             }
         });
 
@@ -471,7 +476,7 @@ module.exports.takeLease = async (req, res) => {
 
         const notification = await prisma.companyNotification.create({
             data: {
-                mid: OwnerID,
+                mid: inventoryInfo.RealOwner,
                 Message: 'Your inventory ' + inventoryInfo.InventoryName + ' has been taken on lease for ' + Duration + ' days by ' + OwnedToInfo.Name,
                 DateAndTime: new Date(),
                 ReadStatus: false,
@@ -494,7 +499,7 @@ module.exports.takeLease = async (req, res) => {
 module.exports.extendLease = async (req, res) => {
     try {
         // Extracting input parameters from the request body
-        const { rid, OccupiedTill } = req.body;
+        const { rid, OccupiedTill, TransactionID } = req.body;
 
         const OccupiedTillDate = new Date(OccupiedTill);
 
@@ -505,6 +510,7 @@ module.exports.extendLease = async (req, res) => {
             },
             data: {
                 OccupiedTill: OccupiedTillDate,
+                TransactionID: TransactionID,
             },
         });
 
@@ -512,6 +518,37 @@ module.exports.extendLease = async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Lease Extended successfully',
+        });
+
+        const OwnerInfo = await prisma.rental.findUnique({
+            where: {
+                rid: rid,
+            },
+            select: {
+                OwnerID: true,
+                OwnedToID: true,
+                Company_Rental_OwnedToIDToCompany: {
+                    select: {
+                        Name: true,
+                    }
+                },
+                iid: true,
+                Inventory: {
+                    select: {
+                        InventoryName: true,
+                    },    
+                }
+            }
+        });
+
+        const notification = await prisma.companyNotification.create({
+            data: {
+                mid: OwnerInfo.OwnerID,
+                Message: 'Your ' + OwnerInfo.Inventory.InventoryName + ' has been extended on lease till ' + OccupiedTill + ' by ' + OwnerInfo.Company_Rental_OwnedToIDToCompany.Name,
+                DateAndTime: new Date(),
+                ReadStatus: false,
+                Priority: 'Mid',
+            },
         });
     } catch (error) {
         console.error('Error extending lease:', error);

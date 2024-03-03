@@ -375,14 +375,14 @@ leaseInventoryRouter.post('/ownLeasedInventories', leaseInventoryController.ownL
  *               iid:
  *                 type: string
  *                 example: 6b6fd057-bae2-4786-90e4-916ed809baa2
- *               OwnerID:
- *                 type: string
- *                 example: 2c397476-c131-4c60-b45a-12bd242ec256
  *               OwnedToID:
  *                 type: string
  *                 example: e7ea9b52-8ab6-4634-8178-1c38ab0340df
  *               Duration:
  *                 type: integer
+ *                 example: 20
+ *               TransactionID:
+ *                 type: string
  *                 example: 20
  *     responses:
  *       '200':
@@ -446,6 +446,9 @@ leaseInventoryRouter.put('/takeLease', leaseInventoryController.takeLease);
  *               OccupiedTill:
  *                 type: string
  *                 example: 2024-03-18
+ *               TransactionID:
+ *                 type: string
+ *                 example: 20
  *     responses:
  *       '200':
  *         description: Lease taken successfully
