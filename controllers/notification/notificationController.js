@@ -68,15 +68,6 @@ async function getAllNotificationsForManufacturer(req, res) {
         });
 
         res.status(200).json({notifications});
-
-        const updateNotifications = await prisma.companyNotification.updateMany({
-            where: {
-                mid: mid
-            },
-            data: {
-                ReadStatus: true
-            }
-        });
     }
     catch (error) {
         console.error('Error retrieving notification:', error);
@@ -149,15 +140,6 @@ async function getUnreadNotificationsForManufacturer(req, res) {
         });
 
         res.status(200).json({notifications});
-
-        const updateNotifications = await prisma.companyNotification.updateMany({
-            where: {
-                mid: mid
-            },
-            data: {
-                ReadStatus: true
-            }
-        });
     }
     catch (error) {
         console.error('Error retrieving notification:', error);
@@ -167,12 +149,27 @@ async function getUnreadNotificationsForManufacturer(req, res) {
 
 
 
-function updateNotificationStatus(req, res) {
-    let output = {
-        message: 'Notification status updated'
-    };
 
-    res.json(output);
+async function updateNotificationStatusManufacturer (req, res) {
+    const mid = req.body.mid;
+    try{
+        const updateNotifications = await prisma.companyNotification.updateMany({
+            where: {
+                mid: mid
+            },
+            data: {
+                ReadStatus: true
+            }
+        });
+
+        res.status(200).json({success: true,
+             message: 'Notifications updated successfully'});
+    
+    }
+    catch (error) {
+        console.error('Error updating notification:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
 
@@ -222,7 +219,7 @@ module.exports = {
     getAllNotificationsForManufacturer,
     getUnreadNotificationsForRetailer,
     getUnreadNotificationsForManufacturer,
-    updateNotificationStatus,
+    updateNotificationStatusManufacturer,
     deleteNotificationForRetailer,
     deleteNotificationForManufacturer
 }
