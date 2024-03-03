@@ -218,6 +218,18 @@ async function addNewOrder(req, res) {
       }
   });
 
+  let retailPointIncrement = Math.round(totalPriceOfOrder / 100.0);
+  const updateRetailer = await prisma.shop.update({
+      where: {
+          ShopID: sid,
+      },
+      data: {
+          RetailPoints: {
+              increment: retailPointIncrement,
+          },
+      },
+  });
+
   } catch (error) {
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -937,6 +949,92 @@ async function deliveryStatus(req, res) {
   }
 }
 
+
+
+async function addReviewRating(req, res) {
+
+  const oid = req.body.oid;
+  const mid = req.body.mid;
+  const pid = req.body.pid;
+  const Rating = req.body.Rating;
+  const Review = req.body.Review;
+
+  try {
+    const review = await prisma.singleProductOrder.updateMany({
+      where: {
+        oid: oid,
+        mid: mid,
+        pid: pid,
+      },
+      data: {
+        Rating: Rating,
+        Review: Review,
+      },
+    });
+
+    res.status(200).json({success: true,
+                         message: 'Rating and Review Added Successfully'});
+
+    const allRatingsOfProduct = await prisma.singleProductOrder.findMany({
+      where: {
+        pid: pid,
+        Rating: {
+          not: null,
+        },
+      },
+      select: {
+        Rating: true,
+      },
+    });
+    
+    let totalRatingOfProduct = 0.0;
+    for(let i = 0; i < allRatingsOfProduct.length; i++) {
+      totalRatingOfProduct += allRatingsOfProduct[i].Rating;
+    }
+
+    const averageRating = (totalRatingOfProduct * 1.0) / allRatingsOfProduct.length;
+    const updateProductRating = await prisma.product.update({
+      where: {
+        pid: pid,
+      },
+      data: {
+        Rating: averageRating,
+      },
+    });
+
+    const allRatingsOfManufacturer = await prisma.singleProductOrder.findMany({
+      where: {
+        mid: mid,
+        Rating: {
+          not: null,
+        },
+      },
+      select: {
+        Rating: true,
+      },
+    });
+
+    let totalRatingOfManufacturer = 0.0;
+    for(let i = 0; i < allRatingsOfManufacturer.length; i++) {
+      totalRatingOfManufacturer += allRatingsOfManufacturer[i].Rating;
+    }
+
+    const averageRatingOfManufacturer = (totalRatingOfManufacturer * 1.0) / allRatingsOfManufacturer.length;
+    const updateManufacturerRating = await prisma.company.update({
+      where: {
+        mid: mid,
+      },
+      data: {
+        Rating: averageRatingOfManufacturer,
+      },
+    });
+
+  } catch (error) {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
     addNewOrder,
     updateDeliveryStatus,
@@ -948,5 +1046,6 @@ module.exports = {
     getManufacturerOrderDetails,
     deleteOrder,
     deliveryStatus,
-    getRetailerOrdersWithDeliveryStatus
+    getRetailerOrdersWithDeliveryStatus,
+    addReviewRating,
 }

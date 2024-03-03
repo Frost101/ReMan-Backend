@@ -278,6 +278,8 @@ model SingleProductOrder {
   ShippedQuantity Int?
   ShipmentStatus  String? @db.VarChar
   Price           Float?
+  Rating          Float?
+  Review          String? @db.VarChar
   Company         Company @relation(fields: [mid], references: [mid], onDelete: NoAction, onUpdate: NoAction, map: "SingleProductOrder_Company_mid_fk")
   Order           Order   @relation(fields: [oid], references: [oid], onDelete: NoAction, onUpdate: NoAction, map: "SingleProductOrder_Order_oid_fk")
   Product         Product @relation(fields: [pid], references: [pid], onDelete: NoAction, onUpdate: NoAction, map: "SingleProductOrder_Product_pid_fk")
