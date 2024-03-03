@@ -843,6 +843,8 @@ async function getRetailerOrderDetails(req, res) {
                   select: {
                     ProductName: true,
                     Image: true,
+                    Unit: true,
+                    Weight_volume: true,
                   },
                 },
               },
@@ -850,6 +852,8 @@ async function getRetailerOrderDetails(req, res) {
           for(let j = 0; j < products.length; j++) {
               products[j].ProductName = products[j].Product.ProductName;
               products[j].Image = products[j].Product.Image;
+              products[j].Unit = products[j].Product.Unit;
+              products[j].Weight_volume = products[j].Product.Weight_volume;
               delete products[j].Product;
           }
           orderDetailedInfo[0].Products = products;
