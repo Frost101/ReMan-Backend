@@ -830,6 +830,101 @@ async function getProductRatingByManufacturer(req, res) {
 }
 
 
+
+async function getProductsOrderedByManufacturer(req, res) {
+
+  const userId = req.body.manufacturerId;
+
+  try {
+    const data = await prisma.singleProductOrder.groupBy({
+      by: ['pid'],
+      where: {
+        mid: userId,
+      },
+      _sum: {
+        Quantity: true,
+      },
+      orderBy: [
+        {
+          _sum: {
+            Quantity: 'desc',
+          },
+        },
+      ],
+    });
+
+    for(let i = 0; i < data.length; i++) {
+      const productName = await prisma.product.findUnique({
+        where: {
+          pid: data[i].pid,
+        },
+        select: {
+          ProductName: true,
+        },
+      });
+
+      data[i].ProductName = productName.ProductName;
+      data[i].TotalQuantity = data[i]._sum.Quantity;
+      delete data[i]._sum;
+      delete data[i].pid;
+    }  
+
+    res.status(200).json({data});
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
+
+async function getProductsRevenueByManufacturer(req, res) {
+
+  const userId = req.body.manufacturerId;
+
+  try {
+    const data = await prisma.singleProductOrder.groupBy({
+      by: ['pid'],
+      where: {
+        mid: userId,
+      },
+      _sum: {
+        Price: true,
+      },
+      orderBy: [
+        {
+          _sum: {
+            Price: 'desc',
+          },
+        },
+      ],
+    });
+
+    for(let i = 0; i < data.length; i++) {
+      const productName = await prisma.product.findUnique({
+        where: {
+          pid: data[i].pid,
+        },
+        select: {
+          ProductName: true,
+        },
+      });
+
+      data[i].ProductName = productName.ProductName;
+      data[i].TotalPrice = data[i]._sum.Price;
+      delete data[i]._sum;
+      delete data[i].pid;
+    }  
+
+    res.status(200).json({data});
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
 module.exports = {
     getOnSaleProducts,
     getRecommendedCategories,
@@ -848,4 +943,6 @@ module.exports = {
     getProductInfo,
     getProductDetails,
     getProductRatingByManufacturer,
+    getProductsOrderedByManufacturer,
+    getProductsRevenueByManufacturer,
 }
