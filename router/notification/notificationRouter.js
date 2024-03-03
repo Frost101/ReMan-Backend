@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {getAllNotificationsForRetailer, getAllNotificationsForManufacturer, getUnreadNotificationsForRetailer, getUnreadNotificationsForManufacturer, updateNotificationStatus, deleteNotificationForRetailer, deleteNotificationForManufacturer} = require('../../controllers/notification/notificationController'); 
+const {getAllNotificationsForRetailer, getAllNotificationsForManufacturer, getUnreadNotificationsForRetailer, getUnreadNotificationsForManufacturer, updateNotificationStatusManufacturer, deleteNotificationForRetailer, deleteNotificationForManufacturer} = require('../../controllers/notification/notificationController'); 
 
 //* Initialize router
 const notificationRouter = express.Router();
@@ -259,10 +259,10 @@ notificationRouter.post('/unreadNotificationsManufacturer', getUnreadNotificatio
 
 /**
 * @swagger
-* /api/notification/updateNotificationStatus:
+* /api/notification/updateNotificationStatusManufacturer:
 *   put:
 *     tags: [Notification]
-*     description: Update Notification status
+*     description: Update Notification status, mark them as read for a manufacturer
 *     requestBody:
 *      required: true
 *      content:
@@ -270,11 +270,11 @@ notificationRouter.post('/unreadNotificationsManufacturer', getUnreadNotificatio
 *           schema:
 *            type: object
 *            required:
-*              - NID
+*              - mid
 *            properties: 
-*              NID:
-*                type: integer
-*                default: 123434
+*              mid:
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
 *     responses:
 *        200:
 *          description: Success message
@@ -296,7 +296,7 @@ notificationRouter.post('/unreadNotificationsManufacturer', getUnreadNotificatio
 *        default:
 *          description: Internal server error
 */
-notificationRouter.put('/updateNotificationStatus', updateNotificationStatus);
+notificationRouter.put('/updateNotificationStatusManufacturer', updateNotificationStatusManufacturer);
 
 
 

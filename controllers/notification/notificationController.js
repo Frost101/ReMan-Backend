@@ -68,15 +68,6 @@ async function getAllNotificationsForManufacturer(req, res) {
         });
 
         res.status(200).json({notifications});
-
-        const updateNotifications = await prisma.companyNotification.updateMany({
-            where: {
-                mid: mid
-            },
-            data: {
-                ReadStatus: true
-            }
-        });
     }
     catch (error) {
         console.error('Error retrieving notification:', error);
@@ -149,15 +140,6 @@ async function getUnreadNotificationsForManufacturer(req, res) {
         });
 
         res.status(200).json({notifications});
-
-        // const updateNotifications = await prisma.companyNotification.updateMany({
-        //     where: {
-        //         mid: mid
-        //     },
-        //     data: {
-        //         ReadStatus: true
-        //     }
-        // });
     }
     catch (error) {
         console.error('Error retrieving notification:', error);
