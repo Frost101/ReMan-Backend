@@ -18,7 +18,8 @@ const {
         deleteCategory,
         getProductByCategory,
         getProductInfo,
-        getProductDetails
+        getProductDetails,
+        getProductRatingByManufacturer,
     } = require('../../controllers/products/productsController');
 
 
@@ -1099,6 +1100,58 @@ productsRouter.post('/productInfo', getProductInfo);
 *          description: Internal server error
 */
 productsRouter.post('/productDetails', getProductDetails);
+
+
+
+
+/**
+* @swagger
+* /api/products/ProductRatingbyManufacturer:
+*   post:
+*     tags: [Products]
+*     description: Get all the products and their Ratings of a manufacturer
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - manufacturerId
+*            properties: 
+*              manufacturerId:
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
+*     responses:
+*        200:
+*          description: An array of products and ratings
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  products:
+*                    type: array
+*                    items:
+*                      type: object
+*                      properties:
+*                        ProductName:
+*                          type: string
+*                          example: Juice
+*                        Rating:
+*                          type: double
+*                          example: 4.6
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Information not found/Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+productsRouter.post('/ProductRatingbyManufacturer', getProductRatingByManufacturer);
 
 
 module.exports = productsRouter;
