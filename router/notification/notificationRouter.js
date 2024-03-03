@@ -2,7 +2,7 @@
 const express = require('express');
 
 //* Internal imports
-const {getAllNotificationsForRetailer, getAllNotificationsForManufacturer, getUnreadNotificationsForRetailer, getUnreadNotificationsForManufacturer, updateNotificationStatusManufacturer, deleteNotificationForRetailer, deleteNotificationForManufacturer} = require('../../controllers/notification/notificationController'); 
+const {deleteAllNotificationManufacturer,getAllNotificationsForRetailer, getAllNotificationsForManufacturer, getUnreadNotificationsForRetailer, getUnreadNotificationsForManufacturer, updateNotificationStatusManufacturer, deleteNotificationForRetailer, deleteNotificationForManufacturer} = require('../../controllers/notification/notificationController'); 
 
 //* Initialize router
 const notificationRouter = express.Router();
@@ -385,5 +385,47 @@ notificationRouter.delete('/deleteNotificationRetailer', deleteNotificationForRe
 *          description: Internal server error
 */
 notificationRouter.delete('/deleteNotificationManufacturer', deleteNotificationForManufacturer);
+
+
+/**
+* @swagger
+* /api/notification/deleteAllNotificationManufacturer:
+*   delete:
+*     tags: [Notification]
+*     description: Delete All Notification for a manufacturer
+*     requestBody:
+*      required: true
+*      content:
+*        application/json:
+*           schema:
+*            type: object
+*            required:
+*              - mid
+*            properties: 
+*              mid:
+*                type: string
+*                default: 2c397476-c131-4c60-b45a-12bd242ec256
+*     responses:
+*        200:
+*          description: Success message
+*          response-body:
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  message:
+*                    type: string
+*                    default: deleting notification successful   
+*        401:
+*          description: Unauthorized, Invalid username or password, or user not found
+*        403:
+*          description: Forbidden route
+*        404:
+*          description: Invalid route/User not found 
+*        default:
+*          description: Internal server error
+*/
+notificationRouter.delete('/deleteAllNotificationManufacturer', deleteAllNotificationManufacturer);
 
 module.exports = notificationRouter;

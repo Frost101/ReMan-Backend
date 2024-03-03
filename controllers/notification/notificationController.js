@@ -118,6 +118,10 @@ async function getUnreadNotificationsForRetailer(req, res) {
 
 
 
+
+
+
+
 async function getUnreadNotificationsForManufacturer(req, res) {
 
     const mid = req.body.mid;
@@ -214,6 +218,25 @@ async function deleteNotificationForManufacturer(req, res) {
     }
 }
 
+async function deleteAllNotificationManufacturer(req, res) {
+    const mid = req.body.mid;
+
+    try {
+        const deleteNotification = await prisma.companyNotification.deleteMany({
+            where: {
+                mid: mid
+            }
+        });
+
+        res.status(200).json({success: true,
+             message: 'Notifications deleted successfully'});
+    }
+    catch (error) {
+        console.error('Error deleting notification:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 module.exports = {
     getAllNotificationsForRetailer,
     getAllNotificationsForManufacturer,
@@ -221,5 +244,6 @@ module.exports = {
     getUnreadNotificationsForManufacturer,
     updateNotificationStatusManufacturer,
     deleteNotificationForRetailer,
-    deleteNotificationForManufacturer
+    deleteNotificationForManufacturer,
+    deleteAllNotificationManufacturer
 }
