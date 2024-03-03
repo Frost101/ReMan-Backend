@@ -4,40 +4,100 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 //* Array of products
-function getOnSaleProducts(req, res) {
-    let output = {
-        products: [{
-            PID: 123456,
-            MID: 123456,
-            productName: 'Mojito',
-            price: 10,
-            productImage: 'public/images/mojito.jpg',
-            batch : [123456, 256457, 256423],
-            quantity: 1000,
-            saleRate: 50,
-            manufacturerName: 'Fresh',
-            manufacturerLogo: 'public/images/fresh.jpg',
-            weightVolume: 250,
-            unit: 'mL',
-        },
-        {
-            PID: 654321,
-            MID: 987451,
-            productName: 'Chocolate Milk',
-            price: 15,
-            productImage: 'public/images/chocolateMilk.jpg',
-            batch : [123456, 25645],
-            quantity: 5000,
-            saleRate: 70,
-            manufacturerName: 'Aarong',
-            manufacturerLogo: 'public/images/aarong.jpg',
-            weightVolume: 1,
-            unit: 'L',
-        }
-    ]
-    };
+async function getOnSaleProducts(req, res) {
+    // let output = {
+    //     products: [{
+    //         PID: 123456,
+    //         MID: 123456,
+    //         productName: 'Mojito',
+    //         price: 10,
+    //         productImage: 'public/images/mojito.jpg',
+    //         batch : [123456, 256457, 256423],
+    //         quantity: 1000,
+    //         saleRate: 50,
+    //         manufacturerName: 'Fresh',
+    //         manufacturerLogo: 'public/images/fresh.jpg',
+    //         weightVolume: 250,
+    //         unit: 'mL',
+    //     },
+    //     {
+    //         PID: 654321,
+    //         MID: 987451,
+    //         productName: 'Chocolate Milk',
+    //         price: 15,
+    //         productImage: 'public/images/chocolateMilk.jpg',
+    //         batch : [123456, 25645],
+    //         quantity: 5000,
+    //         saleRate: 70,
+    //         manufacturerName: 'Aarong',
+    //         manufacturerLogo: 'public/images/aarong.jpg',
+    //         weightVolume: 1,
+    //         unit: 'L',
+    //     }
+    // ]
+    // };
 
-    res.json(output);
+    // res.json(output);
+
+    try{
+      const productsOnSale = await prisma.inventoryBatch.groupBy({
+        by: ['pid', 'Sale'],
+        where: {
+          Sale: {
+            gt: 0,
+          },
+          MarketStatus: true,
+        },
+        _sum: {
+          Quantity: true,
+        },
+      });
+      
+      for(let i = 0; i < productsOnSale.length; i++) {
+        const productDetails = await prisma.product.findUnique({
+          where: {
+            pid: productsOnSale[i].pid,
+          },
+          select: {
+            pid: true,
+            CategoryName: true,
+            ProductName: true,
+            Image: true,
+            Weight_volume: true,
+            Unit: true,
+            UnitPrice: true,
+            Description: true,
+            Rating: true,
+            mid: true,
+            Company: {
+              select: {
+                Name: true,
+                Logo: true,
+              },  
+            },
+          },
+        });
+        productsOnSale[i].CategoryName = productDetails.CategoryName;
+        productsOnSale[i].ProductName = productDetails.ProductName;
+        productsOnSale[i].Image = productDetails.Image;
+        productsOnSale[i].Weight_volume = productDetails.Weight_volume;
+        productsOnSale[i].Unit = productDetails.Unit;
+        productsOnSale[i].UnitPrice = productDetails.UnitPrice;
+        productsOnSale[i].Description = productDetails.Description;
+        productsOnSale[i].Rating = productDetails.Rating;
+        productsOnSale[i].ManufacturerID = productDetails.mid;
+        productsOnSale[i].ManufacturerName = productDetails.Company.Name;
+        productsOnSale[i].ManufacturerLogo = productDetails.Company.Logo;
+        productsOnSale[i].TotalQuantity = productsOnSale[i]._sum.Quantity;
+        delete productsOnSale[i]._sum;
+      }
+
+      res.status(200).json({productsOnSale});
+    }
+    catch(error){
+        console.error('Error retrieving products:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
 
