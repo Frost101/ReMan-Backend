@@ -803,6 +803,33 @@ async function getProductDetails(req, res) {
 }
 
 
+
+async function getProductRatingByManufacturer(req, res) {
+
+  const userId = req.body.manufacturerId;
+
+  try {
+    const data = await prisma.product.findMany({
+      where: {
+        mid: userId,
+      },
+      select: {
+        ProductName: true,
+        Rating: true,
+      },
+      orderBy: {
+        Rating: 'desc',
+      }
+    });
+
+    res.status(200).json({data});
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
 module.exports = {
     getOnSaleProducts,
     getRecommendedCategories,
@@ -820,4 +847,5 @@ module.exports = {
     getProductByCategory,
     getProductInfo,
     getProductDetails,
+    getProductRatingByManufacturer,
 }
