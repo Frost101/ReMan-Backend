@@ -153,6 +153,42 @@ async function getManufacturerCountInfo(req, res) {
       batchCount += totalProductionHouseProductCount[i]._count.bid;
     }
 
+    // Total Order Count
+    const totalOrderCount = await prisma.orderFragment.count({
+      where: {
+        mid: manufacturerId,
+      },
+    });
+    // console.log(totalOrderCount);
+
+    // Today's Income
+    const today = new Date();
+    const todayOrders = await prisma.order.findMany({
+      where: {
+        OrderDate: {
+          gte: today,
+        },
+      },
+      select: {
+        oid: true,
+      }
+    });
+
+    let todayIncome = 0;
+    for(let i = 0; i < todayOrders.length; i++) {
+      const orderDetails = await prisma.orderFragment.findMany({
+        where: {
+          oid: todayOrders[i].oid,
+          mid: manufacturerId,
+        },
+        select: {
+          FinalPrice: true,
+        }
+      });
+      todayIncome += orderDetails[0].FinalPrice;
+    }
+
+
     res.status(200).json({
       InventoryCount: inventoryCount,
       ProductionHouseCount: productionHouseCount,
@@ -160,6 +196,8 @@ async function getManufacturerCountInfo(req, res) {
       BatchCount: batchCount,
       CategoryCount: categoryCount,
       TotalProductCount: totalProductCount,
+      TotalOrderCount: totalOrderCount,
+      TodayIncome: todayIncome,
     });
 
   } catch (error) {
