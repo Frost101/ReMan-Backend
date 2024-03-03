@@ -54,8 +54,6 @@ module.exports.addVoucher = async (req, res) => {
 module.exports.deleteVoucher = async (req, res) => {
     try {
         // Extracting input parameters from the request body
-        
-
         const deleteVoucher = await prisma.voucher.delete({
             where: {
                 VoucherCode: req.body.VoucherCode,
