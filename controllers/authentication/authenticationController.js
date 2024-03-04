@@ -60,7 +60,8 @@ async function retailerLogin(req,res){
                   const token = createToken(user.ShopID);
                   res.cookie('jwt', token, { domain:'https://reman-retailer.vercel.app/', httpOnly: true, maxAge: maxAge * 1000 });
                   res.status(200).json({ message: 'Login successful'
-                                              , shopId: user.ShopID});
+                                              , shopId: user.ShopID
+                                              , Name: user.Name});
               }
               else {
                   res.status(400).json({ message: 'Incorrect password' });
