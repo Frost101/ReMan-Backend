@@ -185,7 +185,9 @@ async function getManufacturerCountInfo(req, res) {
           FinalPrice: true,
         }
       });
-      todayIncome += orderDetails[0].FinalPrice;
+      if(orderDetails.length > 0){
+        todayIncome += orderDetails[0].FinalPrice;
+      }
     }
 
 
