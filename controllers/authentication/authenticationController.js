@@ -27,6 +27,7 @@ async function retailerLogin(req,res){
         select: {
           Password: true,
           ShopID: true,
+          Name: true,
         },
       });
   
@@ -58,6 +59,7 @@ async function retailerLogin(req,res){
           else {
               if (result) {
                   const token = createToken(user.ShopID);
+                  // console.log(user);
                   res.cookie('jwt', token, { domain:'https://reman-retailer.vercel.app/', httpOnly: true, maxAge: maxAge * 1000 });
                   res.status(200).json({ message: 'Login successful'
                                               , shopId: user.ShopID
