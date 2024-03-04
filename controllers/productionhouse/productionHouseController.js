@@ -189,7 +189,45 @@ async function shiftToInventory(req, res) {
         },
       });
         res.status(200).json({success: true,
-                        message: "Batch products shifted"});             
+                        message: "Batch products shifted"});
+                        
+                        let allBatches = '';                
+                          
+                        for(let i = 0; i < bid.length; i++){
+                          allBatches = allBatches + bid[i];
+                          if(i !== bid.length - 1){
+                            allBatches = allBatches + ', ';
+                          }
+                        }
+                        
+                        const fromPHIDProductionHouse = await prisma.productionHouse.findUnique({
+                          where: {
+                            phid: fromPHID,
+                          },
+                          select: {
+                            mid: true,
+                            ProductionHouseName: true,
+                          }
+                        });
+              
+                        const toIIDInventory = await prisma.inventory.findUnique({
+                          where: {
+                            iid: toIID,
+                          },
+                          select: {
+                            InventoryName: true,
+                          }
+                        });
+              
+                        const notification = await prisma.companyNotification.create({
+                          data: {
+                            mid: fromPHIDProductionHouse.mid,
+                            Message: 'Batches ' + allBatches + ' have been shifted from ' + fromPHIDProductionHouse.ProductionHouseName + ' to ' + toIIDInventory.InventoryName,
+                            DateAndTime: new Date(),
+                            ReadStatus: false,
+                            Priority: 'Mid',
+                          }
+                        });                
     } catch (error) {
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Internal server error' });
