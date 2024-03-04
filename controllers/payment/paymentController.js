@@ -91,8 +91,8 @@ async function paymentOnlineForTakingLease(req, res) {
         total_amount: Duration,
         currency: 'BDT',
         tran_id: tran_ID, // use unique tran_id for each api call
-        success_url: 'http://localhost:3000/api/payment/onlinePaymentSuccessForTakingLease',
-        fail_url: 'http://localhost:3000/api/payment/onlinePaymentFailForTakingLease',
+        success_url: 'https://reman-backend-v9rf.onrender.com/api/payment/onlinePaymentSuccessForTakingLease',
+        fail_url: 'https://reman-backend-v9rf.onrender.com/api/payment/onlinePaymentFailForTakingLease',
         cancel_url: 'http://localhost:3030/cancel',
         ipn_url: 'http://localhost:3030/ipn',
         shipping_method: 'Courier',
@@ -159,8 +159,8 @@ async function paymentOnlineForExtendingLease(req, res) {
         total_amount: 1000,
         currency: 'BDT',
         tran_id: tran_ID, // use unique tran_id for each api call
-        success_url: 'http://localhost:3000/api/payment/onlinePaymentSuccessForExtendingLease',
-        fail_url: 'http://localhost:3000/api/payment/onlinePaymentFailForExtendingLease',
+        success_url: 'https://reman-backend-v9rf.onrender.com/api/payment/onlinePaymentSuccessForExtendingLease',
+        fail_url: 'https://reman-backend-v9rf.onrender.com/api/payment/onlinePaymentFailForExtendingLease',
         cancel_url: 'http://localhost:3030/cancel',
         ipn_url: 'http://localhost:3030/ipn',
         shipping_method: 'Courier',
@@ -265,10 +265,10 @@ async function onlinePaymentSuccessfulForTakingLease(req, res) {
     };
 
     try {
-        const response = await axios.put('http://localhost:3000/api/leaseInventory/takeLease', postData);
+        const response = await axios.put('http://reman-backend-v9rf.onrender.com/api/leaseInventory/takeLease', postData);
         // console.log('Take Lease Successful: ', response.data);
-        // res.redirect('https://reman-retailer.vercel.app/payment/success');
-        res.status(200).json(response.data);
+        res.redirect('https://reman-manufacturer.vercel.app/man/leaseManagement/inventoryMarketPlace/inventoryDetails/success1');
+        // res.status(200).json(response.data);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -312,10 +312,10 @@ async function onlinePaymentSuccessfulForExtendingLease(req, res) {
     };
 
     try {
-        const response = await axios.put('http://localhost:3000/api/leaseInventory/extendLease', postData);
+        const response = await axios.put('http://reman-backend-v9rf.onrender.com/api/leaseInventory/extendLease', postData);
         // console.log('Take Lease Successful: ', response.data);
-        // res.redirect('https://reman-retailer.vercel.app/payment/success');
-        res.status(200).json(response.data);
+        res.redirect('https://reman-manufacturer.vercel.app/man/leaseManagement/inventoryMarketPlace/inventoryDetails/success1');
+        // res.status(200).json(response.data);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -427,8 +427,8 @@ async function onlinePaymentFailedForTakingLease(req, res) {
     //     res.status(500).json({ error: 'Internal server error' });
     // }
 
-    // res.redirect('https://reman-retailer.vercel.app/payment/fail');
-    res.status(200).json({ message: "Payment Failed" });
+    res.redirect('https://reman-manufacturer.vercel.app/man/leaseManagement/inventoryMarketPlace/inventoryDetails/failed1');
+    // res.status(200).json({ message: "Payment Failed" });
 }
 
 
@@ -469,8 +469,8 @@ async function onlinePaymentFailedForExtendingLease(req, res) {
     //     res.status(500).json({ error: 'Internal server error' });
     // }
 
-    // res.redirect('https://reman-retailer.vercel.app/payment/fail');
-    res.status(200).json({ message: "Payment Failed" });
+    res.redirect('https://reman-manufacturer.vercel.app/man/leaseManagement/inventoryMarketPlace/inventoryDetails/failed1');
+    // res.status(200).json({ message: "Payment Failed" });
 }
 
 
