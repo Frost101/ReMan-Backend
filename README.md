@@ -22,5 +22,5 @@ We followed the MVC Architecture for this project
 
 # **API Documentation**
 
-Swagger was used to document the API endpoints. ![Swagger Link](https://reman-backend-v9rf.onrender.com/api-docs/)
+Swagger was used to document the API endpoints. [Swagger Link](https://reman-backend-v9rf.onrender.com/api-docs/)
 
