@@ -11,7 +11,7 @@ We followed the MVC Architecture for this project
 
 # **Tech Stack & Tools**
 
-- Frontend : `React`, `HTML`, `CSS`, `JS`
+- Frontend : `React`, `HTML`, `CSS`, `JS`, `AntDesign`, `Chakra UI`
 - Backend : `Node JS`, `Express JS`
 - Database : `PostgreSQL`
 - ORM: `Prisma`
