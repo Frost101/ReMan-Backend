@@ -1,8 +1,8 @@
 # **ReMan-Backend**
 # **Project Overview**
 
-**ReMan** connects the **Retailers** and **Manufacturers** through a completely digital platform, without any interference from any third party. \\
-The frontend of the project can be found in the following repositories : [ReMan-Frontend-Manufacturer](https://github.com/Frost101/ReMan-Frontend)  [ReMan-Frontend-Retailer](https://github.com/sabahcsxgawd/ReMan-Frontend-Retailer) \\
+**ReMan** connects the **Retailers** and **Manufacturers** through a completely digital platform, without any interference from any third party. <br>
+The frontend of the project can be found in the following repositories : [ReMan-Frontend-Manufacturer](https://github.com/Frost101/ReMan-Frontend)  [ReMan-Frontend-Retailer](https://github.com/sabahcsxgawd/ReMan-Frontend-Retailer) <br>
 Complete workflow is shown here: [Youtube Link](https://youtu.be/NSeYYYAv3-4)
 
 
